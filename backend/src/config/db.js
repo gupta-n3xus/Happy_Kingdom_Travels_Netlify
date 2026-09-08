@@ -9,22 +9,20 @@ const connectDB = async () => {
     process.exit(1);
   }
 
-  try {
-    const conn = await mongoose.connect(uri);
-    console.log(`MongoDB Atlas connected: ${conn.connection.host}/${conn.connection.name}`);
-  } catch (error) {
-    console.error('MongoDB Atlas connection failed.');
-    console.error(`Error: ${error.message}`);
-
-    if (error.message.includes('authentication failed')) {
-      console.error('Check your MongoDB Atlas username and password.');
-    } else if (error.message.includes('IP whitelist')) {
-      console.error('Add your IP to the MongoDB Atlas network access list.');
-    } else if (error.message.includes('ETIMEDOUT') || error.message.includes('ECONNREFUSED')) {
-      console.error('Check your network connection and Atlas cluster status.');
+  const maxRetries = 5;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const conn = await mongoose.connect(uri);
+      console.log(`MongoDB Atlas connected: ${conn.connection.host}/${conn.connection.name}`);
+      return;
+    } catch (error) {
+      console.error(`MongoDB connection attempt ${attempt}/${maxRetries} failed: ${error.message}`);
+      if (attempt === maxRetries) {
+        console.error('Max retries reached. Starting server without DB connection.');
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
-
-    process.exit(1);
   }
 };
 
