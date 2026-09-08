@@ -1,0 +1,14 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import Package from '../models/Package.js';
+await mongoose.connect(process.env.MONGODB_URI);
+const old = await Package.findOneAndDelete({ slug: 'royal-bhutan-experience-5n-6d' });
+console.log('Deleted old:', old ? old.title : 'not found');
+const pkgs = await Package.find().select('slug title');
+pkgs.forEach(p => console.log(' ', p.slug, '-', p.title));
+process.exit(0);

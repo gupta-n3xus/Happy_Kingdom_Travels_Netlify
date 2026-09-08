@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <clipPath id="circle">
+      <circle cx="32" cy="32" r="32"/>
+    </clipPath>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2332"/>
+      <stop offset="100%" stop-color="#2d3a4a"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="url(#sky)"/>
+  <g clip-path="url(#circle)">
+    <!-- Sun -->
+    <circle cx="32" cy="18" r="9" fill="#f0c040"/>
+    <circle cx="32" cy="18" r="7" fill="#f5d060"/>
+    <!-- Mountains -->
+    <polygon points="32,10 12,34 22,34" fill="#5a7a8a"/>
+    <polygon points="32,10 42,34 52,34" fill="#4a6a7a"/>
+    <polygon points="32,14 18,34 28,34" fill="#6a8a9a"/>
+    <polygon points="32,14 36,34 46,34" fill="#5a7a8a"/>
+    <!-- Snow caps -->
+    <polygon points="32,10 28,18 36,18" fill="#d0dde5"/>
+    <polygon points="32,12 26,22 38,22" fill="#c0d0da" opacity="0.7"/>
+    <!-- Trees left -->
+    <polygon points="10,34 13,24 16,34" fill="#2d5a3a"/>
+    <polygon points="8,34 11,26 14,34" fill="#1e4a2e"/>
+    <polygon points="14,34 17,22 20,34" fill="#2d5a3a"/>
+    <!-- Trees right -->
+    <polygon points="48,34 51,24 54,34" fill="#2d5a3a"/>
+    <polygon points="50,34 53,26 56,34" fill="#1e4a2e"/>
+    <!-- Ground -->
+    <rect x="0" y="34" width="64" height="30" fill="#1e3a2a"/>
+    <rect x="0" y="34" width="64" height="4" fill="#2d5a3a" opacity="0.5"/>
+    <!-- HK text -->
+    <text x="32" y="48" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#f0c040" letter-spacing="1">HK</text>
+    <!-- Plane -->
+    <g transform="translate(46,16) rotate(30)">
+      <path d="M0,-4 L2,-1 L6,0 L2,1 L0,4 L1,2 L0,1 L-1,2 Z" fill="#f0c040"/>
+    </g>
+  </g>
+</svg>
