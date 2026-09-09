@@ -1,4 +1,5 @@
-import UAParser from 'ua-parser-js';
+import pkg from 'ua-parser-js';
+const UAParser = pkg.default || pkg;
 
 const geoCache = new Map();
 const CACHE_TTL = 60 * 60 * 1000;

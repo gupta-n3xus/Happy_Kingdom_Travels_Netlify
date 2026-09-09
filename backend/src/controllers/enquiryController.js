@@ -36,7 +36,14 @@ export const createEnquiry = async (req, res, next) => {
     const userAgent = req.headers['user-agent'] || '';
     const referrer = req.headers['referer'] || req.headers['referrer'] || '';
     const language = req.headers['accept-language'] || '';
-    const { browser, os, device } = parseUA(userAgent);
+
+    let browser = null, os = null, device = null;
+    try {
+      ({ browser, os, device } = parseUA(userAgent));
+      console.log('Parsed UA:', { browser, os, device });
+    } catch (e) {
+      console.error('parseUA error:', e.message);
+    }
 
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
@@ -56,9 +63,9 @@ export const createEnquiry = async (req, res, next) => {
     getGeoLocation(ipAddress).then(async (geo) => {
       if (geo) {
         await Enquiry.findByIdAndUpdate(enquiry._id, { location: geo });
-        console.log('Geo updated for enquiry:', enquiry._id, geo.city, geo.country);
+        console.log('Geo updated:', enquiry._id, geo.city, geo.country);
       }
-    }).catch(() => {});
+    }).catch((err) => console.error('Geo lookup failed:', err.message));
   } catch (error) {
     next(error);
   }
