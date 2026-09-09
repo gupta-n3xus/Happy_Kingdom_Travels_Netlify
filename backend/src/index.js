@@ -24,6 +24,8 @@ import galleryRoutes from './routes/gallery.js';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 connectDB();
 
 app.use(helmet());
@@ -54,7 +56,7 @@ app.use('/api/backup', backupRoutes);
 app.use('/api/gallery', galleryRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'API is running' });
+  res.status(200).json({ success: true, message: 'API is running', version: '1.1.0' });
 });
 
 app.use(errorHandler);
@@ -62,6 +64,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log('Registered routes:', app._router.stack.filter(r => r.route || r.name === 'router').map(r => r.regexp?.toString() || r.route?.path || r.name).join(', '));
 });
 
 export default app;
