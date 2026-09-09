@@ -17,10 +17,11 @@ export const createEnquiry = async (req, res, next) => {
     let browser = null, os = null, device = null;
     try {
       ({ browser, os, device } = parseUA(userAgent));
-      console.log('Parsed UA:', { browser, os, device });
     } catch (e) {
       console.error('parseUA error:', e.message);
     }
+
+    console.log('Enquiry data:', { ipAddress, browser, os, device, referrer, language });
 
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
