@@ -7,6 +7,7 @@ import enquiryService from '../services/enquiryService'
 import { trackEvent } from '../hooks/useAnalytics'
 import { createCustomTripMessage } from '../utils/createWhatsAppMessage'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
+import { getClientInfo } from '../utils/clientInfo'
 
 const QuoteForm = () => {
   const [formData, setFormData] = useState({
@@ -62,6 +63,8 @@ const QuoteForm = () => {
     const whatsappMessage = createCustomTripMessage(formData)
     openWhatsApp(whatsappMessage)
 
+    const clientInfo = await getClientInfo()
+
     const enquiryData = {
       fullName: formData.name,
       phone: formData.phone,
@@ -78,6 +81,7 @@ const QuoteForm = () => {
       interests: formData.interests.length > 0 ? formData.interests : undefined,
       specialRequirements: formData.specialRequirements || undefined,
       message: formData.message || undefined,
+      ...clientInfo,
     }
 
     if (formData.preferredPackage && /^[a-f\d]{24}$/i.test(formData.preferredPackage)) {

@@ -6,6 +6,7 @@ import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { createTripPlannerMessage } from '../utils/createWhatsAppMessage'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
+import { getClientInfo } from '../utils/clientInfo'
 
 const SearchTripForm = () => {
   const [formData, setFormData] = useState({
@@ -54,6 +55,8 @@ const SearchTripForm = () => {
       const whatsappMessage = createTripPlannerMessage(formData)
       openWhatsApp(whatsappMessage)
 
+      const clientInfo = await getClientInfo()
+
       await enquiryService.createEnquiry({
         fullName: formData.fullName || 'Trip Search',
         phone: formData.phone,
@@ -66,6 +69,7 @@ const SearchTripForm = () => {
         travelStyle: formData.travelStyle || undefined,
         message: `Duration: ${finalDuration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
         source: 'trip_planner',
+        ...clientInfo,
       }).catch(() => {})
 
       toast.success('WhatsApp opened with your trip details.')

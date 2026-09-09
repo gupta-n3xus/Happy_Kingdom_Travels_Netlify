@@ -1,32 +1,35 @@
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
 import { sendEnquiryNotification } from '../services/emailService.js';
-import { getClientIP, parseUA, getGeoLocation } from '../utils/geo.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const createEnquiry = async (req, res, next) => {
   try {
-    const { fullName, phone, email, travelFrom, travelDate, adults, children, preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements } = req.body;
+    const {
+      fullName, phone, email, travelFrom, travelDate, adults, children,
+      preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
+      ipAddress: clientIP, userAgent: clientUA, browser: clientBrowser, os: clientOS,
+      device: clientDevice, location: clientLocation, referrer: clientReferrer,
+      language: clientLanguage,
+    } = req.body;
 
-    const ipAddress = getClientIP(req);
-    const userAgent = req.headers['user-agent'] || '';
-    const referrer = req.headers['referer'] || req.headers['referrer'] || '';
-    const language = req.headers['accept-language'] || '';
+    const ipAddress = clientIP || req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || '';
+    const userAgent = clientUA || req.headers['user-agent'] || '';
+    const referrer = clientReferrer || req.headers['referer'] || '';
+    const language = clientLanguage || req.headers['accept-language'] || '';
 
-    let browser = null, os = null, device = null;
-    try {
-      ({ browser, os, device } = parseUA(userAgent));
-    } catch (e) {
-      console.error('parseUA error:', e.message);
-    }
+    const browser = clientBrowser || null;
+    const os = clientOS || null;
+    const device = clientDevice || null;
+    const location = clientLocation || null;
 
-    console.log('Enquiry data:', { ipAddress, browser, os, device, referrer, language });
+    console.log('Enquiry data:', { ipAddress, browser, os, device, location, referrer, language });
 
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
       preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
-      ipAddress, userAgent, referrer, language, browser, os, device
+      ipAddress, userAgent, referrer, language, browser, os, device, location,
     });
     console.log('Enquiry saved:', enquiry._id);
 
@@ -39,13 +42,6 @@ export const createEnquiry = async (req, res, next) => {
     sendEnquiryNotification(enquiry).catch((err) =>
       console.error('Email notification failed:', err.message)
     );
-
-    getGeoLocation(ipAddress).then(async (geo) => {
-      if (geo) {
-        await Enquiry.findByIdAndUpdate(enquiry._id, { location: geo });
-        console.log('Geo updated:', enquiry._id, geo.city, geo.country);
-      }
-    }).catch((err) => console.error('Geo lookup failed:', err.message));
   } catch (error) {
     next(error);
   }
