@@ -51,6 +51,9 @@ const SearchTripForm = () => {
     setLoading(true)
     try {
       const finalDuration = formData.duration === 'custom' ? formData.customDuration : formData.duration
+      const whatsappMessage = createTripPlannerMessage(formData)
+      openWhatsApp(whatsappMessage)
+
       await enquiryService.createEnquiry({
         fullName: formData.fullName || 'Trip Search',
         phone: formData.phone,
@@ -63,12 +66,9 @@ const SearchTripForm = () => {
         travelStyle: formData.travelStyle || undefined,
         message: `Duration: ${finalDuration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
         source: 'trip_planner',
-      })
+      }).catch(() => {})
 
-      const whatsappMessage = createTripPlannerMessage(formData)
-      openWhatsApp(whatsappMessage)
-
-      toast.success('Enquiry submitted! WhatsApp opened with your trip details.')
+      toast.success('WhatsApp opened with your trip details.')
       setFormData({
         fullName: '',
         phone: '',
@@ -83,7 +83,7 @@ const SearchTripForm = () => {
         travelStyle: '',
       })
     } catch {
-      toast.error('We couldn\'t submit your trip request. Please try again or contact us on WhatsApp.')
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
