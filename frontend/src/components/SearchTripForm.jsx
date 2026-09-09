@@ -6,7 +6,7 @@ import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { createTripPlannerMessage } from '../utils/createWhatsAppMessage'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
-import { getClientInfo } from '../utils/clientInfo'
+import { getClientInfoSync, fetchGeoInBackground, getCachedGeo } from '../utils/clientInfo'
 
 const SearchTripForm = () => {
   const [formData, setFormData] = useState({
@@ -55,7 +55,8 @@ const SearchTripForm = () => {
       const whatsappMessage = createTripPlannerMessage(formData)
       openWhatsApp(whatsappMessage)
 
-      const clientInfo = await getClientInfo()
+      fetchGeoInBackground()
+      const clientInfo = getClientInfoSync()
 
       await enquiryService.createEnquiry({
         fullName: formData.fullName || 'Trip Search',
@@ -70,6 +71,15 @@ const SearchTripForm = () => {
         message: `Duration: ${finalDuration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
         source: 'trip_planner',
         ...clientInfo,
+      }).then(async (res) => {
+        const geo = getCachedGeo()
+        if (geo && res?.data?._id) {
+          fetch('/api/enquiries/geo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: res.data._id, ipAddress: geo.ipAddress, location: geo.location }),
+          }).catch(() => {})
+        }
       }).catch(() => {})
 
       toast.success('WhatsApp opened with your trip details.')

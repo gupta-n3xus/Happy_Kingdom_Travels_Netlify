@@ -5,7 +5,8 @@ import {
   getAllEnquiries,
   getEnquiryById,
   updateEnquiryStatus,
-  deleteEnquiry
+  deleteEnquiry,
+  updateEnquiryGeo
 } from '../controllers/enquiryController.js';
 import { protect, authorize } from '../middleware/auth.js';
 
@@ -18,6 +19,7 @@ const enquiryLimiter = rateLimit({
 });
 
 router.post('/', enquiryLimiter, createEnquiry);
+router.post('/geo', updateEnquiryGeo);
 router.get('/', protect, authorize('admin'), getAllEnquiries);
 router.get('/:id', protect, authorize('admin'), getEnquiryById);
 router.put('/:id', protect, authorize('admin'), updateEnquiryStatus);

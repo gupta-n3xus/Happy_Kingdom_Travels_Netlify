@@ -52,46 +52,54 @@ function parseUserAgent(ua) {
   return { browser, os, device };
 }
 
-export async function getClientInfo() {
+export function getClientInfoSync() {
   const ua = navigator.userAgent || '';
   const language = navigator.language || '';
   const referrer = document.referrer || '';
-  const screen = `${window.screen?.width}x${window.screen?.height}`;
 
   const { browser, os, device } = parseUserAgent(ua);
 
-  let ip = '';
-  let location = null;
-
-  try {
-    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) });
-    if (res.ok) {
-      const data = await res.json();
-      ip = data.ip || '';
-      location = {
-        city: data.city || '',
-        region: data.region || '',
-        country: data.country_name || '',
-        countryCode: data.country_code || '',
-        lat: data.latitude || null,
-        lng: data.longitude || null,
-        timezone: data.timezone || '',
-        isp: data.org || '',
-      };
-    }
-  } catch {
-    // silent - IP geolocation is best-effort
-  }
-
   return {
-    ipAddress: ip,
+    ipAddress: '',
     userAgent: ua,
     browser,
     os,
     device,
-    location,
+    location: null,
     referrer,
     language,
-    screen,
   };
+}
+
+let cachedGeo = null;
+let geoFetched = false;
+
+export function fetchGeoInBackground() {
+  if (geoFetched) return;
+  geoFetched = true;
+
+  fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (data) {
+        cachedGeo = {
+          ipAddress: data.ip || '',
+          location: {
+            city: data.city || '',
+            region: data.region || '',
+            country: data.country_name || '',
+            countryCode: data.country_code || '',
+            lat: data.latitude || null,
+            lng: data.longitude || null,
+            timezone: data.timezone || '',
+            isp: data.org || '',
+          },
+        };
+      }
+    })
+    .catch(() => {});
+}
+
+export function getCachedGeo() {
+  return cachedGeo;
 }

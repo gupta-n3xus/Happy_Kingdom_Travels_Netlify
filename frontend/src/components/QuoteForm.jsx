@@ -7,7 +7,7 @@ import enquiryService from '../services/enquiryService'
 import { trackEvent } from '../hooks/useAnalytics'
 import { createCustomTripMessage } from '../utils/createWhatsAppMessage'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
-import { getClientInfo } from '../utils/clientInfo'
+import { getClientInfoSync, fetchGeoInBackground, getCachedGeo } from '../utils/clientInfo'
 
 const QuoteForm = () => {
   const [formData, setFormData] = useState({
@@ -63,7 +63,8 @@ const QuoteForm = () => {
     const whatsappMessage = createCustomTripMessage(formData)
     openWhatsApp(whatsappMessage)
 
-    const clientInfo = await getClientInfo()
+    fetchGeoInBackground()
+    const clientInfo = getClientInfoSync()
 
     const enquiryData = {
       fullName: formData.name,
@@ -88,7 +89,16 @@ const QuoteForm = () => {
       enquiryData.preferredPackage = formData.preferredPackage
     }
 
-    enquiryService.createEnquiry(enquiryData).catch(() => {})
+    enquiryService.createEnquiry(enquiryData).then(async (res) => {
+      const geo = getCachedGeo()
+      if (geo && res?.data?._id) {
+        fetch('/api/enquiries/geo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: res.data._id, ipAddress: geo.ipAddress, location: geo.location }),
+        }).catch(() => {})
+      }
+    }).catch(() => {})
     trackEvent('quote_submit', {
       source: 'custom_trip_form',
       travelStyle: formData.travelStyle || '',

@@ -24,14 +24,12 @@ export const createEnquiry = async (req, res, next) => {
     const device = clientDevice || null;
     const location = clientLocation || null;
 
-    console.log('Enquiry data:', { ipAddress, browser, os, device, location, referrer, language });
-
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
       preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
       ipAddress, userAgent, referrer, language, browser, os, device, location,
     });
-    console.log('Enquiry saved:', enquiry._id);
+    console.log('Enquiry saved:', enquiry._id, { ipAddress, browser: browser?.name, os: os?.name, device: device?.type, city: location?.city });
 
     res.status(201).json({
       success: true,
@@ -39,9 +37,26 @@ export const createEnquiry = async (req, res, next) => {
       data: enquiry
     });
 
-    sendEnquiryNotification(enquiry).catch((err) =>
-      console.error('Email notification failed:', err.message)
-    );
+    sendEnquiryNotification(enquiry).catch(() => {});
+  } catch (error) {
+    console.error('Create enquiry error:', error.message);
+    next(error);
+  }
+};
+
+export const updateEnquiryGeo = async (req, res, next) => {
+  try {
+    const { id, ipAddress, location } = req.body;
+    if (!id) return res.status(400).json({ success: false, message: 'Enquiry ID required' });
+
+    const update = {};
+    if (ipAddress) update.ipAddress = ipAddress;
+    if (location) update.location = location;
+
+    const enquiry = await Enquiry.findByIdAndUpdate(id, update, { new: true });
+    if (!enquiry) return res.status(404).json({ success: false, message: 'Enquiry not found' });
+
+    res.status(200).json({ success: true, data: enquiry });
   } catch (error) {
     next(error);
   }
