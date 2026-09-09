@@ -30,9 +30,14 @@ async function sendWithRetry(enquiry, retries = 1) {
 export const createEnquiry = async (req, res, next) => {
   try {
     const { fullName, phone, email, travelFrom, travelDate, adults, children, preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements } = req.body;
+
+    const ipAddress = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+    const userAgent = req.headers['user-agent'] || '';
+
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
-      preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements
+      preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
+      ipAddress, userAgent
     });
     console.log('Enquiry saved:', enquiry._id);
 

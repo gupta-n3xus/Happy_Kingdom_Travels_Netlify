@@ -88,6 +88,14 @@ const enquirySchema = new mongoose.Schema(
     source: {
       type: String,
       default: 'website'
+    },
+    ipAddress: {
+      type: String,
+      trim: true
+    },
+    userAgent: {
+      type: String,
+      trim: true
     }
   },
   { timestamps: true }

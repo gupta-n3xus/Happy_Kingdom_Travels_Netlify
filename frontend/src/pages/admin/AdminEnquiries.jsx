@@ -66,6 +66,8 @@ const AdminEnquiries = () => {
       Message: e.message || '',
       Status: e.status || '',
       'Submitted': e.createdAt ? formatDate(e.createdAt) : '',
+      'IP Address': e.ipAddress || '',
+      'Device': e.userAgent || '',
     }))
 
     const ws = XLSX.utils.json_to_sheet(rows)
@@ -76,6 +78,7 @@ const AdminEnquiries = () => {
       { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 15 },
       { wch: 15 }, { wch: 8 }, { wch: 8 }, { wch: 15 },
       { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 },
+      { wch: 18 }, { wch: 60 },
     ]
 
     XLSX.writeFile(wb, `enquiries-${new Date().toISOString().slice(0, 10)}.xlsx`)
@@ -339,6 +342,17 @@ const AdminEnquiries = () => {
                 <p className="text-sm text-muted">Submitted</p>
                 <p className="font-medium text-charcoal">{formatDate(selectedEnquiry.createdAt)}</p>
               </div>
+              {(selectedEnquiry.ipAddress || selectedEnquiry.userAgent) && (
+                <div className="p-3 bg-gray-50 rounded-lg space-y-1">
+                  <p className="text-sm font-medium text-muted">User Info</p>
+                  {selectedEnquiry.ipAddress && (
+                    <p className="text-sm text-charcoal">IP: {selectedEnquiry.ipAddress}</p>
+                  )}
+                  {selectedEnquiry.userAgent && (
+                    <p className="text-xs text-muted break-all">Device: {selectedEnquiry.userAgent}</p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="p-6 border-t flex gap-3">
               <button
