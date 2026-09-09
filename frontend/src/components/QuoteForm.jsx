@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Send } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { CITIES, HOTEL_CATEGORIES, BUDGET_RANGES, TRAVEL_STYLES, INTERESTS } from '../constants'
+import { HOTEL_CATEGORIES, BUDGET_RANGES, TRAVEL_STYLES, INTERESTS } from '../constants'
+import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { trackEvent } from '../hooks/useAnalytics'
 import { createCustomTripMessage } from '../utils/createWhatsAppMessage'
@@ -13,7 +14,8 @@ const QuoteForm = () => {
     phone: '',
     whatsappNumber: '',
     email: '',
-    travelFrom: '',
+    state: '',
+    city: '',
     travelDate: '',
     returnDate: '',
     adults: 2,
@@ -26,12 +28,19 @@ const QuoteForm = () => {
     specialRequirements: '',
     message: '',
   })
-  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value }
+      if (name === 'state') {
+        newData.city = ''
+      }
+      return newData
+    })
   }
+
+  const cities = formData.state ? (STATE_CITIES[formData.state] || []) : []
 
   const handleInterestToggle = (interest) => {
     setFormData((prev) => ({
@@ -50,64 +59,57 @@ const QuoteForm = () => {
       return
     }
 
-    if (loading) return
-    setLoading(true)
-    try {
-      const whatsappMessage = createCustomTripMessage(formData)
-      openWhatsApp(whatsappMessage)
+    const whatsappMessage = createCustomTripMessage(formData)
+    openWhatsApp(whatsappMessage)
 
-      const enquiryData = {
-        fullName: formData.name,
-        phone: formData.phone,
-        whatsappNumber: formData.whatsappNumber || undefined,
-        email: formData.email || 'noemail@provided.com',
-        travelFrom: formData.travelFrom || undefined,
-        travelDate: formData.travelDate,
-        returnDate: formData.returnDate || undefined,
-        adults: Number(formData.adults),
-        children: Number(formData.children),
-        hotelPreference: formData.hotelPreference || undefined,
-        budgetRange: formData.budgetRange || undefined,
-        travelStyle: formData.travelStyle || undefined,
-        interests: formData.interests.length > 0 ? formData.interests : undefined,
-        specialRequirements: formData.specialRequirements || undefined,
-        message: formData.message || undefined,
-      }
-
-      if (formData.preferredPackage && /^[a-f\d]{24}$/i.test(formData.preferredPackage)) {
-        enquiryData.preferredPackage = formData.preferredPackage
-      }
-
-      await enquiryService.createEnquiry(enquiryData).catch(() => {})
-      trackEvent('quote_submit', {
-        source: 'custom_trip_form',
-        travelStyle: formData.travelStyle || '',
-        budgetRange: formData.budgetRange || '',
-      })
-      toast.success('WhatsApp opened with your trip details.')
-      setFormData({
-        name: '',
-        phone: '',
-        whatsappNumber: '',
-        email: '',
-        travelFrom: '',
-        travelDate: '',
-        returnDate: '',
-        adults: 2,
-        children: 0,
-        preferredPackage: '',
-        hotelPreference: '',
-        budgetRange: '',
-        travelStyle: '',
-        interests: [],
-        specialRequirements: '',
-        message: '',
-      })
-    } catch {
-      toast.error('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
+    const enquiryData = {
+      fullName: formData.name,
+      phone: formData.phone,
+      whatsappNumber: formData.whatsappNumber || undefined,
+      email: formData.email || 'noemail@provided.com',
+      travelFrom: formData.city && formData.state ? `${formData.city}, ${formData.state}` : undefined,
+      travelDate: formData.travelDate,
+      returnDate: formData.returnDate || undefined,
+      adults: Number(formData.adults),
+      children: Number(formData.children),
+      hotelPreference: formData.hotelPreference || undefined,
+      budgetRange: formData.budgetRange || undefined,
+      travelStyle: formData.travelStyle || undefined,
+      interests: formData.interests.length > 0 ? formData.interests : undefined,
+      specialRequirements: formData.specialRequirements || undefined,
+      message: formData.message || undefined,
     }
+
+    if (formData.preferredPackage && /^[a-f\d]{24}$/i.test(formData.preferredPackage)) {
+      enquiryData.preferredPackage = formData.preferredPackage
+    }
+
+    enquiryService.createEnquiry(enquiryData).catch(() => {})
+    trackEvent('quote_submit', {
+      source: 'custom_trip_form',
+      travelStyle: formData.travelStyle || '',
+      budgetRange: formData.budgetRange || '',
+    })
+
+    setFormData({
+      name: '',
+      phone: '',
+      whatsappNumber: '',
+      email: '',
+      state: '',
+      city: '',
+      travelDate: '',
+      returnDate: '',
+      adults: 2,
+      children: 0,
+      preferredPackage: '',
+      hotelPreference: '',
+      budgetRange: '',
+      travelStyle: '',
+      interests: [],
+      specialRequirements: '',
+      message: '',
+    })
   }
 
   return (
@@ -165,19 +167,35 @@ const QuoteForm = () => {
 
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1">Travelling From</label>
-          <select
-            name="travelFrom"
-            value={formData.travelFrom}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal"
-          >
-            <option value="">Select City</option>
-            {CITIES.map((city) => (
-              <option key={city.slug} value={city.name}>
-                {city.name}
-              </option>
-            ))}
-          </select>
+          <div className="grid grid-cols-2 gap-3">
+            <select
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal"
+            >
+              <option value="">Select State</option>
+              {STATES.map((state) => (
+                <option key={state.slug} value={state.name}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
+            <select
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              disabled={!formData.state}
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="">{formData.state ? 'Select City' : 'Select state first'}</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div>
@@ -341,20 +359,10 @@ const QuoteForm = () => {
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full bg-accent text-charcoal py-4 rounded-lg font-bold text-lg hover:bg-yellow-500 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-accent text-charcoal py-4 rounded-lg font-bold text-lg hover:bg-yellow-500 transition-colors flex items-center justify-center"
       >
-        {loading ? (
-          <>
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-charcoal mr-2" />
-            Sending...
-          </>
-        ) : (
-          <>
-            <Send className="w-5 h-5 mr-2" />
-            Get My Free Quote
-          </>
-        )}
+        <MessageCircle className="w-5 h-5 mr-2" />
+        Send on WhatsApp
       </button>
     </form>
   )

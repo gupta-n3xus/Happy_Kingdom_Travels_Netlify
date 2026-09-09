@@ -111,7 +111,7 @@ const HOTEL_LABELS = {
 
 export function createCustomTripMessage(formData) {
   const name = safe(formData.name, 'there')
-  const travelFrom = safe(formData.travelFrom, 'Not specified')
+  const travelFrom = formData.city && formData.state ? `${formData.city}, ${formData.state}` : safe(formData.travelFrom, 'Not specified')
   const travelDate = formatDate(formData.travelDate)
   const returnDate = formData.returnDate ? formatDate(formData.returnDate) : null
   const adults = safe(formData.adults, '2')
