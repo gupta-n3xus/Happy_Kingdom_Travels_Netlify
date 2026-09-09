@@ -4,6 +4,29 @@ import { sendEnquiryNotification } from '../services/emailService.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+async function sendWithRetry(enquiry, retries = 1) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const result = await sendEnquiryNotification(enquiry);
+      if (result.success) {
+        console.log('Email sent:', result.messageId);
+        return;
+      }
+      if (attempt < retries) {
+        console.log(`Email failed, retrying (${attempt + 1}/${retries})...`);
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+    } catch (err) {
+      if (attempt < retries) {
+        console.log(`Email error, retrying (${attempt + 1}/${retries})...`);
+        await new Promise((r) => setTimeout(r, 2000));
+      } else {
+        console.error('Email notification failed for enquiry:', enquiry._id, err.message);
+      }
+    }
+  }
+}
+
 export const createEnquiry = async (req, res, next) => {
   try {
     const { fullName, phone, email, travelFrom, travelDate, adults, children, preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements } = req.body;
@@ -19,9 +42,7 @@ export const createEnquiry = async (req, res, next) => {
       data: enquiry
     });
 
-    sendEnquiryNotification(enquiry)
-      .then((result) => console.log('Email result:', result))
-      .catch((err) => console.error('Email notification failed for enquiry:', enquiry._id, err));
+    sendWithRetry(enquiry);
   } catch (error) {
     next(error);
   }
