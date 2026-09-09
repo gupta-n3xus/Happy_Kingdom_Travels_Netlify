@@ -15,6 +15,17 @@ export const formatDate = (date) => {
   })
 }
 
+export const formatDateTime = (date) => {
+  return new Date(date).toLocaleString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+}
+
 export const slugify = (text) => {
   return text
     .toString()

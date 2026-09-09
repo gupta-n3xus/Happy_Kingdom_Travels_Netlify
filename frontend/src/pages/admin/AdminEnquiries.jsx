@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Eye, X, Trash2, Image, Download } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import enquiryService from '../../services/enquiryService'
-import { formatDate } from '../../utils/helpers'
+import { formatDate, formatDateTime } from '../../utils/helpers'
 import { STATUS_OPTIONS } from '../../constants'
 import toast from 'react-hot-toast'
 
@@ -348,7 +348,7 @@ const AdminEnquiries = () => {
               </div>
               <div>
                 <p className="text-sm text-muted">Submitted</p>
-                <p className="font-medium text-charcoal">{formatDate(selectedEnquiry.createdAt)}</p>
+                <p className="font-medium text-charcoal">{formatDateTime(selectedEnquiry.createdAt)}</p>
               </div>
               {(selectedEnquiry.ipAddress || selectedEnquiry.userAgent) && (
                 <div className="p-3 bg-gray-50 rounded-lg space-y-2">
