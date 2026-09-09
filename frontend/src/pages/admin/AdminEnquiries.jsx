@@ -293,6 +293,12 @@ const AdminEnquiries = () => {
                   <p className="font-medium text-charcoal">{selectedEnquiry.children || '-'}</p>
                 </div>
               </div>
+              {selectedEnquiry.preferredDuration && (
+                <div>
+                  <p className="text-sm text-muted">Preferred Duration</p>
+                  <p className="font-medium text-charcoal">{selectedEnquiry.preferredDuration}</p>
+                </div>
+              )}
               {selectedEnquiry.preferredPackage && (
                 <div>
                   <p className="text-sm text-muted">Preferred Package</p>

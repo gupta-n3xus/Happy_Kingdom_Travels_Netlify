@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { CITIES, DURATIONS, TRAVEL_STYLES } from '../constants'
+import { DURATIONS, TRAVEL_STYLES } from '../constants'
+import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { createTripPlannerMessage } from '../utils/createWhatsAppMessage'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
@@ -11,24 +12,37 @@ const SearchTripForm = () => {
     fullName: '',
     phone: '',
     email: '',
-    travelFrom: '',
+    state: '',
+    city: '',
     travelDate: '',
     adults: 2,
     children: 0,
     duration: '',
+    customDuration: '',
     travelStyle: '',
   })
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value }
+      if (name === 'state') {
+        newData.city = ''
+      }
+      if (name === 'duration' && value !== 'custom') {
+        newData.customDuration = ''
+      }
+      return newData
+    })
   }
+
+  const cities = formData.state ? (STATE_CITIES[formData.state] || []) : []
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!formData.travelFrom || !formData.travelDate || !formData.phone) {
+    if (!formData.state || !formData.city || !formData.travelDate || !formData.phone) {
       toast.error('Please fill in all required fields')
       return
     }
@@ -36,17 +50,18 @@ const SearchTripForm = () => {
     if (loading) return
     setLoading(true)
     try {
+      const finalDuration = formData.duration === 'custom' ? formData.customDuration : formData.duration
       await enquiryService.createEnquiry({
         fullName: formData.fullName || 'Trip Search',
         phone: formData.phone,
         email: formData.email || 'pending@pending.com',
-        travelFrom: formData.travelFrom,
+        travelFrom: `${formData.city}, ${formData.state}`,
         travelDate: formData.travelDate,
         adults: Number(formData.adults),
         children: Number(formData.children),
-        preferredDuration: formData.duration || undefined,
+        preferredDuration: finalDuration || undefined,
         travelStyle: formData.travelStyle || undefined,
-        message: `Duration: ${formData.duration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
+        message: `Duration: ${finalDuration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
         source: 'trip_planner',
       })
 
@@ -58,11 +73,13 @@ const SearchTripForm = () => {
         fullName: '',
         phone: '',
         email: '',
-        travelFrom: '',
+        state: '',
+        city: '',
         travelDate: '',
         adults: 2,
         children: 0,
         duration: '',
+        customDuration: '',
         travelStyle: '',
       })
     } catch {
@@ -113,18 +130,37 @@ const SearchTripForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">Travel From *</label>
+          <label className="block text-sm font-medium text-charcoal mb-1">State *</label>
           <select
-            name="travelFrom"
-            value={formData.travelFrom}
+            name="state"
+            value={formData.state}
             onChange={handleChange}
             required
             className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal"
           >
+            <option value="">Select State</option>
+            {STATES.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-charcoal mb-1">City *</label>
+          <select
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+            disabled={!formData.state}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <option value="">Select City</option>
-            {CITIES.map((city) => (
-              <option key={city.slug} value={city.name}>
-                {city.name}
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
               </option>
             ))}
           </select>
@@ -185,6 +221,21 @@ const SearchTripForm = () => {
             ))}
           </select>
         </div>
+
+        {formData.duration === 'custom' && (
+          <div>
+            <label className="block text-sm font-medium text-charcoal mb-1">Custom Duration *</label>
+            <input
+              type="text"
+              name="customDuration"
+              value={formData.customDuration}
+              onChange={handleChange}
+              required
+              placeholder="e.g. 3N/4D, 10 days, etc."
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal"
+            />
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1">Travel Style</label>

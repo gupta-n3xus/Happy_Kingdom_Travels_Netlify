@@ -37,7 +37,9 @@ export function createTripPlannerMessage(formData) {
   const travelDate = formatDate(formData.travelDate)
   const adults = safe(formData.adults, '2')
   const children = safe(formData.children, '0')
-  const duration = DURATION_LABELS[formData.duration] || safe(formData.duration)
+  const duration = formData.duration === 'custom' 
+    ? safe(formData.customDuration, 'Custom') 
+    : (DURATION_LABELS[formData.duration] || safe(formData.duration))
   const travelStyle = STYLE_LABELS[formData.travelStyle] || safe(formData.travelStyle)
 
   return `Hi Happy Kingdom Travels!
