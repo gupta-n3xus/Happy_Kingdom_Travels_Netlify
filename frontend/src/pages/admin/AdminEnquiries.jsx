@@ -65,7 +65,7 @@ const AdminEnquiries = () => {
       'Preferred Package': e.preferredPackage || '',
       Message: e.message || '',
       Status: e.status || '',
-      'Submitted': e.createdAt ? formatDate(e.createdAt) : '',
+      'Submitted': e.createdAt ? formatDateTime(e.createdAt) : '',
       'IP Address': e.ipAddress || '',
       'City': e.location?.city || '',
       'Country': e.location?.country || '',
