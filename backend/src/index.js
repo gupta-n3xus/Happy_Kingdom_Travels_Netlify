@@ -20,6 +20,7 @@ import settingsRoutes from './routes/settings.js';
 import trackingRoutes from './routes/tracking.js';
 import uploadRoutes from './routes/upload.js';
 import backupRoutes from './routes/backup.js';
+import galleryRoutes from './routes/gallery.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/backup', backupRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running' });

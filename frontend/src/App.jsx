@@ -35,6 +35,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Terms = lazy(() => import('./pages/Terms'))
 const CancellationPolicy = lazy(() => import('./pages/CancellationPolicy'))
+const Gallery = lazy(() => import('./pages/Gallery'))
 const FAQs = lazy(() => import('./pages/Faqs'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
@@ -48,6 +49,7 @@ const AdminBlogPosts = lazy(() => import('./pages/admin/AdminBlogPosts'))
 const AdminBlogEditor = lazy(() => import('./pages/admin/AdminBlogEditor'))
 const AdminEnquiries = lazy(() => import('./pages/admin/AdminEnquiries'))
 const AdminReviews = lazy(() => import('./pages/admin/AdminReviews'))
+const AdminGallery = lazy(() => import('./pages/admin/AdminGallery'))
 const AdminBackup = lazy(() => import('./pages/admin/AdminBackup'))
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
 
@@ -316,6 +318,14 @@ function App() {
             }
           />
           <Route
+            path="/gallery"
+            element={
+              <PublicLayout>
+                <Gallery />
+              </PublicLayout>
+            }
+          />
+          <Route
             path="/contact"
             element={
               <PublicLayout>
@@ -453,6 +463,16 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <AdminReviews />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/gallery"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminGallery />
                 </AdminLayout>
               </ProtectedRoute>
             }

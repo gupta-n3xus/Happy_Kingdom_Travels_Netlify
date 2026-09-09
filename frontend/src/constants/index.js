@@ -3,6 +3,7 @@ export const NAV_LINKS = [
   { name: 'Bhutan Tours', path: '/bhutan-tour-packages' },
   { name: 'Travel Guide', path: '/travel-guide' },
   { name: 'Customize Trip', path: '/customize-your-trip' },
+  { name: 'Gallery', path: '/gallery' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
 ]

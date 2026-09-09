@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Package, MapPin, FileText, MessageSquare, Star, Settings, LogOut, Menu, X, ChevronDown, Database } from 'lucide-react'
+import { LayoutDashboard, Package, MapPin, FileText, MessageSquare, Star, Settings, LogOut, Menu, X, ChevronDown, Database, Image } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import logo from '../../utils/logo/HKT.png'
 
@@ -17,6 +17,7 @@ const AdminLayout = ({ children }) => {
     { name: 'Blog Posts', path: '/admin/blog', icon: FileText },
     { name: 'Enquiries', path: '/admin/enquiries', icon: MessageSquare },
     { name: 'Reviews', path: '/admin/reviews', icon: Star },
+    { name: 'Gallery', path: '/admin/gallery', icon: Image },
     { name: 'Backup', path: '/admin/backup', icon: Database },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ]
