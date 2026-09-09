@@ -96,6 +96,37 @@ const enquirySchema = new mongoose.Schema(
     userAgent: {
       type: String,
       trim: true
+    },
+    browser: {
+      name: { type: String, trim: true },
+      version: { type: String, trim: true }
+    },
+    os: {
+      name: { type: String, trim: true },
+      version: { type: String, trim: true }
+    },
+    device: {
+      type: { type: String, trim: true },
+      vendor: { type: String, trim: true },
+      model: { type: String, trim: true }
+    },
+    location: {
+      city: { type: String, trim: true },
+      region: { type: String, trim: true },
+      country: { type: String, trim: true },
+      countryCode: { type: String, trim: true },
+      lat: { type: Number },
+      lng: { type: Number },
+      timezone: { type: String, trim: true },
+      isp: { type: String, trim: true }
+    },
+    referrer: {
+      type: String,
+      trim: true
+    },
+    language: {
+      type: String,
+      trim: true
     }
   },
   { timestamps: true }

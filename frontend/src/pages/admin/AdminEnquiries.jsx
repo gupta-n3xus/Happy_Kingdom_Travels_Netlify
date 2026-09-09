@@ -67,7 +67,14 @@ const AdminEnquiries = () => {
       Status: e.status || '',
       'Submitted': e.createdAt ? formatDate(e.createdAt) : '',
       'IP Address': e.ipAddress || '',
-      'Device': e.userAgent || '',
+      'City': e.location?.city || '',
+      'Country': e.location?.country || '',
+      'ISP': e.location?.isp || '',
+      'Browser': e.browser?.name || '',
+      'OS': e.os?.name || '',
+      'Device': e.device?.type || '',
+      'Referrer': e.referrer || '',
+      'Language': e.language || '',
     }))
 
     const ws = XLSX.utils.json_to_sheet(rows)
@@ -78,7 +85,8 @@ const AdminEnquiries = () => {
       { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 15 },
       { wch: 15 }, { wch: 8 }, { wch: 8 }, { wch: 15 },
       { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 },
-      { wch: 18 }, { wch: 60 },
+      { wch: 18 }, { wch: 20 }, { wch: 15 }, { wch: 25 },
+      { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 40 }, { wch: 15 },
     ]
 
     XLSX.writeFile(wb, `enquiries-${new Date().toISOString().slice(0, 10)}.xlsx`)
@@ -343,13 +351,36 @@ const AdminEnquiries = () => {
                 <p className="font-medium text-charcoal">{formatDate(selectedEnquiry.createdAt)}</p>
               </div>
               {(selectedEnquiry.ipAddress || selectedEnquiry.userAgent) && (
-                <div className="p-3 bg-gray-50 rounded-lg space-y-1">
+                <div className="p-3 bg-gray-50 rounded-lg space-y-2">
                   <p className="text-sm font-medium text-muted">User Info</p>
-                  {selectedEnquiry.ipAddress && (
-                    <p className="text-sm text-charcoal">IP: {selectedEnquiry.ipAddress}</p>
+                  {selectedEnquiry.location?.city && (
+                    <p className="text-sm text-charcoal">
+                      📍 {selectedEnquiry.location.city}{selectedEnquiry.location.region ? `, ${selectedEnquiry.location.region}` : ''}{selectedEnquiry.location.country ? `, ${selectedEnquiry.location.country}` : ''}
+                    </p>
                   )}
-                  {selectedEnquiry.userAgent && (
-                    <p className="text-xs text-muted break-all">Device: {selectedEnquiry.userAgent}</p>
+                  {selectedEnquiry.location?.isp && (
+                    <p className="text-xs text-muted">ISP: {selectedEnquiry.location.isp}</p>
+                  )}
+                  {selectedEnquiry.browser?.name && (
+                    <p className="text-sm text-charcoal">
+                      🌐 {selectedEnquiry.browser.name}{selectedEnquiry.browser.version ? ` ${selectedEnquiry.browser.version}` : ''}
+                      {selectedEnquiry.os?.name ? ` on ${selectedEnquiry.os.name}${selectedEnquiry.os.version ? ` ${selectedEnquiry.os.version}` : ''}` : ''}
+                    </p>
+                  )}
+                  {selectedEnquiry.device?.type && (
+                    <p className="text-sm text-charcoal">
+                      📱 {selectedEnquiry.device.type.charAt(0).toUpperCase() + selectedEnquiry.device.type.slice(1)}
+                      {selectedEnquiry.device.model ? ` - ${selectedEnquiry.device.model}` : ''}
+                    </p>
+                  )}
+                  {selectedEnquiry.ipAddress && (
+                    <p className="text-xs text-muted">IP: {selectedEnquiry.ipAddress}</p>
+                  )}
+                  {selectedEnquiry.referrer && (
+                    <p className="text-xs text-muted break-all">Referrer: {selectedEnquiry.referrer}</p>
+                  )}
+                  {selectedEnquiry.language && (
+                    <p className="text-xs text-muted">Language: {selectedEnquiry.language}</p>
                   )}
                 </div>
               )}

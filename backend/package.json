@@ -22,7 +22,8 @@
     "mongoose": "^8.6.0",
     "morgan": "^1.10.0",
     "multer": "^2.3.0",
-    "nodemailer": "^9.1.1"
+    "nodemailer": "^9.1.1",
+    "ua-parser-js": "^1.0.41"
   },
   "devDependencies": {
     "eslint": "^9.9.0",

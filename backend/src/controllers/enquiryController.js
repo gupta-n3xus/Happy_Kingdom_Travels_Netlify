@@ -1,6 +1,7 @@
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
 import { sendEnquiryNotification } from '../services/emailService.js';
+import { getClientIP, parseUA, getGeoLocation } from '../utils/geo.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -31,13 +32,16 @@ export const createEnquiry = async (req, res, next) => {
   try {
     const { fullName, phone, email, travelFrom, travelDate, adults, children, preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements } = req.body;
 
-    const ipAddress = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+    const ipAddress = getClientIP(req);
     const userAgent = req.headers['user-agent'] || '';
+    const referrer = req.headers['referer'] || req.headers['referrer'] || '';
+    const language = req.headers['accept-language'] || '';
+    const { browser, os, device } = parseUA(userAgent);
 
     const enquiry = await Enquiry.create({
       fullName, phone, email, travelFrom, travelDate, adults, children,
       preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
-      ipAddress, userAgent
+      ipAddress, userAgent, referrer, language, browser, os, device
     });
     console.log('Enquiry saved:', enquiry._id);
 
@@ -48,6 +52,13 @@ export const createEnquiry = async (req, res, next) => {
     });
 
     sendWithRetry(enquiry);
+
+    getGeoLocation(ipAddress).then(async (geo) => {
+      if (geo) {
+        await Enquiry.findByIdAndUpdate(enquiry._id, { location: geo });
+        console.log('Geo updated for enquiry:', enquiry._id, geo.city, geo.country);
+      }
+    }).catch(() => {});
   } catch (error) {
     next(error);
   }

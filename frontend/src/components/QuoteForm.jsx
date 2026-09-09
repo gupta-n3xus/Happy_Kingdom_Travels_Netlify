@@ -53,6 +53,9 @@ const QuoteForm = () => {
     if (loading) return
     setLoading(true)
     try {
+      const whatsappMessage = createCustomTripMessage(formData)
+      openWhatsApp(whatsappMessage)
+
       const enquiryData = {
         fullName: formData.name,
         phone: formData.phone,
@@ -75,15 +78,13 @@ const QuoteForm = () => {
         enquiryData.preferredPackage = formData.preferredPackage
       }
 
-      await enquiryService.createEnquiry(enquiryData)
+      await enquiryService.createEnquiry(enquiryData).catch(() => {})
       trackEvent('quote_submit', {
         source: 'custom_trip_form',
         travelStyle: formData.travelStyle || '',
         budgetRange: formData.budgetRange || '',
       })
-      toast.success('Enquiry submitted! WhatsApp opened with your trip details.')
-      const whatsappMessage = createCustomTripMessage(formData)
-      openWhatsApp(whatsappMessage)
+      toast.success('WhatsApp opened with your trip details.')
       setFormData({
         name: '',
         phone: '',
@@ -103,7 +104,7 @@ const QuoteForm = () => {
         message: '',
       })
     } catch {
-      toast.error('Sorry, we couldn\'t submit your enquiry. Please try again or contact us on WhatsApp.')
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
