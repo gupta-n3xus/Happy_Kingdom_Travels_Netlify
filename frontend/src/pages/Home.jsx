@@ -245,11 +245,34 @@ const Home = () => {
               <p className="text-muted text-lg">No packages available yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {packages.map((pkg) => (
-                <PackageCard key={pkg._id || pkg.id} pkg={pkg} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {packages.slice(0, 6).map((pkg) => (
+                  <PackageCard key={pkg._id || pkg.id} pkg={pkg} />
+                ))}
+              </div>
+              {packages.length > 6 && (
+                <div className="mt-12 text-center">
+                  <div className="relative mb-8">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-6 text-sm text-muted">
+                        Showing 6 of {packages.length} packages
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    to="/bhutan-tour-packages"
+                    className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    View All {packages.length} Packages
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
