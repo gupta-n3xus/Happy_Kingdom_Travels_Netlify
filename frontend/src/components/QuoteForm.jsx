@@ -176,8 +176,8 @@ const QuoteForm = () => {
             >
               <option value="">Select State</option>
               {STATES.map((state) => (
-                <option key={state.slug} value={state.name}>
-                  {state.name}
+                <option key={state} value={state}>
+                  {state}
                 </option>
               ))}
             </select>
