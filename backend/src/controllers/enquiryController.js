@@ -13,18 +13,15 @@ export const createEnquiry = async (req, res, next) => {
     });
     console.log('Enquiry saved:', enquiry._id);
 
-    try {
-      const emailResult = await sendEnquiryNotification(enquiry);
-      console.log('Email result:', emailResult);
-    } catch (emailError) {
-      console.error('Email notification exception for enquiry:', enquiry._id, emailError);
-    }
-
     res.status(201).json({
       success: true,
       message: 'Enquiry submitted successfully. We will contact you soon.',
       data: enquiry
     });
+
+    sendEnquiryNotification(enquiry)
+      .then((result) => console.log('Email result:', result))
+      .catch((err) => console.error('Email notification failed for enquiry:', enquiry._id, err));
   } catch (error) {
     next(error);
   }
