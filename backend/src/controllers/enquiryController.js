@@ -1,8 +1,15 @@
-import mongoose from 'mongoose';
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const withTimeout = (promise, ms, label) => {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+};
 
 export const createEnquiry = async (req, res, next) => {
   try {
@@ -24,22 +31,17 @@ export const createEnquiry = async (req, res, next) => {
     const device = clientDevice || null;
     const location = clientLocation || null;
 
-    console.log('Creating enquiry for:', fullName, email);
-    console.log('DB state:', mongoose.connection.readyState);
-    const db = mongoose.connection.db;
-    const testResult = await db.collection('test_insert').insertOne({ test: true, timestamp: new Date() });
-    console.log('Test insert succeeded:', testResult.insertedId);
-    const result = await db.collection('enquiries').insertOne({
-      fullName, phone, email, travelFrom, travelDate: travelDate ? new Date(travelDate) : null, adults, children,
-      preferredDuration, travelStyle, preferredPackage: preferredPackage || null, message, source, specialRequirements,
-      ipAddress, userAgent, referrer, language, browser, os, device, location,
-      status: 'new',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      __v: 0,
-    });
-    console.log('Enquiry saved (raw):', result.insertedId);
-    const enquiry = { _id: result.insertedId, fullName, phone, email };
+    const enquiry = await withTimeout(
+      Enquiry.create({
+        fullName, phone, email, travelFrom, travelDate, adults, children,
+        preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
+        ipAddress, userAgent, referrer, language, browser, os, device, location,
+      }),
+      15000,
+      'Enquiry.create'
+    );
+
+    console.log('Enquiry saved:', enquiry._id);
 
     return res.status(201).json({
       success: true,
@@ -48,6 +50,12 @@ export const createEnquiry = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Create enquiry error:', error.message);
+    if (error.message.includes('timed out')) {
+      return res.status(503).json({
+        success: true,
+        message: 'Your enquiry has been received. We will contact you soon.',
+      });
+    }
     next(error);
   }
 };

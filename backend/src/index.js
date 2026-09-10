@@ -52,17 +52,6 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running', version: '1.1.0' });
 });
 
-app.post('/api/test-write', async (req, res) => {
-  try {
-    const mongoose = await import('mongoose');
-    const db = mongoose.default.connection.db;
-    const result = await db.collection('test_write_collection').insertOne({ test: true, body: req.body, time: new Date() });
-    res.json({ success: true, id: result.insertedId });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

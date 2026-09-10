@@ -128,7 +128,7 @@ const enquirySchema = new mongoose.Schema(
       trim: true
     }
   },
-  { timestamps: true }
+  { timestamps: true, autoIndex: false }
 );
 
 enquirySchema.index({ status: 1 });
