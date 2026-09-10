@@ -106,9 +106,8 @@ const enquirySchema = new mongoose.Schema(
       version: { type: String, trim: true }
     },
     device: {
-      type: { type: String, trim: true },
-      vendor: { type: String, trim: true },
-      model: { type: String, trim: true }
+      type: String,
+      trim: true,
     },
     location: {
       city: { type: String, trim: true },

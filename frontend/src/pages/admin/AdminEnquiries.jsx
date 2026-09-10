@@ -72,7 +72,7 @@ const AdminEnquiries = () => {
       'ISP': e.location?.isp || '',
       'Browser': e.browser?.name || '',
       'OS': e.os?.name || '',
-      'Device': e.device?.type || '',
+      'Device': e.device || '',
       'Referrer': e.referrer || '',
       'Language': e.language || '',
     }))
@@ -367,10 +367,9 @@ const AdminEnquiries = () => {
                       {selectedEnquiry.os?.name ? ` on ${selectedEnquiry.os.name}${selectedEnquiry.os.version ? ` ${selectedEnquiry.os.version}` : ''}` : ''}
                     </p>
                   )}
-                  {selectedEnquiry.device?.type && (
+                  {selectedEnquiry.device && (
                     <p className="text-sm text-charcoal">
-                      📱 {selectedEnquiry.device.type.charAt(0).toUpperCase() + selectedEnquiry.device.type.slice(1)}
-                      {selectedEnquiry.device.model ? ` - ${selectedEnquiry.device.model}` : ''}
+                      📱 {selectedEnquiry.device.charAt(0).toUpperCase() + selectedEnquiry.device.slice(1)}
                     </p>
                   )}
                   {selectedEnquiry.ipAddress && (

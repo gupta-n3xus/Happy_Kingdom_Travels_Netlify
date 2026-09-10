@@ -40,14 +40,13 @@ function parseUserAgent(ua) {
     }
   }
 
-  let device = null;
+  let device = 'desktop';
   for (const { type, regex } of deviceRegexes) {
     if (regex.test(ua)) {
-      device = { type };
+      device = type;
       break;
     }
   }
-  if (!device) device = { type: 'desktop' };
 
   return { browser, os, device };
 }
