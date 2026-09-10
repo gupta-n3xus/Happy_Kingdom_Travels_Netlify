@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       select: false
     },
-    role: {
+role: {
       type: String,
       enum: ['admin', 'sub_admin', 'editor'],
       default: 'editor'
