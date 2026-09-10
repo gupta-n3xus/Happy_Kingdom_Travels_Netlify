@@ -88,8 +88,8 @@ const AdminGallery = () => {
   const handleFileSelect = (e) => {
     const file = e.target.files[0]
     if (!file) return
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB')
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB')
       return
     }
     setSelectedFile(file)
@@ -425,7 +425,7 @@ const AdminGallery = () => {
                     <ImageIcon className="w-6 h-6 text-muted" />
                     <div className="text-left">
                       <p className="text-sm font-medium text-charcoal">Click to upload</p>
-                      <p className="text-xs text-muted">JPG, PNG, WebP or GIF (max 5MB)</p>
+                      <p className="text-xs text-muted">JPG, PNG, WebP or GIF (max 10MB)</p>
                     </div>
                   </button>
                 )}

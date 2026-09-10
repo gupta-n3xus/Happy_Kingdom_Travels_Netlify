@@ -4,10 +4,6 @@ import { protect, authorize } from '../middleware/auth.js';
 
 const router = express.Router();
 
-const bufferToDataUrl = (buffer, mimetype) => {
-  return `data:${mimetype};base64,${buffer.toString('base64')}`;
-};
-
 router.post('/image', protect, authorize('admin'), (req, res) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
@@ -17,8 +13,7 @@ router.post('/image', protect, authorize('admin'), (req, res) => {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
 
-    const dataUrl = bufferToDataUrl(req.file.buffer, req.file.mimetype);
-    res.status(200).json({ success: true, url: dataUrl });
+    res.status(200).json({ success: true, url: req.file.path });
   });
 });
 
@@ -31,9 +26,7 @@ router.post('/images', protect, authorize('admin'), (req, res) => {
       return res.status(400).json({ success: false, message: 'No image files provided' });
     }
 
-    const urls = req.files.map(file => ({
-      url: bufferToDataUrl(file.buffer, file.mimetype)
-    }));
+    const urls = req.files.map(file => ({ url: file.path }));
     res.status(200).json({ success: true, images: urls });
   });
 });
@@ -47,8 +40,7 @@ router.post('/gallery-image', (req, res) => {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
 
-    const dataUrl = bufferToDataUrl(req.file.buffer, req.file.mimetype);
-    res.status(200).json({ success: true, url: dataUrl });
+    res.status(200).json({ success: true, url: req.file.path });
   });
 });
 
@@ -61,9 +53,7 @@ router.post('/gallery-images', protect, authorize('admin'), (req, res) => {
       return res.status(400).json({ success: false, message: 'No image files provided' });
     }
 
-    const urls = req.files.map(file => ({
-      url: bufferToDataUrl(file.buffer, file.mimetype)
-    }));
+    const urls = req.files.map(file => ({ url: file.path }));
     res.status(200).json({ success: true, images: urls });
   });
 });

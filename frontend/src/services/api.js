@@ -97,17 +97,27 @@ class ApiClient {
     const headers = {}
     if (token) headers['Authorization'] = `Bearer ${token}`
 
-    const response = await fetch(url, { method: 'POST', headers, body: formData })
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 60000)
 
-    if (response.status === 401) {
-      this.removeToken()
-      window.location.href = '/admin/login'
-      throw new Error('Unauthorized')
+    try {
+      const response = await fetch(url, { method: 'POST', headers, body: formData, signal: controller.signal })
+      clearTimeout(timeoutId)
+
+      if (response.status === 401) {
+        this.removeToken()
+        window.location.href = '/admin/login'
+        throw new Error('Unauthorized')
+      }
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || 'Upload failed')
+      return data
+    } catch (err) {
+      clearTimeout(timeoutId)
+      if (err.name === 'AbortError') throw new Error('Upload timed out')
+      throw err
     }
-
-    const data = await response.json()
-    if (!response.ok) throw new Error(data.message || 'Upload failed')
-    return data
   }
 }
 
