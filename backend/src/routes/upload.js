@@ -1,15 +1,12 @@
 import express from 'express';
 import upload, { galleryUpload } from '../config/upload.js';
 import { protect, authorize } from '../middleware/auth.js';
-import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
 
-const galleryPublicLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 30,
-  message: { success: false, message: 'Too many uploads. Please try again later.' }
-});
+const bufferToDataUrl = (buffer, mimetype) => {
+  return `data:${mimetype};base64,${buffer.toString('base64')}`;
+};
 
 router.post('/image', protect, authorize('admin'), (req, res) => {
   upload.single('image')(req, res, (err) => {
@@ -20,8 +17,8 @@ router.post('/image', protect, authorize('admin'), (req, res) => {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
 
-    const imageUrl = `/images/${req.file.filename}`;
-    res.status(200).json({ success: true, url: imageUrl, filename: req.file.filename });
+    const dataUrl = bufferToDataUrl(req.file.buffer, req.file.mimetype);
+    res.status(200).json({ success: true, url: dataUrl });
   });
 });
 
@@ -35,14 +32,13 @@ router.post('/images', protect, authorize('admin'), (req, res) => {
     }
 
     const urls = req.files.map(file => ({
-      url: `/images/${file.filename}`,
-      filename: file.filename
+      url: bufferToDataUrl(file.buffer, file.mimetype)
     }));
     res.status(200).json({ success: true, images: urls });
   });
 });
 
-router.post('/gallery-image', galleryPublicLimiter, (req, res) => {
+router.post('/gallery-image', (req, res) => {
   galleryUpload.single('image')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
@@ -51,8 +47,8 @@ router.post('/gallery-image', galleryPublicLimiter, (req, res) => {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
 
-    const imageUrl = `/gallery/${req.file.filename}`;
-    res.status(200).json({ success: true, url: imageUrl, filename: req.file.filename });
+    const dataUrl = bufferToDataUrl(req.file.buffer, req.file.mimetype);
+    res.status(200).json({ success: true, url: dataUrl });
   });
 });
 
@@ -66,8 +62,7 @@ router.post('/gallery-images', protect, authorize('admin'), (req, res) => {
     }
 
     const urls = req.files.map(file => ({
-      url: `/gallery/${file.filename}`,
-      filename: file.filename
+      url: bufferToDataUrl(file.buffer, file.mimetype)
     }));
     res.status(200).json({ success: true, images: urls });
   });
