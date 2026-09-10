@@ -7,15 +7,15 @@ import {
   deleteReview,
   approveReview
 } from '../controllers/reviewController.js';
-import { protect } from '../middleware/auth.js';
+import { protect, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
 router.get('/', getApprovedReviews);
 router.get('/all', protect, getAllReviews);
 router.post('/', createReview);
-router.put('/:id', protect, updateReview);
-router.delete('/:id', protect, deleteReview);
-router.put('/:id/approve', protect, approveReview);
+router.put('/:id', protect, authorize('admin', 'sub_admin'), updateReview);
+router.delete('/:id', protect, authorize('admin', 'sub_admin'), deleteReview);
+router.put('/:id/approve', protect, authorize('admin', 'sub_admin'), approveReview);
 
 export default router;

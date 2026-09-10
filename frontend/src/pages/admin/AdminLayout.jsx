@@ -22,6 +22,12 @@ const AdminLayout = ({ children }) => {
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ]
 
+  const filteredMenuItems = user?.role === 'sub_admin'
+    ? menuItems.filter(item =>
+        ['Dashboard', 'Packages', 'Blog Posts', 'Reviews', 'Gallery'].includes(item.name)
+      )
+    : menuItems
+
   const handleLogout = () => {
     logout()
     navigate('/admin/login')
@@ -40,7 +46,7 @@ const AdminLayout = ({ children }) => {
         </div>
 
         <nav className="mt-6 px-4">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const isActive = location.pathname === item.path
             return (
               <Link

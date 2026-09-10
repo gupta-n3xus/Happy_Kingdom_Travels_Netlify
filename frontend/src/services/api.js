@@ -47,10 +47,10 @@ class ApiClient {
       const response = await fetch(url, config)
       clearTimeout(timeoutId)
 
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 403) {
         this.removeToken()
         window.location.href = '/admin/login'
-        throw new Error('Unauthorized')
+        throw new Error(response.status === 403 ? 'Forbidden' : 'Unauthorized')
       }
 
       const data = await response.json()
@@ -104,10 +104,10 @@ class ApiClient {
       const response = await fetch(url, { method: 'POST', headers, body: formData, signal: controller.signal })
       clearTimeout(timeoutId)
 
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 403) {
         this.removeToken()
         window.location.href = '/admin/login'
-        throw new Error('Unauthorized')
+        throw new Error(response.status === 403 ? 'Forbidden' : 'Unauthorized')
       }
 
       const data = await response.json()

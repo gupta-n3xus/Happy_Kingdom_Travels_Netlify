@@ -12,8 +12,8 @@ const router = Router();
 
 router.get('/', getAllPosts);
 router.get('/:slug', getPostBySlug);
-router.post('/', protect, authorize('admin'), createPost);
-router.put('/:id', protect, authorize('admin'), updatePost);
-router.delete('/:id', protect, authorize('admin'), deletePost);
+router.post('/', protect, authorize('admin', 'sub_admin'), createPost);
+router.put('/:id', protect, authorize('admin', 'sub_admin'), updatePost);
+router.delete('/:id', protect, authorize('admin', 'sub_admin'), deletePost);
 
 export default router;
