@@ -23,12 +23,14 @@ export const createEnquiry = async (req, res, next) => {
     const device = clientDevice || null;
     const location = clientLocation || null;
 
-    const enquiry = await Enquiry.create({
+    console.log('Creating enquiry for:', fullName, email);
+    const doc = new Enquiry({
       fullName, phone, email, travelFrom, travelDate, adults, children,
       preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
       ipAddress, userAgent, referrer, language, browser, os, device, location,
     });
-    console.log('Enquiry saved:', enquiry._id, { ipAddress, browser: browser?.name, os: os?.name, device: device?.type, city: location?.city });
+    const enquiry = await doc.save({ maxTimeMS: 10000 });
+    console.log('Enquiry saved:', enquiry._id);
 
     return res.status(201).json({
       success: true,
