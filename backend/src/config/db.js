@@ -12,7 +12,11 @@ const connectDB = async () => {
   const maxRetries = 5;
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const conn = await mongoose.connect(uri);
+      const conn = await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 20000,
+        wtimeoutMS: 10000,
+      });
       console.log(`MongoDB Atlas connected: ${conn.connection.host}/${conn.connection.name}`);
       return;
     } catch (error) {

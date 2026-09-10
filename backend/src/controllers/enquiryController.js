@@ -27,6 +27,8 @@ export const createEnquiry = async (req, res, next) => {
     console.log('Creating enquiry for:', fullName, email);
     console.log('DB state:', mongoose.connection.readyState);
     const db = mongoose.connection.db;
+    const testResult = await db.collection('test_insert').insertOne({ test: true, timestamp: new Date() });
+    console.log('Test insert succeeded:', testResult.insertedId);
     const result = await db.collection('enquiries').insertOne({
       fullName, phone, email, travelFrom, travelDate: travelDate ? new Date(travelDate) : null, adults, children,
       preferredDuration, travelStyle, preferredPackage: preferredPackage || null, message, source, specialRequirements,
