@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
 
@@ -24,13 +25,19 @@ export const createEnquiry = async (req, res, next) => {
     const location = clientLocation || null;
 
     console.log('Creating enquiry for:', fullName, email);
-    const doc = new Enquiry({
-      fullName, phone, email, travelFrom, travelDate, adults, children,
-      preferredDuration, travelStyle, preferredPackage, message, source, specialRequirements,
+    console.log('DB state:', mongoose.connection.readyState);
+    const db = mongoose.connection.db;
+    const result = await db.collection('enquiries').insertOne({
+      fullName, phone, email, travelFrom, travelDate: travelDate ? new Date(travelDate) : null, adults, children,
+      preferredDuration, travelStyle, preferredPackage: preferredPackage || null, message, source, specialRequirements,
       ipAddress, userAgent, referrer, language, browser, os, device, location,
+      status: 'new',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      __v: 0,
     });
-    const enquiry = await doc.save({ maxTimeMS: 10000 });
-    console.log('Enquiry saved:', enquiry._id);
+    console.log('Enquiry saved (raw):', result.insertedId);
+    const enquiry = { _id: result.insertedId, fullName, phone, email };
 
     return res.status(201).json({
       success: true,
