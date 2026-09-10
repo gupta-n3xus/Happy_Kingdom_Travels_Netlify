@@ -1,6 +1,5 @@
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
-import { sendEnquiryNotification } from '../services/emailService.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -31,13 +30,11 @@ export const createEnquiry = async (req, res, next) => {
     });
     console.log('Enquiry saved:', enquiry._id, { ipAddress, browser: browser?.name, os: os?.name, device: device?.type, city: location?.city });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: 'Enquiry submitted successfully. We will contact you soon.',
       data: enquiry
     });
-
-    sendEnquiryNotification(enquiry).catch(() => {});
   } catch (error) {
     console.error('Create enquiry error:', error.message);
     next(error);
