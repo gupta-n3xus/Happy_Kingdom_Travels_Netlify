@@ -71,7 +71,7 @@ const SearchTripForm = () => {
         message: `Duration: ${finalDuration || 'Any'}, Style: ${formData.travelStyle || 'Any'}`,
         source: 'trip_planner',
         ...clientInfo,
-      }).then(async (res) => {
+      }).then((res) => {
         const geo = getCachedGeo()
         if (geo && res?.data?._id) {
           fetch('/api/enquiries/geo', {
@@ -80,7 +80,9 @@ const SearchTripForm = () => {
             body: JSON.stringify({ id: res.data._id, ipAddress: geo.ipAddress, location: geo.location }),
           }).catch(() => {})
         }
-      }).catch(() => {})
+      }).catch((err) => {
+        console.error('Enquiry submit failed:', err)
+      })
 
       toast.success('WhatsApp opened with your trip details.')
       setFormData({

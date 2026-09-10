@@ -14,7 +14,8 @@ const router = Router();
 
 const enquiryLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 50,
+  validate: { xForwardedForHeader: false },
   message: { success: false, message: 'Too many enquiries, please try again after 15 minutes' }
 });
 
