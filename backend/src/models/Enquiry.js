@@ -128,11 +128,11 @@ const enquirySchema = new mongoose.Schema(
       trim: true
     }
   },
-  { timestamps: true, autoIndex: false }
+  { timestamps: true }
 );
 
 enquirySchema.index({ status: 1 });
 enquirySchema.index({ createdAt: -1 });
 
-const Enquiry = mongoose.model('Enquiry', enquirySchema);
+const Enquiry = mongoose.model('Enquiry', enquirySchema, 'inquiries');
 export default Enquiry;
