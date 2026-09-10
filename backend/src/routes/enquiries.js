@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
 import {
   createEnquiry,
   getAllEnquiries,
@@ -12,14 +11,7 @@ import { protect, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
-const enquiryLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 50,
-  validate: { xForwardedForHeader: false },
-  message: { success: false, message: 'Too many enquiries, please try again after 15 minutes' }
-});
-
-router.post('/', enquiryLimiter, createEnquiry);
+router.post('/', createEnquiry);
 router.post('/geo', updateEnquiryGeo);
 router.get('/', protect, authorize('admin'), getAllEnquiries);
 router.get('/:id', protect, authorize('admin'), getEnquiryById);

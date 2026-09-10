@@ -5,7 +5,6 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import rateLimit from 'express-rate-limit';
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -34,14 +33,7 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 500,
-  validate: { xForwardedForHeader: false },
-  message: { success: false, message: 'Too many requests, please try again later' }
-});
 app.use('/api/settings', (req, res, next) => next());
-app.use('/api', limiter);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/packages', packageRoutes);
