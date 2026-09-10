@@ -24,7 +24,7 @@ const AdminLayout = ({ children }) => {
 
   const filteredMenuItems = user?.role === 'sub_admin'
     ? menuItems.filter(item =>
-        ['Dashboard', 'Packages', 'Blog Posts', 'Reviews', 'Gallery'].includes(item.name)
+        ['Packages', 'Blog Posts', 'Reviews', 'Gallery'].includes(item.name)
       )
     : menuItems
 
