@@ -96,6 +96,7 @@ const QuoteForm = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: res.data._id, ipAddress: geo.ipAddress, location: geo.location }),
+          signal: AbortSignal.timeout(8000),
         }).catch(() => {})
       }
     }).catch(() => {})

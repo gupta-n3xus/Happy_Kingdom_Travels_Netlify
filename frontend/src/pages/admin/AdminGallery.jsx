@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon, MessageCircle } from 'lucide-react'
 import galleryService from '../../services/galleryService'
 import { formatDate } from '../../utils/helpers'
 import toast from 'react-hot-toast'
@@ -197,19 +197,20 @@ const AdminGallery = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Category</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Rating</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Comments</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center">
+                  <td colSpan="8" className="px-6 py-12 text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-muted">
+                  <td colSpan="8" className="px-6 py-12 text-center text-muted">
                     No gallery items found
                   </td>
                 </tr>
@@ -248,6 +249,12 @@ const AdminGallery = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-muted text-sm">{formatDate(item.createdAt)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1 text-sm text-muted">
+                        <MessageCircle className="w-4 h-4" />
+                        {item.comments?.length || 0}
+                      </span>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <button

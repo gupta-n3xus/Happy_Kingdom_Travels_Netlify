@@ -114,3 +114,45 @@ export const deleteGalleryItem = async (req, res, next) => {
     next(error);
   }
 };
+
+export const addComment = async (req, res, next) => {
+  try {
+    const { name, text } = req.body;
+    if (!name || !text) {
+      return res.status(400).json({ success: false, message: 'Name and text are required' });
+    }
+
+    const item = await GalleryItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'Gallery item not found' });
+    }
+
+    item.comments.push({ name: name.trim(), text: text.trim() });
+    await item.save();
+
+    res.status(201).json({ success: true, data: item.comments[item.comments.length - 1] });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteComment = async (req, res, next) => {
+  try {
+    const item = await GalleryItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'Gallery item not found' });
+    }
+
+    const comment = item.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).json({ success: false, message: 'Comment not found' });
+    }
+
+    comment.deleteOne();
+    await item.save();
+
+    res.status(200).json({ success: true, message: 'Comment deleted' });
+  } catch (error) {
+    next(error);
+  }
+};

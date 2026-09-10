@@ -20,6 +20,12 @@ const galleryService = {
     const formData = new FormData()
     formData.append('image', file)
     return api.upload('/upload/gallery-image', formData)
+  },
+  addComment: async (galleryId, data) => {
+    return api.post(`/gallery/${galleryId}/comments`, data)
+  },
+  deleteComment: async (galleryId, commentId) => {
+    return api.delete(`/gallery/${galleryId}/comments/${commentId}`)
   }
 }
 

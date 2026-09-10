@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+const commentSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true, maxlength: 100 },
+    text: { type: String, required: true, trim: true, maxlength: 500 },
+  },
+  { timestamps: true }
+);
+
 const galleryItemSchema = new mongoose.Schema(
   {
     image: {
@@ -46,7 +54,8 @@ const galleryItemSchema = new mongoose.Schema(
     approved: {
       type: Boolean,
       default: true
-    }
+    },
+    comments: [commentSchema]
   },
   { timestamps: true }
 );

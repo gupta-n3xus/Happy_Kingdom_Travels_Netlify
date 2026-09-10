@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Upload, Star, X, ChevronLeft, ChevronRight, Loader2, ImageIcon, Send } from 'lucide-react'
+import { Upload, Star, X, ChevronLeft, ChevronRight, Loader2, ImageIcon, Send, MessageCircle } from 'lucide-react'
 import SEO from '../components/SEO'
 import Breadcrumbs from '../components/Breadcrumbs'
 import CTASection from '../components/CTASection'
@@ -34,6 +34,10 @@ const Gallery = () => {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
+
+  const [commentName, setCommentName] = useState('')
+  const [commentText, setCommentText] = useState('')
+  const [commentSubmitting, setCommentSubmitting] = useState(false)
 
   const observerRef = useRef(null)
   const loadMoreRef = useRef(null)
@@ -199,6 +203,34 @@ const Gallery = () => {
 
   const goToNext = () => {
     setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
+  }
+
+  const handleAddComment = async () => {
+    if (!commentName.trim() || !commentText.trim()) {
+      toast.error('Please enter your name and comment')
+      return
+    }
+    const item = items[activeIndex]
+    if (!item) return
+
+    setCommentSubmitting(true)
+    try {
+      const res = await galleryService.addComment(item._id, {
+        name: commentName.trim(),
+        text: commentText.trim(),
+      })
+      setItems(prev => prev.map((it, i) => {
+        if (i !== activeIndex) return it
+        return { ...it, comments: [...(it.comments || []), res.data] }
+      }))
+      setCommentName('')
+      setCommentText('')
+      toast.success('Comment added!')
+    } catch (err) {
+      toast.error(err.message || 'Failed to add comment')
+    } finally {
+      setCommentSubmitting(false)
+    }
   }
 
   return (
@@ -466,6 +498,12 @@ const Gallery = () => {
                         {item.touristName && (
                           <p className="text-white/80 text-xs mt-1">by {item.touristName}</p>
                         )}
+                        {item.comments?.length > 0 && (
+                          <p className="text-white/60 text-xs mt-1 flex items-center gap-1">
+                            <MessageCircle className="w-3 h-3" />
+                            {item.comments.length}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </button>
@@ -517,7 +555,7 @@ const Gallery = () => {
             <img
               src={items[activeIndex]?.image}
               alt={items[activeIndex]?.title}
-              className="max-w-full max-h-[75vh] object-contain rounded-lg"
+              className="max-w-full max-h-[55vh] object-contain rounded-lg"
             />
             <div className="mt-4 text-center">
               <p className="text-white font-semibold">{items[activeIndex]?.title}</p>
@@ -527,6 +565,53 @@ const Gallery = () => {
                   {items[activeIndex]?.touristCity && `, ${items[activeIndex].touristCity}`}
                 </p>
               )}
+            </div>
+
+            <div className="mt-4 w-full max-w-lg bg-white/10 backdrop-blur-md rounded-xl p-4 max-h-[25vh] overflow-y-auto">
+              <div className="flex items-center gap-2 mb-3">
+                <MessageCircle className="w-4 h-4 text-white/80" />
+                <span className="text-white/80 text-sm font-medium">
+                  Comments ({items[activeIndex]?.comments?.length || 0})
+                </span>
+              </div>
+
+              {items[activeIndex]?.comments?.length > 0 ? (
+                <div className="space-y-3 mb-3">
+                  {items[activeIndex].comments.map((c) => (
+                    <div key={c._id} className="bg-white/10 rounded-lg p-3">
+                      <p className="text-white text-sm font-medium">{c.name}</p>
+                      <p className="text-white/80 text-sm mt-1">{c.text}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-white/50 text-sm mb-3">No comments yet. Be the first!</p>
+              )}
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={commentName}
+                  onChange={(e) => setCommentName(e.target.value)}
+                  placeholder="Your name"
+                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
+                />
+                <input
+                  type="text"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Add a comment..."
+                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                />
+                <button
+                  onClick={handleAddComment}
+                  disabled={commentSubmitting}
+                  className="px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm transition-colors disabled:opacity-50"
+                >
+                  {commentSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </div>
 

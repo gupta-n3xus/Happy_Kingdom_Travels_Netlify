@@ -30,30 +30,43 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${token}`
     }
 
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), options.timeout || 20000)
+
     const config = {
       ...options,
       headers,
+      signal: controller.signal,
     }
 
     if (options.body && typeof options.body === 'object') {
       config.body = JSON.stringify(options.body)
     }
 
-    const response = await fetch(url, config)
+    try {
+      const response = await fetch(url, config)
+      clearTimeout(timeoutId)
 
-    if (response.status === 401) {
-      this.removeToken()
-      window.location.href = '/admin/login'
-      throw new Error('Unauthorized')
+      if (response.status === 401) {
+        this.removeToken()
+        window.location.href = '/admin/login'
+        throw new Error('Unauthorized')
+      }
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong')
+      }
+
+      return data
+    } catch (err) {
+      clearTimeout(timeoutId)
+      if (err.name === 'AbortError') {
+        throw new Error('Request timed out')
+      }
+      throw err
     }
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Something went wrong')
-    }
-
-    return data
   }
 
   get(endpoint, params = {}) {
