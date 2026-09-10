@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { Eye, X, Trash2, Image, Download } from 'lucide-react'
+import { Eye, X, Trash2, Image, Download, ChevronLeft, ChevronRight } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import enquiryService from '../../services/enquiryService'
 import { formatDate, formatDateTime } from '../../utils/helpers'
 import { STATUS_OPTIONS } from '../../constants'
 import toast from 'react-hot-toast'
+
+const PAGE_SIZE = 10
 
 const AdminEnquiries = () => {
   const [enquiries, setEnquiries] = useState([])
@@ -12,16 +14,30 @@ const AdminEnquiries = () => {
   const [selectedEnquiry, setSelectedEnquiry] = useState(null)
   const [filter, setFilter] = useState('all')
   const [savingImage, setSavingImage] = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
   const modalRef = useRef(null)
 
   useEffect(() => {
-    fetchEnquiries()
-  }, [])
+    setPage(1)
+    fetchEnquiries(1, filter)
+  }, [filter])
 
-  const fetchEnquiries = async () => {
+  useEffect(() => {
+    fetchEnquiries(page, filter)
+  }, [page])
+
+  const fetchEnquiries = async (pageNum, status) => {
+    setLoading(true)
     try {
-      const data = await enquiryService.getAllEnquiries()
+      const params = { page: pageNum, limit: PAGE_SIZE }
+      if (status && status !== 'all') params.status = status
+      const data = await enquiryService.getAllEnquiries(params)
       setEnquiries(data.data || [])
+      setTotalPages(data.pagination?.totalPages || 1)
+      setTotal(data.pagination?.total || 0)
     } catch (error) {
       console.error('Failed to fetch enquiries:', error)
     } finally {
@@ -33,7 +49,7 @@ const AdminEnquiries = () => {
     try {
       await enquiryService.updateEnquiryStatus(id, status)
       toast.success('Status updated')
-      fetchEnquiries()
+      fetchEnquiries(page, filter)
     } catch (error) {
       toast.error('Failed to update status')
     }
@@ -45,52 +61,68 @@ const AdminEnquiries = () => {
       await enquiryService.deleteEnquiry(id)
       toast.success('Enquiry deleted')
       setSelectedEnquiry(null)
-      fetchEnquiries()
+      if (enquiries.length === 1 && page > 1) {
+        setPage(page - 1)
+      } else {
+        fetchEnquiries(page, filter)
+      }
     } catch (error) {
       toast.error('Failed to delete enquiry')
     }
   }
 
-  const exportToExcel = () => {
-    const rows = enquiries.map((e) => ({
-      Name: e.fullName,
-      Phone: e.phone,
-      Email: e.email || '',
-      'Travel From': e.travelFrom || '',
-      'Travel Date': e.travelDate ? formatDate(e.travelDate) : '',
-      Adults: e.adults || 0,
-      Children: e.children || 0,
-      'Preferred Duration': e.preferredDuration || '',
-      'Travel Style': e.travelStyle || '',
-      'Preferred Package': e.preferredPackage || '',
-      Message: e.message || '',
-      Status: e.status || '',
-      'Submitted': e.createdAt ? formatDateTime(e.createdAt) : '',
-      'IP Address': e.ipAddress || '',
-      'City': e.location?.city || '',
-      'Country': e.location?.country || '',
-      'ISP': e.location?.isp || '',
-      'Browser': e.browser?.name || '',
-      'OS': e.os?.name || '',
-      'Device': e.device || '',
-      'Referrer': e.referrer || '',
-      'Language': e.language || '',
-    }))
+  const exportToExcel = async () => {
+    setExporting(true)
+    try {
+      const params = { page: 1, limit: 10000 }
+      if (filter && filter !== 'all') params.status = filter
+      const data = await enquiryService.getAllEnquiries(params)
+      const allEnquiries = data.data || []
 
-    const ws = XLSX.utils.json_to_sheet(rows)
-    const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, 'Enquiries')
+      const rows = allEnquiries.map((e) => ({
+        Name: e.fullName,
+        Phone: e.phone,
+        Email: e.email || '',
+        'Travel From': e.travelFrom || '',
+        'Travel Date': e.travelDate ? formatDate(e.travelDate) : '',
+        Adults: e.adults || 0,
+        Children: e.children || 0,
+        'Preferred Duration': e.preferredDuration || '',
+        'Travel Style': e.travelStyle || '',
+        'Preferred Package': e.preferredPackage?.title || e.preferredPackage || '',
+        Message: e.message || '',
+        Status: e.status || '',
+        'Submitted': e.createdAt ? formatDateTime(e.createdAt) : '',
+        'IP Address': e.ipAddress || '',
+        'City': e.location?.city || '',
+        'Country': e.location?.country || '',
+        'ISP': e.location?.isp || '',
+        'Browser': e.browser?.name || '',
+        'OS': e.os?.name || '',
+        'Device': e.device || '',
+        'Referrer': e.referrer || '',
+        'Language': e.language || '',
+      }))
 
-    ws['!cols'] = [
-      { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 15 },
-      { wch: 15 }, { wch: 8 }, { wch: 8 }, { wch: 15 },
-      { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 },
-      { wch: 18 }, { wch: 20 }, { wch: 15 }, { wch: 25 },
-      { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 40 }, { wch: 15 },
-    ]
+      const ws = XLSX.utils.json_to_sheet(rows)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Enquiries')
 
-    XLSX.writeFile(wb, `enquiries-${new Date().toISOString().slice(0, 10)}.xlsx`)
-    toast.success('Enquiries exported!')
+      ws['!cols'] = [
+        { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 15 },
+        { wch: 15 }, { wch: 8 }, { wch: 8 }, { wch: 15 },
+        { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 },
+        { wch: 18 }, { wch: 20 }, { wch: 15 }, { wch: 25 },
+        { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 40 }, { wch: 15 },
+      ]
+
+      XLSX.writeFile(wb, `enquiries-${new Date().toISOString().slice(0, 10)}.xlsx`)
+      toast.success(`Exported ${allEnquiries.length} enquiries!`)
+    } catch (error) {
+      toast.error('Failed to export enquiries')
+    } finally {
+      setExporting(false)
+    }
   }
 
   const saveScreenshot = async (enquiry) => {
@@ -129,18 +161,6 @@ const AdminEnquiries = () => {
     }
   }
 
-  const filteredEnquiries = filter === 'all'
-    ? enquiries
-    : enquiries.filter(e => e.status === filter)
-
-  const statusCounts = {
-    all: enquiries.length,
-    new: enquiries.filter(e => e.status === 'new').length,
-    contacted: enquiries.filter(e => e.status === 'contacted').length,
-    quote_sent: enquiries.filter(e => e.status === 'quote_sent').length,
-    confirmed: enquiries.filter(e => e.status === 'confirmed').length,
-  }
-
   const getStatusStyle = (status) => {
     const styles = {
       new: 'bg-blue-100 text-blue-800',
@@ -157,7 +177,17 @@ const AdminEnquiries = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-charcoal mb-6">Enquiries</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-charcoal">Enquiries</h1>
+        <button
+          onClick={exportToExcel}
+          disabled={exporting}
+          className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
+        >
+          <Download className="w-4 h-4" />
+          {exporting ? 'Exporting...' : `Export All (${total})`}
+        </button>
+      </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">
         {['all', 'new', 'contacted', 'quote_sent', 'confirmed'].map((status) => (
@@ -170,16 +200,9 @@ const AdminEnquiries = () => {
                 : 'bg-white text-muted hover:bg-gray-100'
             }`}
           >
-            {status === 'all' ? 'All' : status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} ({statusCounts[status] || 0})
+            {status === 'all' ? 'All' : status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
           </button>
         ))}
-        <button
-          onClick={exportToExcel}
-          className="ml-auto inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors"
-        >
-          <Download className="w-4 h-4" />
-          Export User Data
-        </button>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -204,14 +227,14 @@ const AdminEnquiries = () => {
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </td>
                 </tr>
-              ) : filteredEnquiries.length === 0 ? (
+              ) : enquiries.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="px-6 py-12 text-center text-muted">
                     No enquiries found
                   </td>
                 </tr>
               ) : (
-                filteredEnquiries.map((enquiry) => (
+                enquiries.map((enquiry) => (
                   <tr key={enquiry._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <p className="font-medium text-charcoal">{enquiry.fullName}</p>
@@ -249,6 +272,69 @@ const AdminEnquiries = () => {
             </tbody>
           </table>
         </div>
+
+        {totalPages > 1 && (
+          <div className="px-6 py-4 border-t flex items-center justify-between">
+            <p className="text-sm text-muted">
+              Page {page} of {totalPages} ({total} total)
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+                className="px-3 py-2 text-sm font-medium text-muted hover:text-charcoal hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                &laquo;
+              </button>
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-2 text-muted hover:text-charcoal hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum
+                if (totalPages <= 5) {
+                  pageNum = i + 1
+                } else if (page <= 3) {
+                  pageNum = i + 1
+                } else if (page >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i
+                } else {
+                  pageNum = page - 2 + i
+                }
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={`w-9 h-9 text-sm font-medium rounded-lg transition-colors ${
+                      page === pageNum
+                        ? 'bg-primary text-white'
+                        : 'text-muted hover:bg-gray-100'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              })}
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-2 text-muted hover:text-charcoal hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setPage(totalPages)}
+                disabled={page === totalPages}
+                className="px-3 py-2 text-sm font-medium text-muted hover:text-charcoal hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                &raquo;
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {selectedEnquiry && (
@@ -313,7 +399,7 @@ const AdminEnquiries = () => {
               {selectedEnquiry.preferredPackage && (
                 <div>
                   <p className="text-sm text-muted">Preferred Package</p>
-                  <p className="font-medium text-charcoal">{selectedEnquiry.preferredPackage}</p>
+                  <p className="font-medium text-charcoal">{selectedEnquiry.preferredPackage?.title || selectedEnquiry.preferredPackage}</p>
                 </div>
               )}
               {selectedEnquiry.budgetRange && (

@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const [enquiriesRes, analyticsRes] = await Promise.allSettled([
-        api.get('/enquiries'),
+        api.get('/enquiries', { page: 1, limit: 6 }),
         api.get('/tracking/dashboard'),
       ])
 
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
         setAnalytics(analyticsRes.value.data)
       }
 
-      setRecentEnquiries(enquiries.slice(0, 5))
+      setRecentEnquiries(enquiries)
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error)
     } finally {
