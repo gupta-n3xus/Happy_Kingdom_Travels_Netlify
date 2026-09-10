@@ -53,7 +53,7 @@ const galleryItemSchema = new mongoose.Schema(
     },
     approved: {
       type: Boolean,
-      default: true
+      default: false
     },
     comments: [commentSchema]
   },

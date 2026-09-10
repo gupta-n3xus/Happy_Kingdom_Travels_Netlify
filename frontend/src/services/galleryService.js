@@ -16,10 +16,10 @@ const galleryService = {
   deleteGalleryItem: async (id) => {
     return api.delete(`/gallery/${id}`)
   },
-  uploadGalleryImage: async (file) => {
+  uploadGalleryImages: async (files) => {
     const formData = new FormData()
-    formData.append('image', file)
-    return api.upload('/upload/gallery-image', formData)
+    files.forEach(file => formData.append('images', file))
+    return api.upload('/upload/gallery-images', formData)
   },
   addComment: async (galleryId, data) => {
     return api.post(`/gallery/${galleryId}/comments`, data)

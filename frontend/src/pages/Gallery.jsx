@@ -30,8 +30,8 @@ const Gallery = () => {
     caption: '',
     category: 'Paro'
   })
-  const [selectedFile, setSelectedFile] = useState(null)
-  const [previewUrl, setPreviewUrl] = useState(null)
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [previewUrls, setPreviewUrls] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
 
@@ -117,20 +117,25 @@ const Gallery = () => {
   }, [loading, loadingMore, hasMore])
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size must be less than 10MB')
+    let files = Array.from(e.target.files)
+    if (files.length > 5) {
+      toast.error('Maximum 5 photos allowed')
       return
     }
-    setSelectedFile(file)
-    setPreviewUrl(URL.createObjectURL(file))
+    files = files.filter(file => file.size <= 10 * 1024 * 1024)
+    if (files.length !== files.originalLength) {
+      toast.error('Each photo must be less than 10MB')
+      // Remove files that exceed 10MB
+      files = files.filter(file => file.size <= 10 * 1024 * 1024)
+    }
+    setSelectedFiles(files)
+    const newUrls = files.map(file => URL.createObjectURL(file))
+    setPreviewUrls(prev => [...prev, ...newUrls])
   }
 
-  const removeFile = () => {
-    setSelectedFile(null)
-    if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setPreviewUrl(null)
+  const removeFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index))
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index))
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -144,23 +149,17 @@ const Gallery = () => {
 
     setSubmitting(true)
     try {
-      let imageUrl = ''
-
-      if (selectedFile) {
-        setUploading(true)
-        const uploadData = await galleryService.uploadGalleryImage(selectedFile)
-        imageUrl = uploadData.url
-        setUploading(false)
-      }
-
-      if (!imageUrl) {
-        toast.error('Please upload a photo')
+      if (selectedFiles.length === 0) {
+        toast.error('Please upload at least one photo')
         setSubmitting(false)
         return
       }
 
-      await galleryService.createGalleryItem({
-        image: imageUrl,
+      setUploading(true)
+      const uploadData = await galleryService.uploadGalleryImages(selectedFiles)
+      
+      const { data } = await galleryService.createGalleryItem({
+        images: uploadData.images,
         title: formData.title.trim(),
         caption: formData.caption.trim(),
         touristName: formData.touristName.trim(),
@@ -168,11 +167,12 @@ const Gallery = () => {
         rating: formData.rating,
         category: formData.category
       })
-
-      toast.success('Thank you! Your experience has been shared.')
+      
+      toast.success(data.message || 'Thank you! Your experience has been shared.')
 
       setFormData({ title: '', touristName: '', touristCity: '', rating: 5, caption: '', category: 'Paro' })
-      removeFile()
+      setSelectedFiles([])
+      setPreviewUrls([])
 
       setPage(1)
       setHasMore(true)
@@ -341,29 +341,34 @@ const Gallery = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">Upload Photo *</label>
+                <label className="block text-sm font-medium text-charcoal mb-2">Upload Photos *</label>
                 <input
                   type="file"
                   ref={fileInputRef}
                   accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  multiple
                   onChange={handleFileSelect}
                   className="hidden"
                 />
 
-                {previewUrl ? (
-                  <div className="relative inline-block">
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-32 h-32 object-cover rounded-xl border-2 border-gray-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={removeFile}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                {previewUrls.length > 0 ? (
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    {previewUrls.map((url, idx) => (
+                      <div key={idx} className="relative">
+                        <img
+                          src={url}
+                          alt="Preview"
+                          className="w-full h-32 object-cover rounded-xl"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeFile(idx)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <button
@@ -373,8 +378,8 @@ const Gallery = () => {
                   >
                     <ImageIcon className="w-8 h-8 text-muted" />
                     <div className="text-left">
-                      <p className="font-medium text-charcoal">Click to upload a photo</p>
-                      <p className="text-sm text-muted">JPG, PNG, WebP or GIF (max 10MB)</p>
+                      <p className="font-medium text-charcoal">Click to upload photos</p>
+                      <p className="text-sm text-muted">JPG, PNG, WebP or GIF (max 5 photos, each max 10MB)</p>
                     </div>
                   </button>
                 )}

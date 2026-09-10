@@ -44,7 +44,7 @@ const upload = multer({
 export const galleryUpload = multer({
   storage: galleryStorage,
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024, files: 5 },
 });
 
 export default upload;

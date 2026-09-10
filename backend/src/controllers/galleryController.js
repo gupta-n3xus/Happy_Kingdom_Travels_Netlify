@@ -71,12 +71,12 @@ export const createGalleryItem = async (req, res, next) => {
   try {
     const item = await GalleryItem.create({
       ...req.body,
-      approved: true
+      approved: false
     });
 
     res.status(201).json({
       success: true,
-      message: 'Gallery item created successfully',
+      message: 'Gallery item created successfully. Your request has been sent to the team, review will be updated shortly after. Thank you for your review!',
       data: item
     });
   } catch (error) {
