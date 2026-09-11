@@ -122,11 +122,19 @@ const Gallery = () => {
       toast.error('Maximum 5 photos allowed')
       return
     }
-    files = files.filter(file => file.size <= 10 * 1024 * 1024)
-    if (files.length !== files.originalLength) {
-      toast.error('Each photo must be less than 10MB')
-      // Remove files that exceed 10MB
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0)
+    if (totalSize > 50 * 1024 * 1024) {
+      toast.error('Total upload size must not exceed 50MB')
+      return
+    }
+    const oversizeFiles = files.filter(file => file.size > 10 * 1024 * 1024)
+    if (oversizeFiles.length > 0) {
+      toast.error(oversizeFiles.length + ' photo(s) exceed 10MB limit and were skipped')
       files = files.filter(file => file.size <= 10 * 1024 * 1024)
+    }
+    if (files.length === 0) {
+      toast.error('Each photo must be less than 10MB')
+      return
     }
     setSelectedFiles(files)
     const newUrls = files.map(file => URL.createObjectURL(file))

@@ -16,6 +16,9 @@ const galleryService = {
   deleteGalleryItem: async (id) => {
     return api.delete(`/gallery/${id}`)
   },
+  approveGalleryItem: async (id, approved) => {
+    return api.put(`/gallery/${id}`, { approved })
+  },
   uploadGalleryImages: async (files) => {
     const formData = new FormData()
     files.forEach(file => formData.append('images', file))

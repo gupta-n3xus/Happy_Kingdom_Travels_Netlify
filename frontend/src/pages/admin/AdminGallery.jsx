@@ -10,6 +10,7 @@ const AdminGallery = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('All')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [showModal, setShowModal] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
   const [saving, setSaving] = useState(false)
@@ -153,9 +154,18 @@ const AdminGallery = () => {
     }
   }
 
-  const filteredItems = filter === 'All'
-    ? items
-    : items.filter(i => i.category === filter)
+  const handleToggleApproval = async (id, currentApproved) => {
+    try {
+      await galleryService.approveGalleryItem(id, !currentApproved)
+      toast.success(currentApproved ? 'Item removed from public gallery' : 'Item approved and now public')
+      fetchItems()
+    } catch (error) {
+      toast.error('Failed to update approval status')
+    }
+  }
+
+  const filteredItems = (filter === 'All' ? items : items.filter(i => i.category === filter))
+    .filter(i => statusFilter === 'all' || (statusFilter === 'approved' && i.approved) || (statusFilter === 'pending' && !i.approved))
 
   return (
     <div>
@@ -186,6 +196,25 @@ const AdminGallery = () => {
         ))}
       </div>
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        {['all', 'pending', 'approved'].map((status) => {
+          const count = status === 'all' ? items.length : items.filter(i => i.approved === (status === 'approved')).length
+          return (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                statusFilter === status
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-muted hover:bg-gray-100'
+              }`}
+            >
+              {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)} ({count})
+            </button>
+          )
+        })}
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -198,19 +227,20 @@ const AdminGallery = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Rating</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Comments</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {loading ? (
                 <tr>
-                  <td colSpan="8" className="px-6 py-12 text-center">
+                  <td colSpan="9" className="px-6 py-12 text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="px-6 py-12 text-center text-muted">
+                  <td colSpan="9" className="px-6 py-12 text-center text-muted">
                     No gallery items found
                   </td>
                 </tr>
@@ -256,7 +286,31 @@ const AdminGallery = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.approved ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                        {item.approved ? 'Approved' : 'Pending'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleToggleApproval(item._id, item.approved)}
+                          className={`p-2 rounded-lg transition-colors ${
+                            item.approved
+                              ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50'
+                              : 'text-green-600 hover:text-green-800 hover:bg-green-50'
+                          }`}
+                          title={item.approved ? 'Remove from public' : 'Approve and make public'}
+                        >
+                          {item.approved ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
                         <button
                           onClick={() => openEditModal(item)}
                           className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"

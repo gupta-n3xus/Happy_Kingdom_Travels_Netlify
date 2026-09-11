@@ -13,7 +13,7 @@ import { protect, authorize } from '../middleware/auth.js';
 const router = Router();
 
 router.get('/', getPublishedGallery);
-router.post('/', protect, authorize('admin', 'sub_admin'), createGalleryItem);
+router.post('/', createGalleryItem);
 router.get('/all', protect, getAllGallery);
 router.put('/:id', protect, authorize('admin', 'sub_admin'), updateGalleryItem);
 router.delete('/:id', protect, authorize('admin', 'sub_admin'), deleteGalleryItem);

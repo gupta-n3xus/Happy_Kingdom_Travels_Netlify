@@ -18,9 +18,13 @@ const AdminLogin = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      await login(email, password)
+      const data = await login(email, password)
       toast.success('Login successful!')
-      navigate('/admin')
+      if (data?.data?.role === 'sub_admin') {
+        navigate('/admin/packages', { replace: true })
+      } else {
+        navigate('/admin', { replace: true })
+      }
     } catch (error) {
       toast.error(error.message || 'Invalid credentials')
     } finally {

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { SettingsProvider } from './context/SettingsContext'
 import ScrollToTop from './components/ScrollToTop'
@@ -71,15 +71,7 @@ const PublicLayout = ({ children }) => (
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token')
   if (!token) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
-          <p className="text-gray-500 text-lg mb-6">Page not found</p>
-          <a href="/" className="text-primary font-medium hover:underline">Go to Homepage</a>
-        </div>
-      </div>
-    )
+    return <Navigate to="/admin/login" replace />
   }
   return children
 }

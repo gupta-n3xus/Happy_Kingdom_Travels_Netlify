@@ -10,23 +10,19 @@ const AdminLayout = ({ children }) => {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
 
-  const menuItems = [
-    { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-    { name: 'Packages', path: '/admin/packages', icon: Package },
-    { name: 'Destinations', path: '/admin/destinations', icon: MapPin },
-    { name: 'Blog Posts', path: '/admin/blog', icon: FileText },
-    { name: 'Enquiries', path: '/admin/enquiries', icon: MessageSquare },
-    { name: 'Reviews', path: '/admin/reviews', icon: Star },
-    { name: 'Gallery', path: '/admin/gallery', icon: Image },
-    { name: 'Backup', path: '/admin/backup', icon: Database },
-    { name: 'Settings', path: '/admin/settings', icon: Settings },
+  const allMenuItems = [
+    { name: 'Dashboard', path: '/admin', icon: LayoutDashboard, roles: ['admin'] },
+    { name: 'Packages', path: '/admin/packages', icon: Package, roles: ['admin', 'sub_admin'] },
+    { name: 'Destinations', path: '/admin/destinations', icon: MapPin, roles: ['admin'] },
+    { name: 'Blog Posts', path: '/admin/blog', icon: FileText, roles: ['admin', 'sub_admin'] },
+    { name: 'Enquiries', path: '/admin/enquiries', icon: MessageSquare, roles: ['admin'] },
+    { name: 'Reviews', path: '/admin/reviews', icon: Star, roles: ['admin', 'sub_admin'] },
+    { name: 'Gallery', path: '/admin/gallery', icon: Image, roles: ['admin', 'sub_admin'] },
+    { name: 'Backup', path: '/admin/backup', icon: Database, roles: ['admin'] },
+    { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['admin'] },
   ]
 
-  const filteredMenuItems = user?.role === 'sub_admin'
-    ? menuItems.filter(item =>
-        ['Packages', 'Blog Posts', 'Reviews', 'Gallery'].includes(item.name)
-      )
-    : menuItems
+  const filteredMenuItems = allMenuItems.filter(item => item.roles.includes(user?.role || 'admin'))
 
   const handleLogout = () => {
     logout()
@@ -47,7 +43,7 @@ const AdminLayout = ({ children }) => {
 
         <nav className="mt-6 px-4">
           {filteredMenuItems.map((item) => {
-            const isActive = location.pathname === item.path
+            const isActive = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path))
             return (
               <Link
                 key={item.path}

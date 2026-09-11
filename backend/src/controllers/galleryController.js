@@ -76,7 +76,7 @@ export const createGalleryItem = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Gallery item created successfully. Your request has been sent to the team, review will be updated shortly after. Thank you for your review!',
+      message: 'Your valuable feedback has been received. It will be reviewed by our team and made public shortly. Thank you for your valuable time with us!',
       data: item
     });
   } catch (error) {
