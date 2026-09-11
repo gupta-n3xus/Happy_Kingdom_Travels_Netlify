@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MessageSquare, TrendingUp, ArrowUpRight, FileText, Users, Eye, MessageCircle, CalendarCheck, BarChart3 } from 'lucide-react'
 import api from '../../services/api'
+import { useAuth } from '../../context/AuthContext'
 
 const AdminDashboard = () => {
   const [analytics, setAnalytics] = useState(null)
   const [recentEnquiries, setRecentEnquiries] = useState([])
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState('all')
+  const { user } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if (user?.role === 'sub_admin') {
+      navigate('/admin/packages', { replace: true })
+      return
+    }
     fetchDashboardData()
-  }, [])
+  }, [user, navigate])
 
   const fetchDashboardData = async () => {
     try {
