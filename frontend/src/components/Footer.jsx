@@ -47,18 +47,26 @@ const Footer = () => {
               Your trusted partner for authentic Bhutan travel experiences. Discover the Land of the Thunder Dragon with our expert-guided tours.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook">
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Instagram">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="https://youtube.com/@happykingdomtravels?si=frHNSS0FG-kqoV-Z" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="YouTube">
-                <Youtube className="w-4 h-4" />
-              </a>
+              {BUSINESS_CONTACT.socialLinks.facebook && (
+                <a href={BUSINESS_CONTACT.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook">
+                  <Facebook className="w-4 h-4" />
+                </a>
+              )}
+              {BUSINESS_CONTACT.socialLinks.instagram && (
+                <a href={BUSINESS_CONTACT.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Instagram">
+                  <Instagram className="w-4 h-4" />
+                </a>
+              )}
+              {BUSINESS_CONTACT.socialLinks.twitter && (
+                <a href={BUSINESS_CONTACT.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter">
+                  <Twitter className="w-4 h-4" />
+                </a>
+              )}
+              {BUSINESS_CONTACT.socialLinks.youtube && (
+                <a href={BUSINESS_CONTACT.socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors" aria-label="YouTube">
+                  <Youtube className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
 

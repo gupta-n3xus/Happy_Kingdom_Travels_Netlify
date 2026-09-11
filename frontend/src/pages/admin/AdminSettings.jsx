@@ -1,20 +1,26 @@
-import { useState, useEffect } from 'react'
-import { Save } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Save, Upload, X, Image } from 'lucide-react'
 import settingsService from '../../services/settingsService'
+import api from '../../services/api'
+import { useRefreshSettings } from '../../context/SettingsContext'
 import toast from 'react-hot-toast'
 
 const AdminSettings = () => {
+  const refreshSettings = useRefreshSettings()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const heroFileRef = useRef(null)
   const [formData, setFormData] = useState({
     companyName: '',
     phone: '',
     whatsapp: '',
     email: '',
     address: '',
-    socialLinks: { facebook: '', instagram: '', twitter: '' },
+    socialLinks: { facebook: '', instagram: '', twitter: '', youtube: '' },
     analytics: { ga4Id: '', gtmId: '' },
     seo: { defaultTitle: '', defaultDescription: '' },
+    heroImage: '',
   })
 
   useEffect(() => {
@@ -31,9 +37,10 @@ const AdminSettings = () => {
         whatsapp: settings.whatsapp || '',
         email: settings.email || '',
         address: settings.address || '',
-        socialLinks: settings.socialLinks || { facebook: '', instagram: '', twitter: '' },
+        socialLinks: settings.socialLinks || { facebook: '', instagram: '', twitter: '', youtube: '' },
         analytics: settings.analytics || { ga4Id: '', gtmId: '' },
         seo: settings.seo || { defaultTitle: '', defaultDescription: '' },
+        heroImage: settings.heroImage || '',
       })
     } catch (error) {
       console.error('Failed to fetch settings:', error)
@@ -47,11 +54,29 @@ const AdminSettings = () => {
     setSaving(true)
     try {
       await settingsService.updateSettings(formData)
+      if (refreshSettings) await refreshSettings()
       toast.success('Settings saved')
     } catch (error) {
       toast.error('Failed to save settings')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleHeroUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('image', file)
+      const result = await api.upload('/upload/image', fd)
+      setFormData(prev => ({ ...prev, heroImage: result.url }))
+      toast.success('Hero image uploaded')
+    } catch (error) {
+      toast.error(error.message || 'Failed to upload image')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -78,6 +103,38 @@ const AdminSettings = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm">
+          <h2 className="font-bold text-charcoal mb-4">Homepage Hero Image</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <input ref={heroFileRef} type="file" accept="image/*" className="hidden" onChange={handleHeroUpload} />
+              <button type="button" onClick={() => heroFileRef.current?.click()} disabled={uploading} className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors disabled:opacity-50">
+                {uploading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                {uploading ? 'Uploading...' : 'Upload Image'}
+              </button>
+              <span className="text-sm text-gray-500">JPG, PNG, WebP — max 10MB</span>
+            </div>
+            {formData.heroImage && (
+              <div className="relative inline-block">
+                <img src={formData.heroImage} alt="Hero preview" className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200" />
+                <button type="button" onClick={() => setFormData(prev => ({ ...prev, heroImage: '' }))} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            {!formData.heroImage && (
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Image className="w-4 h-4" />
+                <span>No hero image set — default image will be used</span>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="font-bold text-charcoal mb-4">Business Information</h2>
           <div className="space-y-4">
@@ -118,6 +175,10 @@ const AdminSettings = () => {
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1">Twitter URL</label>
               <input type="url" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.socialLinks.twitter} onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, twitter: e.target.value } })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-charcoal mb-1">YouTube URL</label>
+              <input type="url" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.socialLinks.youtube} onChange={(e) => setFormData({ ...formData, socialLinks: { ...formData.socialLinks, youtube: e.target.value } })} />
             </div>
           </div>
         </div>

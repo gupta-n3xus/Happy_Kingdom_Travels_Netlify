@@ -12,7 +12,10 @@ const galleryItemSchema = new mongoose.Schema(
   {
     image: {
       type: String,
-      required: [true, 'Image is required']
+    },
+    images: {
+      type: [String],
+      default: []
     },
     title: {
       type: String,

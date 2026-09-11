@@ -25,7 +25,8 @@ const siteSettingsSchema = new mongoose.Schema(
     socialLinks: {
       facebook: { type: String, default: '' },
       instagram: { type: String, default: '' },
-      twitter: { type: String, default: '' }
+      twitter: { type: String, default: '' },
+      youtube: { type: String, default: '' }
     },
     analytics: {
       ga4Id: { type: String, default: '' },
@@ -34,7 +35,8 @@ const siteSettingsSchema = new mongoose.Schema(
     seo: {
       defaultTitle: { type: String, default: 'Bhutan Travel Agency - Your Gateway to the Last Shangri-La' },
       defaultDescription: { type: String, default: 'Explore Bhutan with curated travel packages. Discover ancient monasteries, pristine valleys, and vibrant culture.' }
-    }
+    },
+    heroImage: { type: String, default: '' }
   },
   { timestamps: true }
 );

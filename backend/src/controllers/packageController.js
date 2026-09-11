@@ -1,7 +1,28 @@
 import Package from '../models/Package.js';
 import { formatResponse, formatError, getPagination } from '../utils/helpers.js';
+import { importImageToCloudinary, deleteCloudinaryImage, deleteCloudinaryImages } from '../config/upload.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const importImages = async (data) => {
+  const tasks = [];
+  if (data.heroImage) {
+    tasks.push(importImageToCloudinary(data.heroImage).then(url => { data.heroImage = url; }));
+  }
+  if (Array.isArray(data.images)) {
+    tasks.push(
+      Promise.all(data.images.map(url => importImageToCloudinary(url))).then(urls => { data.images = urls; })
+    );
+  }
+  if (tasks.length > 0) await Promise.all(tasks);
+};
+
+const deletePackageImages = async (pkg) => {
+  const urls = [];
+  if (pkg.heroImage) urls.push(pkg.heroImage);
+  if (Array.isArray(pkg.images)) urls.push(...pkg.images);
+  if (urls.length > 0) await deleteCloudinaryImages(urls);
+};
 
 export const getAllPackages = async (req, res) => {
   try {
@@ -105,6 +126,7 @@ export const getFeaturedPackages = async (_req, res) => {
 
 export const createPackage = async (req, res) => {
   try {
+    await importImages(req.body);
     const pkg = await Package.create(req.body);
     return formatResponse(res, 201, pkg);
   } catch (error) {
@@ -115,6 +137,7 @@ export const createPackage = async (req, res) => {
 
 export const updatePackage = async (req, res) => {
   try {
+    await importImages(req.body);
     const pkg = await Package.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -131,10 +154,12 @@ export const updatePackage = async (req, res) => {
 
 export const deletePackage = async (req, res) => {
   try {
-    const pkg = await Package.findByIdAndDelete(req.params.id);
+    const pkg = await Package.findById(req.params.id);
     if (!pkg) {
       return formatError(res, 404, 'Package not found');
     }
+    await deletePackageImages(pkg);
+    await pkg.deleteOne();
     return formatResponse(res, 200, null, 'Package deleted successfully');
   } catch (error) {
     console.error('deletePackage error:', error);

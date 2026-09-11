@@ -27,7 +27,7 @@ import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 import packageService from '../services/packageService'
 import destinationService from '../services/destinationService'
-import { useBusinessContact } from '../context/SettingsContext'
+import { useBusinessContact, useSettings } from '../context/SettingsContext'
 import { createWhatsAppUrl } from '../utils/createWhatsAppUrl'
 import { createGeneralMessage } from '../utils/createWhatsAppMessage'
 
@@ -146,6 +146,7 @@ const cityPackages = [
 
 const Home = () => {
   const BUSINESS_CONTACT = useBusinessContact();
+  const settings = useSettings();
 
   const [packages, setPackages] = useState([])
   const [destinations, setDestinations] = useState([])
@@ -197,7 +198,7 @@ const Home = () => {
       <HeroSection
         title="Explore Bhutan. We'll Handle the Journey."
         subtitle="Complete Bhutan tour packages with hotels, transportation, sightseeing and local assistance — planned around your trip."
-        backgroundImage="/images/paro-hero.jpg"
+        backgroundImage={settings?.heroImage || "/images/paro-hero.jpg"}
         primaryCTA={{ text: 'Explore Bhutan Packages', link: '/bhutan-tour-packages' }}
         secondaryCTA={{ text: 'Plan My Trip', link: '/customize-your-trip' }}
         showTrustIndicators={true}

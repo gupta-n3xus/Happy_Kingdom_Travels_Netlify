@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard, roles: ['admin'] },
     { name: 'Packages', path: '/admin/packages', icon: Package, roles: ['admin', 'sub_admin'] },
     { name: 'Destinations', path: '/admin/destinations', icon: MapPin, roles: ['admin'] },
-    { name: 'Blog Posts', path: '/admin/blog', icon: FileText, roles: ['admin', 'sub_admin'] },
+    { name: 'Blog Posts', path: '/admin/blog', icon: FileText, roles: ['admin'] },
     { name: 'Enquiries', path: '/admin/enquiries', icon: MessageSquare, roles: ['admin'] },
     { name: 'Reviews', path: '/admin/reviews', icon: Star, roles: ['admin', 'sub_admin'] },
     { name: 'Gallery', path: '/admin/gallery', icon: Image, roles: ['admin', 'sub_admin'] },

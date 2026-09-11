@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon, MessageCircle } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon, MessageCircle, Check } from 'lucide-react'
 import galleryService from '../../services/galleryService'
+import { useAuth } from '../../context/AuthContext'
 import { formatDate } from '../../utils/helpers'
 import toast from 'react-hot-toast'
 
 const CATEGORIES = ['Paro', 'Thimphu', 'Punakha', 'Bumthang', 'Other']
 
 const AdminGallery = () => {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('All')
@@ -18,6 +21,8 @@ const AdminGallery = () => {
   const fileInputRef = useRef(null)
   const [previewUrl, setPreviewUrl] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [removedImages, setRemovedImages] = useState([])
+  const [expandedComments, setExpandedComments] = useState(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -59,6 +64,7 @@ const AdminGallery = () => {
     })
     setPreviewUrl(null)
     setSelectedFile(null)
+    setRemovedImages([])
     setShowModal(true)
   }
 
@@ -74,8 +80,9 @@ const AdminGallery = () => {
       image: item.image || '',
       order: item.order || 0
     })
-    setPreviewUrl(item.image || null)
+    setPreviewUrl(null)
     setSelectedFile(null)
+    setRemovedImages([])
     setShowModal(true)
   }
 
@@ -84,6 +91,7 @@ const AdminGallery = () => {
     setEditingItem(null)
     setPreviewUrl(null)
     setSelectedFile(null)
+    setRemovedImages([])
   }
 
   const handleFileSelect = (e) => {
@@ -126,6 +134,15 @@ const AdminGallery = () => {
       }
 
       if (editingItem) {
+        const currentImages = (editingItem.images?.length > 0 ? editingItem.images : (editingItem.image ? [editingItem.image] : []))
+          .filter(img => !removedImages.includes(img))
+        if (selectedFile) {
+          payload.images = [...currentImages, imageUrl]
+          payload.image = payload.images[0]
+        } else {
+          payload.images = currentImages
+          payload.image = currentImages[0] || imageUrl
+        }
         await galleryService.updateGalleryItem(editingItem._id, payload)
         toast.success('Gallery item updated')
       } else {
@@ -156,11 +173,30 @@ const AdminGallery = () => {
 
   const handleToggleApproval = async (id, currentApproved) => {
     try {
-      await galleryService.approveGalleryItem(id, !currentApproved)
-      toast.success(currentApproved ? 'Item removed from public gallery' : 'Item approved and now public')
+      if (isAdmin) {
+        await galleryService.updateGalleryItem(id, { approved: !currentApproved })
+        toast.success(currentApproved ? 'Item removed from public gallery' : 'Item approved and now public')
+      } else {
+        await galleryService.approveGalleryItem(id)
+        toast.success('Item approved and now public')
+      }
       fetchItems()
     } catch (error) {
       toast.error('Failed to update approval status')
+    }
+  }
+
+  const handleDeleteComment = async (galleryId, commentId) => {
+    if (!window.confirm('Delete this comment?')) return
+    try {
+      await galleryService.deleteComment(galleryId, commentId)
+      setItems(prev => prev.map(it => {
+        if (it._id !== galleryId) return it
+        return { ...it, comments: it.comments.filter(c => c._id !== commentId) }
+      }))
+      toast.success('Comment deleted')
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete comment')
     }
   }
 
@@ -171,13 +207,15 @@ const AdminGallery = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-charcoal">Gallery</h1>
-        <button
-          onClick={openCreateModal}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Item
-        </button>
+        {isAdmin && (
+          <button
+            onClick={openCreateModal}
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Item
+          </button>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
@@ -248,11 +286,27 @@ const AdminGallery = () => {
                 filteredItems.map((item) => (
                   <tr key={item._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
+                      <div className="relative w-12 h-12">
+                        {(item.images?.length > 0 ? item.images : (item.image ? [item.image] : [])).length > 2 && (
+                          <img
+                            src={(item.images?.length > 0 ? item.images : [item.image])[2]}
+                            alt=""
+                            className="absolute top-0 left-2 w-12 h-12 rounded-lg object-cover border border-gray-200 opacity-40"
+                          />
+                        )}
+                        {(item.images?.length > 0 ? item.images : (item.image ? [item.image] : [])).length > 1 && (
+                          <img
+                            src={(item.images?.length > 0 ? item.images : [item.image])[1]}
+                            alt=""
+                            className="absolute top-0 left-1 w-12 h-12 rounded-lg object-cover border border-gray-200 opacity-70"
+                          />
+                        )}
+                        <img
+                          src={(item.images?.length > 0 ? item.images : (item.image ? [item.image] : ['']))[0]}
+                          alt={item.title}
+                          className="relative w-12 h-12 rounded-lg object-cover border border-gray-200"
+                        />
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className="font-medium text-charcoal">{item.title}</p>
@@ -279,11 +333,38 @@ const AdminGallery = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-muted text-sm">{formatDate(item.createdAt)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-sm text-muted">
+                    <td className="px-6 py-4 whitespace-nowrap relative">
+                      <button
+                        onClick={() => setExpandedComments(expandedComments === item._id ? null : item._id)}
+                        className="inline-flex items-center gap-1 text-sm text-muted hover:text-primary transition-colors cursor-pointer"
+                      >
                         <MessageCircle className="w-4 h-4" />
                         {item.comments?.length || 0}
-                      </span>
+                      </button>
+                      {expandedComments === item._id && item.comments?.length > 0 && (
+                        <div className="absolute left-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-72 max-h-60 overflow-y-auto">
+                          <p className="text-xs font-medium text-muted mb-2">Comments</p>
+                          <div className="space-y-2">
+                            {item.comments.map((c) => (
+                              <div key={c._id} className="flex items-start justify-between gap-2 bg-gray-50 rounded-lg p-2">
+                                <div className="min-w-0">
+                                  <p className="text-sm font-medium text-charcoal truncate">{c.name}</p>
+                                  <p className="text-xs text-muted truncate">{c.text}</p>
+                                </div>
+                                {isAdmin && (
+                                  <button
+                                    onClick={() => handleDeleteComment(item._id, c._id)}
+                                    className="shrink-0 p-1 text-muted hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                    title="Delete comment"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.approved ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
@@ -292,37 +373,51 @@ const AdminGallery = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleToggleApproval(item._id, item.approved)}
-                          className={`p-2 rounded-lg transition-colors ${
-                            item.approved
-                              ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50'
-                              : 'text-green-600 hover:text-green-800 hover:bg-green-50'
-                          }`}
-                          title={item.approved ? 'Remove from public' : 'Approve and make public'}
-                        >
-                          {item.approved ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => openEditModal(item)}
-                          className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {isAdmin ? (
+                          <button
+                            onClick={() => handleToggleApproval(item._id, item.approved)}
+                            className={`p-2 rounded-lg transition-colors ${
+                              item.approved
+                                ? 'text-amber-600 hover:text-amber-800 hover:bg-amber-50'
+                                : 'text-green-600 hover:text-green-800 hover:bg-green-50'
+                            }`}
+                            title={item.approved ? 'Remove from public' : 'Approve and make public'}
+                          >
+                            {item.approved ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </button>
+                        ) : !item.approved ? (
+                          <button
+                            onClick={() => handleToggleApproval(item._id, false)}
+                            className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors"
+                            title="Approve and make public"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                        ) : null}
+                        {isAdmin && (
+                          <>
+                            <button
+                              onClick={() => openEditModal(item)}
+                              className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -441,34 +536,71 @@ const AdminGallery = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-1.5">Image *</label>
+                <label className="block text-sm font-medium text-charcoal mb-1.5">Images *</label>
                 <input
                   type="file"
                   ref={fileInputRef}
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/heic,image/heif,image/jxl,image/svg+xml,image/avif"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
 
+                {editingItem && (
+                  <div className="mb-3">
+                    <p className="text-xs text-muted mb-2">Current images:</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {(editingItem.images?.length > 0 ? editingItem.images : (editingItem.image ? [editingItem.image] : [])).map((img, idx) => (
+                        removedImages.includes(img) ? null : (
+                          <div key={idx} className="relative inline-block">
+                            <img
+                              src={img}
+                              alt={`${editingItem.title} ${idx + 1}`}
+                              className="w-20 h-20 object-cover rounded-lg border-2 border-gray-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setRemovedImages(prev => [...prev, img])}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )
+                      ))}
+                      {removedImages.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setRemovedImages([])}
+                          className="text-xs text-primary hover:underline self-center"
+                        >
+                          Restore removed
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {previewUrl ? (
-                  <div className="relative inline-block">
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-24 h-24 object-cover rounded-lg border-2 border-gray-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedFile(null)
-                        setPreviewUrl(null)
-                        setFormData(prev => ({ ...prev, image: '' }))
-                        if (fileInputRef.current) fileInputRef.current.value = ''
-                      }}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
+                  <div>
+                    <p className="text-xs text-muted mb-2">New image:</p>
+                    <div className="relative inline-block">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-24 h-24 object-cover rounded-lg border-2 border-gray-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedFile(null)
+                          setPreviewUrl(null)
+                          if (fileInputRef.current) fileInputRef.current.value = ''
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <button
@@ -479,7 +611,7 @@ const AdminGallery = () => {
                     <ImageIcon className="w-6 h-6 text-muted" />
                     <div className="text-left">
                       <p className="text-sm font-medium text-charcoal">Click to upload</p>
-                      <p className="text-xs text-muted">JPG, PNG, WebP or GIF (max 10MB)</p>
+                      <p className="text-xs text-muted">JPG, PNG, WebP, GIF, HEIC, JPEG XL, SVG or AVIF (max 10MB)</p>
                     </div>
                   </button>
                 )}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Upload, Star, X, ChevronLeft, ChevronRight, Loader2, ImageIcon, Send, MessageCircle } from 'lucide-react'
+import { Upload, Star, X, ChevronLeft, ChevronRight, Loader2, ImageIcon, Send, MessageCircle, MapPin } from 'lucide-react'
 import SEO from '../components/SEO'
 import Breadcrumbs from '../components/Breadcrumbs'
 import CTASection from '../components/CTASection'
@@ -21,6 +21,7 @@ const Gallery = () => {
 
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -138,7 +139,7 @@ const Gallery = () => {
     }
     setSelectedFiles(files)
     const newUrls = files.map(file => URL.createObjectURL(file))
-    setPreviewUrls(prev => [...prev, ...newUrls])
+    setPreviewUrls(newUrls)
   }
 
   const removeFile = (index) => {
@@ -194,8 +195,9 @@ const Gallery = () => {
     }
   }
 
-  const openLightbox = (index) => {
-    setActiveIndex(index)
+  const openLightbox = (itemIndex) => {
+    setActiveIndex(itemIndex)
+    setActiveImageIndex(0)
     setLightboxOpen(true)
     document.body.style.overflow = 'hidden'
   }
@@ -207,10 +209,12 @@ const Gallery = () => {
 
   const goToPrev = () => {
     setActiveIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
+    setActiveImageIndex(0)
   }
 
   const goToNext = () => {
     setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
+    setActiveImageIndex(0)
   }
 
   const handleAddComment = async () => {
@@ -227,8 +231,8 @@ const Gallery = () => {
         name: commentName.trim(),
         text: commentText.trim(),
       })
-      setItems(prev => prev.map((it, i) => {
-        if (i !== activeIndex) return it
+      setItems(prev => prev.map(it => {
+        if (it._id !== item._id) return it
         return { ...it, comments: [...(it.comments || []), res.data] }
       }))
       setCommentName('')
@@ -353,7 +357,7 @@ const Gallery = () => {
                 <input
                   type="file"
                   ref={fileInputRef}
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/heic,image/heif,image/jxl,image/svg+xml,image/avif"
                   multiple
                   onChange={handleFileSelect}
                   className="hidden"
@@ -387,7 +391,7 @@ const Gallery = () => {
                     <ImageIcon className="w-8 h-8 text-muted" />
                     <div className="text-left">
                       <p className="font-medium text-charcoal">Click to upload photos</p>
-                      <p className="text-sm text-muted">JPG, PNG, WebP or GIF (max 5 photos, each max 10MB)</p>
+                      <p className="text-sm text-muted">JPG, PNG, WebP, GIF, HEIC, JPEG XL, SVG or AVIF (max 5 photos, each max 10MB)</p>
                     </div>
                   </button>
                 )}
@@ -491,36 +495,70 @@ const Gallery = () => {
             </div>
           ) : (
             <>
-              <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-                {items.map((item, index) => (
-                  <button
-                    key={item._id}
-                    onClick={() => openLightbox(index)}
-                    className="break-inside-avoid block w-full group relative rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                      style={{ minHeight: '150px' }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <p className="text-white font-semibold text-sm">{item.title}</p>
-                        {item.touristName && (
-                          <p className="text-white/80 text-xs mt-1">by {item.touristName}</p>
-                        )}
-                        {item.comments?.length > 0 && (
-                          <p className="text-white/60 text-xs mt-1 flex items-center gap-1">
-                            <MessageCircle className="w-3 h-3" />
-                            {item.comments.length}
-                          </p>
-                        )}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {items.map((item, index) => {
+                  const hasMultiple = item.images && item.images.length > 1
+                  const count = item.images?.length || 1
+                  const allImages = item.images?.length > 0 ? item.images : (item.image ? [item.image] : [])
+                  return (
+                    <div
+                      key={item._id}
+                      className="cursor-pointer group"
+                      onClick={() => openLightbox(index)}
+                    >
+                      <div className="relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 bg-white border border-gray-100">
+                        <div className="relative aspect-[4/5]">
+                          {hasMultiple && count >= 3 && (
+                            <div className="absolute inset-2 rounded-lg overflow-hidden -rotate-3 group-hover:-rotate-5 transition-transform duration-300 shadow-md">
+                              <img src={item.images[2]} alt="" loading="lazy" className="w-full h-full object-cover opacity-70" />
+                            </div>
+                          )}
+                          {hasMultiple && count >= 2 && (
+                            <div className="absolute inset-1.5 rounded-lg overflow-hidden rotate-2 group-hover:rotate-4 transition-transform duration-300 shadow-lg">
+                              <img src={item.images[1]} alt="" loading="lazy" className="w-full h-full object-cover opacity-80" />
+                            </div>
+                          )}
+                          <img
+                            src={allImages[0]}
+                            alt={item.title}
+                            loading="lazy"
+                            className={`absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${hasMultiple ? 'rounded-lg shadow-2xl relative z-10' : 'rounded-xl'}`}
+                          />
+                          {hasMultiple && (
+                            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-0.5 bg-black/60 rounded-full backdrop-blur-sm z-20">
+                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <rect x="3" y="3" width="7" height="7" rx="1" />
+                                <rect x="14" y="3" width="7" height="7" rx="1" />
+                                <rect x="3" y="14" width="7" height="7" rx="1" />
+                                <rect x="14" y="14" width="7" height="7" rx="1" />
+                              </svg>
+                              <span className="text-white text-[11px] font-semibold">{count}</span>
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20" />
+                          <div className="absolute bottom-0 left-0 right-0 p-3.5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                            <div className="flex items-center gap-0.5 mb-1">
+                              {[...Array(item.rating || 5)].map((_, i) => (
+                                <Star key={i} className="w-3 h-3 fill-accent text-accent drop-shadow-sm" />
+                              ))}
+                            </div>
+                            <p className="font-semibold text-sm line-clamp-1 drop-shadow-md">{item.title}</p>
+                            <div className="flex items-center gap-1 text-[11px] text-white/90 mt-0.5 drop-shadow-md">
+                              <MapPin className="w-3 h-3" />
+                              <span>{item.touristName}{item.touristCity ? `, ${item.touristCity}` : ''}</span>
+                            </div>
+                            {item.comments?.length > 0 && (
+                              <div className="flex items-center gap-1 text-[11px] text-white/70 mt-0.5 drop-shadow-md">
+                                <MessageCircle className="w-3 h-3" />
+                                <span>{item.comments.length}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </button>
-                ))}
+                  )
+                })}
               </div>
 
               {hasMore && (
@@ -550,83 +588,106 @@ const Gallery = () => {
               <button
                 onClick={goToPrev}
                 className="absolute left-4 text-white/80 hover:text-white transition-colors z-10 p-2 bg-black/40 rounded-full"
-                aria-label="Previous image"
+                aria-label="Previous"
               >
                 <ChevronLeft className="w-8 h-8" />
               </button>
               <button
                 onClick={goToNext}
                 className="absolute right-4 text-white/80 hover:text-white transition-colors z-10 p-2 bg-black/40 rounded-full"
-                aria-label="Next image"
+                aria-label="Next"
               >
                 <ChevronRight className="w-8 h-8" />
               </button>
             </>
           )}
 
-          <div className="max-w-[90vw] max-h-[85vh] flex flex-col items-center">
-            <img
-              src={items[activeIndex]?.image}
-              alt={items[activeIndex]?.title}
-              className="max-w-full max-h-[55vh] object-contain rounded-lg"
-            />
-            <div className="mt-4 text-center">
-              <p className="text-white font-semibold">{items[activeIndex]?.title}</p>
-              {items[activeIndex]?.touristName && (
-                <p className="text-white/70 text-sm mt-1">
-                  by {items[activeIndex]?.touristName}
-                  {items[activeIndex]?.touristCity && `, ${items[activeIndex].touristCity}`}
-                </p>
-              )}
-            </div>
+          {(() => {
+            const activeItem = items[activeIndex]
+            const allImages = activeItem?.images?.length > 0 ? activeItem.images : (activeItem?.image ? [activeItem.image] : [])
+            const currentImage = allImages[activeImageIndex] || allImages[0]
 
-            <div className="mt-4 w-full max-w-lg bg-white/10 backdrop-blur-md rounded-xl p-4 max-h-[25vh] overflow-y-auto">
-              <div className="flex items-center gap-2 mb-3">
-                <MessageCircle className="w-4 h-4 text-white/80" />
-                <span className="text-white/80 text-sm font-medium">
-                  Comments ({items[activeIndex]?.comments?.length || 0})
-                </span>
-              </div>
+            return (
+              <div className="max-w-[90vw] max-h-[90vh] flex flex-col items-center">
+                <img
+                  src={currentImage}
+                  alt={activeItem?.title}
+                  className="max-w-full max-h-[50vh] object-contain rounded-lg"
+                />
 
-              {items[activeIndex]?.comments?.length > 0 ? (
-                <div className="space-y-3 mb-3">
-                  {items[activeIndex].comments.map((c) => (
-                    <div key={c._id} className="bg-white/10 rounded-lg p-3">
-                      <p className="text-white text-sm font-medium">{c.name}</p>
-                      <p className="text-white/80 text-sm mt-1">{c.text}</p>
-                    </div>
-                  ))}
+                {allImages.length > 1 && (
+                  <div className="flex gap-2 mt-3 overflow-x-auto max-w-full px-2">
+                    {allImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`shrink-0 rounded-lg overflow-hidden border-2 transition-all ${idx === activeImageIndex ? 'border-white scale-110' : 'border-white/30 opacity-60 hover:opacity-100'}`}
+                      >
+                        <img src={img} alt="" className="w-14 h-14 object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-4 text-center">
+                  <p className="text-white font-semibold">{activeItem?.title}</p>
+                  {activeItem?.touristName && (
+                    <p className="text-white/70 text-sm mt-1">
+                      by {activeItem?.touristName}
+                      {activeItem?.touristCity && `, ${activeItem.touristCity}`}
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <p className="text-white/50 text-sm mb-3">No comments yet. Be the first!</p>
-              )}
 
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={commentName}
-                  onChange={(e) => setCommentName(e.target.value)}
-                  placeholder="Your name"
-                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
-                />
-                <input
-                  type="text"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
-                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
-                />
-                <button
-                  onClick={handleAddComment}
-                  disabled={commentSubmitting}
-                  className="px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm transition-colors disabled:opacity-50"
-                >
-                  {commentSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                </button>
+                <div className="mt-4 w-full max-w-lg bg-white/10 backdrop-blur-md rounded-xl p-4 max-h-[25vh] overflow-y-auto">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MessageCircle className="w-4 h-4 text-white/80" />
+                    <span className="text-white/80 text-sm font-medium">
+                      Comments ({activeItem?.comments?.length || 0})
+                    </span>
+                  </div>
+
+                  {activeItem?.comments?.length > 0 ? (
+                    <div className="space-y-3 mb-3">
+                      {activeItem.comments.map((c) => (
+                        <div key={c._id} className="bg-white/10 rounded-lg p-3">
+                          <p className="text-white text-sm font-medium">{c.name}</p>
+                          <p className="text-white/80 text-sm mt-1">{c.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-white/50 text-sm mb-3">No comments yet. Be the first!</p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={commentName}
+                      onChange={(e) => setCommentName(e.target.value)}
+                      placeholder="Your name"
+                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
+                    />
+                    <input
+                      type="text"
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="Add a comment..."
+                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder:text-white/40 outline-none focus:border-white/40"
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                    />
+                    <button
+                      onClick={handleAddComment}
+                      disabled={commentSubmitting}
+                      className="px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm transition-colors disabled:opacity-50"
+                    >
+                      {commentSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          })()}
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm">
             {activeIndex + 1} / {items.length}

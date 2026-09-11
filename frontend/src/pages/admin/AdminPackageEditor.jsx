@@ -12,6 +12,7 @@ const AdminPackageEditor = () => {
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
+    destination: 'Bhutan',
     shortDescription: '',
     description: '',
     duration: { nights: 5, days: 6 },
@@ -28,6 +29,7 @@ const AdminPackageEditor = () => {
     suitableFor: [],
     inclusions: [],
     exclusions: [],
+    optionalActivities: [],
     itinerary: [],
     accommodation: [],
     faq: [],
@@ -52,6 +54,7 @@ const AdminPackageEditor = () => {
       const pkg = data.data
       setFormData({
         title: pkg.title || '',
+        destination: pkg.destination || 'Bhutan',
         shortDescription: pkg.shortDescription || '',
         description: pkg.description || '',
         duration: pkg.duration || { nights: 5, days: 6 },
@@ -68,6 +71,7 @@ const AdminPackageEditor = () => {
         suitableFor: pkg.suitableFor || [],
         inclusions: (pkg.inclusions || []).map(item => typeof item === 'string' ? { text: item } : item),
         exclusions: (pkg.exclusions || []).map(item => typeof item === 'string' ? { text: item } : item),
+        optionalActivities: pkg.optionalActivities || [],
         itinerary: pkg.itinerary || [],
         accommodation: pkg.accommodation || [],
         faq: (pkg.faq || pkg.faqs || []).map(f => ({ question: f.question, answer: f.answer })),
@@ -124,6 +128,7 @@ const AdminPackageEditor = () => {
     try {
       const payload = {
         title: formData.title,
+        destination: formData.destination,
         shortDescription: formData.shortDescription,
         description: formData.description,
         duration: {
@@ -140,6 +145,7 @@ const AdminPackageEditor = () => {
         suitableFor: formData.suitableFor,
         inclusions: formData.inclusions.map(item => typeof item === 'string' ? item : item.text),
         exclusions: formData.exclusions.map(item => typeof item === 'string' ? item : item.text),
+        optionalActivities: formData.optionalActivities,
         itinerary: formData.itinerary,
         accommodation: formData.accommodation,
         faq: formData.faq,
@@ -559,6 +565,10 @@ const AdminPackageEditor = () => {
                   <input type="number" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.startingPrice} onChange={(e) => setFormData({ ...formData, startingPrice: e.target.value })} />
                 </div>
               )}
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-1">Destination</label>
+                <input type="text" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.destination} onChange={(e) => setFormData({ ...formData, destination: e.target.value })} placeholder="e.g., Bhutan" />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-charcoal mb-1">Nights</label>
@@ -590,6 +600,58 @@ const AdminPackageEditor = () => {
                   <option value="luxury">Luxury</option>
                 </select>
               </div>
+              <div className="flex items-center gap-3">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" className="sr-only peer" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+                <span className="text-sm font-medium text-charcoal">Featured Package</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-charcoal">Route</h2>
+              <button type="button" onClick={() => setFormData({ ...formData, route: [...formData.route, ''] })} className="text-primary text-sm font-medium hover:text-primary-light">+ Add</button>
+            </div>
+            <div className="space-y-2">
+              {formData.route.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input type="text" className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={item} onChange={(e) => { const u = [...formData.route]; u[index] = e.target.value; setFormData({ ...formData, route: u }); }} placeholder="e.g., Paro → Thimphu → Punakha" />
+                  <button type="button" onClick={() => setFormData({ ...formData, route: formData.route.filter((_, i) => i !== index) })} className="text-red-500 hover:text-red-700"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-charcoal">Starting Points</h2>
+              <button type="button" onClick={() => setFormData({ ...formData, startingPoints: [...formData.startingPoints, ''] })} className="text-primary text-sm font-medium hover:text-primary-light">+ Add</button>
+            </div>
+            <div className="space-y-2">
+              {formData.startingPoints.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input type="text" className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={item} onChange={(e) => { const u = [...formData.startingPoints]; u[index] = e.target.value; setFormData({ ...formData, startingPoints: u }); }} placeholder="e.g., Bagdogra Airport" />
+                  <button type="button" onClick={() => setFormData({ ...formData, startingPoints: formData.startingPoints.filter((_, i) => i !== index) })} className="text-red-500 hover:text-red-700"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-charcoal">Optional Activities</h2>
+              <button type="button" onClick={() => setFormData({ ...formData, optionalActivities: [...formData.optionalActivities, ''] })} className="text-primary text-sm font-medium hover:text-primary-light">+ Add</button>
+            </div>
+            <div className="space-y-2">
+              {formData.optionalActivities.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input type="text" className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={item} onChange={(e) => { const u = [...formData.optionalActivities]; u[index] = e.target.value; setFormData({ ...formData, optionalActivities: u }); }} placeholder="e.g., River Rafting" />
+                  <button type="button" onClick={() => setFormData({ ...formData, optionalActivities: formData.optionalActivities.filter((_, i) => i !== index) })} className="text-red-500 hover:text-red-700"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -603,6 +665,20 @@ const AdminPackageEditor = () => {
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-1">Meta Description</label>
                 <textarea rows="2" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.seo.description} onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, description: e.target.value } })}></textarea>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-charcoal">Keywords</label>
+                  <button type="button" onClick={() => setFormData({ ...formData, seo: { ...formData.seo, keywords: [...formData.seo.keywords, ''] } })} className="text-primary text-sm font-medium hover:text-primary-light">+ Add</button>
+                </div>
+                <div className="space-y-2">
+                  {formData.seo.keywords.map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <input type="text" className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={item} onChange={(e) => { const u = [...formData.seo.keywords]; u[index] = e.target.value; setFormData({ ...formData, seo: { ...formData.seo, keywords: u } }); }} placeholder="e.g., bhutan tour packages" />
+                      <button type="button" onClick={() => setFormData({ ...formData, seo: { ...formData.seo, keywords: formData.seo.keywords.filter((_, i) => i !== index) } })} className="text-red-500 hover:text-red-700"><X className="w-4 h-4" /></button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -4,7 +4,7 @@ import { protect, authorize } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/image', protect, authorize('admin'), (req, res) => {
+router.post('/image', protect, authorize('admin', 'sub_admin'), (req, res) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
@@ -17,7 +17,7 @@ router.post('/image', protect, authorize('admin'), (req, res) => {
   });
 });
 
-router.post('/images', protect, authorize('admin'), (req, res) => {
+router.post('/images', protect, authorize('admin', 'sub_admin'), (req, res) => {
   upload.array('images', 10)(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });

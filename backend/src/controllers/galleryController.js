@@ -1,5 +1,6 @@
 import GalleryItem from '../models/GalleryItem.js';
 import { getPagination } from '../utils/helpers.js';
+import { deleteCloudinaryImages } from '../config/upload.js';
 
 export const getPublishedGallery = async (req, res, next) => {
   try {
@@ -70,14 +71,17 @@ export const getAllGallery = async (req, res, next) => {
 export const createGalleryItem = async (req, res, next) => {
   try {
     const { images, ...rest } = req.body;
-    const imageData = (images && images.length > 0) ? images[0].url || images[0] : rest.image;
-    if (!imageData) {
+    const imageUrls = images
+      ? images.map(img => typeof img === 'string' ? img : img.url)
+      : [];
+    if (imageUrls.length === 0 && !rest.image) {
       return res.status(400).json({ success: false, message: 'At least one image is required' });
     }
 
     const item = await GalleryItem.create({
       ...rest,
-      image: imageData,
+      image: imageUrls[0] || rest.image,
+      images: imageUrls,
       approved: false
     });
 
@@ -110,13 +114,37 @@ export const updateGalleryItem = async (req, res, next) => {
 
 export const deleteGalleryItem = async (req, res, next) => {
   try {
-    const item = await GalleryItem.findByIdAndDelete(req.params.id);
+    const item = await GalleryItem.findById(req.params.id);
 
     if (!item) {
       return res.status(404).json({ success: false, message: 'Gallery item not found' });
     }
 
+    const imageUrls = [];
+    if (item.image) imageUrls.push(item.image);
+    if (Array.isArray(item.images)) imageUrls.push(...item.images);
+    if (imageUrls.length > 0) await deleteCloudinaryImages(imageUrls);
+
+    await item.deleteOne();
+
     res.status(200).json({ success: true, message: 'Gallery item deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const approveGalleryItem = async (req, res, next) => {
+  try {
+    const item = await GalleryItem.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'Gallery item not found' });
+    }
+
+    item.approved = true;
+    await item.save();
+
+    res.status(200).json({ success: true, data: item });
   } catch (error) {
     next(error);
   }
