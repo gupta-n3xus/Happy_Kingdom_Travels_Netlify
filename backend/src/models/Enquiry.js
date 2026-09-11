@@ -134,5 +134,5 @@ const enquirySchema = new mongoose.Schema(
 enquirySchema.index({ status: 1 });
 enquirySchema.index({ createdAt: -1 });
 
-const Enquiry = mongoose.model('Enquiry', enquirySchema, 'enquiries');
+const Enquiry = mongoose.model('Enquiry', enquirySchema);
 export default Enquiry;

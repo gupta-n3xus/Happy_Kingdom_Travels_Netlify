@@ -85,6 +85,10 @@ export const getAllEnquiries = async (req, res, next) => {
 
     if (status) filter.status = status;
 
+    const collectionName = Enquiry.collection.name;
+    const directCount = await Enquiry.collection.countDocuments(filter);
+    console.log(`[ENQUIRY_DEBUG] collection: ${collectionName}, directCount: ${directCount}, modelCount: ${await Enquiry.countDocuments(filter)}`);
+
     let query = Enquiry.find(filter).populate('preferredPackage', 'title slug');
 
     if (search) {
