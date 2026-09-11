@@ -44,7 +44,7 @@ router.post('/gallery-image', (req, res) => {
   });
 });
 
-router.post('/gallery-images', protect, authorize('admin'), (req, res) => {
+router.post('/gallery-images', (req, res) => {
   galleryUpload.array('images', 5)(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });

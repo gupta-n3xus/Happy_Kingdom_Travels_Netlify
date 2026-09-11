@@ -176,7 +176,7 @@ const Gallery = () => {
         category: formData.category
       })
       
-      toast.success(data.message || 'Thank you! Your experience has been shared.')
+      toast.success(data.message || 'Your valuable feedback has been received. It will be reviewed by our team and made public shortly. Thank you for your valuable time with us!')
 
       setFormData({ title: '', touristName: '', touristCity: '', rating: 5, caption: '', category: 'Paro' })
       setSelectedFiles([])

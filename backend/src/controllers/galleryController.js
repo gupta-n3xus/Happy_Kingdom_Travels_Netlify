@@ -69,8 +69,15 @@ export const getAllGallery = async (req, res, next) => {
 
 export const createGalleryItem = async (req, res, next) => {
   try {
+    const { images, ...rest } = req.body;
+    const imageData = (images && images.length > 0) ? images[0].url || images[0] : rest.image;
+    if (!imageData) {
+      return res.status(400).json({ success: false, message: 'At least one image is required' });
+    }
+
     const item = await GalleryItem.create({
-      ...req.body,
+      ...rest,
+      image: imageData,
       approved: false
     });
 
