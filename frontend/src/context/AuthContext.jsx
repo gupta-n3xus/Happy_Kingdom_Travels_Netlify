@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const data = await authService.getMe()
-          setUser(data.user)
+          setUser(data.data)
         } catch (error) {
           localStorage.removeItem('token')
           setUser(null)
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const data = await authService.login(email, password)
-    setUser(data.user)
+    setUser(data.data)
     return data
   }
 
