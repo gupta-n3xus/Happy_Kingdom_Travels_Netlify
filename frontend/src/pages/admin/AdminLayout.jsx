@@ -145,36 +145,38 @@ const AdminLayout = ({ children }) => {
                       <ChevronRight className="w-4 h-4 ml-auto text-muted" />
                     </button>
 
-                    {user?.role === 'admin' && (
-                      <>
-                        <Link
-                          to="/admin/settings"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
-                        >
-                          <Settings className="w-4 h-4 mr-3 text-muted" />
-                          Settings
-                          <ChevronRight className="w-4 h-4 ml-auto text-muted" />
-                        </Link>
-                        <Link
-                          to="/admin/sub-admins"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
-                        >
-                          <Users className="w-4 h-4 mr-3 text-muted" />
-                          Sub Admins
-                          <ChevronRight className="w-4 h-4 ml-auto text-muted" />
-                        </Link>
-                        <Link
-                          to="/admin/activity"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
-                        >
-                          <Activity className="w-4 h-4 mr-3 text-muted" />
-                          Activity Log
-                          <ChevronRight className="w-4 h-4 ml-auto text-muted" />
-                        </Link>
-                      </>
+                    {(user?.role === 'admin' || user?.permissions?.includes('settings:view')) && (
+                      <Link
+                        to="/admin/settings"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
+                      >
+                        <Settings className="w-4 h-4 mr-3 text-muted" />
+                        Settings
+                        <ChevronRight className="w-4 h-4 ml-auto text-muted" />
+                      </Link>
+                    )}
+                    {(user?.role === 'admin' || user?.permissions?.includes('subadmins:view')) && (
+                      <Link
+                        to="/admin/sub-admins"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
+                      >
+                        <Users className="w-4 h-4 mr-3 text-muted" />
+                        Sub Admins
+                        <ChevronRight className="w-4 h-4 ml-auto text-muted" />
+                      </Link>
+                    )}
+                    {(user?.role === 'admin' || user?.permissions?.includes('subadmins:view')) && (
+                      <Link
+                        to="/admin/activity"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center w-full px-4 py-2.5 text-sm text-charcoal hover:bg-gray-50 transition-colors"
+                      >
+                        <Activity className="w-4 h-4 mr-3 text-muted" />
+                        Activity Log
+                        <ChevronRight className="w-4 h-4 ml-auto text-muted" />
+                      </Link>
                     )}
 
                     <div className="border-t mt-1 pt-1">
