@@ -49,7 +49,7 @@ app.use('/api/backup', backupRoutes);
 app.use('/api/gallery', galleryRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'API is running', version: '1.2.0' });
+  res.status(200).json({ success: true, message: 'API is running', version: '1.3.0' });
 });
 
 app.use(errorHandler);
