@@ -106,7 +106,7 @@ const AdminPackages = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <img
-                          src={({'/images/bhutan-5n6d.jpg':'/images/pkg-highlights.jpg','/images/bhutan-6n7d.jpg':'/images/pkg-classic.jpg','/images/bhutan-7n8d.jpg':'/images/pkg-grand-explorer.jpg','/images/bhutan-honeymoon.jpg':'/images/pkg-royal.jpg','/images/bhutan-family.jpg':'/images/pkg-family-escape.jpg','/images/bhutan-group.jpg':'/images/pkg-classic.jpg'})[pkg.heroImage] || pkg.heroImage || 'https://via.placeholder.com/40'}
+                          src={({'/images/bhutan-5n6d.jpg':'/images/pkg-highlights.jpg','/images/bhutan-6n7d.jpg':'/images/pkg-classic.jpg','/images/bhutan-7n8d.jpg':'/images/pkg-grand-explorer.jpg','/images/bhutan-honeymoon.jpg':'/images/pkg-royal.jpg','/images/bhutan-family.jpg':'/images/pkg-family-escape.jpg','/images/bhutan-group.jpg':'/images/pkg-classic.jpg'})[pkg.heroImage] || pkg.heroImage || 'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='14'%3E📦%3C/text%3E%3C/svg%3E'}
                           alt={pkg.title}
                           className="w-10 h-10 rounded-lg object-cover mr-3"
                         />
