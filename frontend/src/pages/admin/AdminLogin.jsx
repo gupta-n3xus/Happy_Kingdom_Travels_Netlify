@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
+import { Lock, Mail, Eye, EyeOff, AlertCircle, Phone } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useBusinessContact } from '../../context/SettingsContext'
 import toast from 'react-hot-toast'
@@ -13,11 +13,13 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
     setLoading(true)
     try {
       const data = await login(email, password)
@@ -49,7 +51,11 @@ const AdminLogin = () => {
         navigate('/admin', { replace: true })
       }
     } catch (error) {
-      toast.error(error.message || 'Invalid credentials')
+      if (error.message === 'Unauthorized') {
+        setError('Invalid email or password. Please check your credentials and try again.')
+      } else {
+        setError(error.message || 'Login failed. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
@@ -71,6 +77,27 @@ const AdminLogin = () => {
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-sm">
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-red-800">{error}</p>
+                    <div className="mt-3 pt-3 border-t border-red-200">
+                      <p className="text-xs text-red-600 mb-2">Need help? Contact the administrator:</p>
+                      <a
+                        href={`tel:${BUSINESS_CONTACT.mobile1.replace(/[^+\d]/g, '')}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-red-700 hover:text-red-900 transition-colors"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        {BUSINESS_CONTACT.mobile1}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-2">Email Address</label>

@@ -48,8 +48,11 @@ class ApiClient {
       clearTimeout(timeoutId)
 
       if (response.status === 401) {
-        this.removeToken()
-        window.location.href = '/admin/login'
+        const isLoginPage = window.location.pathname === '/admin/login'
+        if (!isLoginPage) {
+          this.removeToken()
+          window.location.href = '/admin/login'
+        }
         throw new Error('Unauthorized')
       }
 
@@ -109,8 +112,11 @@ class ApiClient {
       clearTimeout(timeoutId)
 
       if (response.status === 401) {
-        this.removeToken()
-        window.location.href = '/admin/login'
+        const isLoginPage = window.location.pathname === '/admin/login'
+        if (!isLoginPage) {
+          this.removeToken()
+          window.location.href = '/admin/login'
+        }
         throw new Error('Unauthorized')
       }
 
