@@ -88,7 +88,7 @@ const AdminBlogPosts = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <img
-                          src={post.featuredImage || 'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='14'%3E📝%3C/text%3E%3C/svg%3E'}
+                          src={post.featuredImage || "data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='14'%3E📝%3C/text%3E%3C/svg%3E"}
                           alt={post.title}
                           className="w-10 h-10 rounded-lg object-cover mr-3"
                         />

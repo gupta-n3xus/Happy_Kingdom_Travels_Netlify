@@ -146,7 +146,7 @@ const AdminDestinations = () => {
                   <tr key={dest._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <img src={dest.image || 'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='14'%3E🏔️%3C/text%3E%3C/svg%3E'} alt={dest.name} className="w-10 h-10 rounded-lg object-cover mr-3" />
+                        <img src={dest.image || "data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='14'%3E%F0%9F%8F%94%EF%B8%8F%3C/text%3E%3C/svg%3E"} alt={dest.name} className="w-10 h-10 rounded-lg object-cover mr-3" />
                         <span className="font-medium text-charcoal">{dest.name}</span>
                       </div>
                     </td>
