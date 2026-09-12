@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Star, CheckCircle, Trash2 } from 'lucide-react'
 import reviewService from '../../services/reviewService'
+import { useAuth } from '../../context/AuthContext'
 import { formatDate } from '../../utils/helpers'
 import toast from 'react-hot-toast'
 
@@ -8,6 +9,10 @@ const AdminReviews = () => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const { user } = useAuth()
+
+  const canApprove = user?.role === 'admin' || user?.permissions?.includes('reviews:approve')
+  const canDelete = user?.role === 'admin' || user?.permissions?.includes('reviews:delete')
 
   useEffect(() => {
     fetchReviews()
@@ -115,7 +120,7 @@ const AdminReviews = () => {
                   {review.verified && (
                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Verified</span>
                   )}
-                  {!review.approved && (
+                  {canApprove && !review.approved && (
                     <button
                       onClick={() => handleApprove(review._id)}
                       className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
@@ -124,13 +129,15 @@ const AdminReviews = () => {
                       <CheckCircle className="w-4 h-4" />
                     </button>
                   )}
-                  <button
-                    onClick={() => handleDelete(review._id)}
-                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {canDelete && (
+                    <button
+                      onClick={() => handleDelete(review._id)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -3,12 +3,18 @@ import { Link } from 'react-router-dom'
 import { Plus, Edit, Trash2, Search, Eye } from 'lucide-react'
 import packageService from '../../services/packageService'
 import { formatPrice } from '../../utils/helpers'
+import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
 const AdminPackages = () => {
   const [packages, setPackages] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const { user } = useAuth()
+
+  const canEdit = user?.role === 'admin' || user?.permissions?.includes('packages:edit')
+  const canDelete = user?.role === 'admin' || user?.permissions?.includes('packages:delete')
+  const canCreate = user?.role === 'admin' || user?.permissions?.includes('packages:create')
 
   useEffect(() => {
     fetchPackages()
@@ -44,13 +50,15 @@ const AdminPackages = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-charcoal">Packages</h1>
-        <Link
-          to="/admin/packages/new"
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Package
-        </Link>
+        {canCreate && (
+          <Link
+            to="/admin/packages/new"
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Package
+          </Link>
+        )}
       </div>
 
       <div className="mb-6">
@@ -134,20 +142,24 @@ const AdminPackages = () => {
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
-                        <Link
-                          to={`/admin/packages/${pkg._id}/edit`}
-                          className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(pkg._id)}
-                          className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {canEdit && (
+                          <Link
+                            to={`/admin/packages/${pkg._id}/edit`}
+                            className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Link>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(pkg._id)}
+                            className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

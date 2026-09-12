@@ -1,5 +1,6 @@
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
+import { log } from '../utils/activityHelper.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -150,6 +151,7 @@ export const updateEnquiryStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Enquiry not found' });
     }
 
+    log(req, 'update', 'enquiry', req.params.id, enquiry.fullName, `Updated enquiry status to "${req.body.status}" for "${enquiry.fullName}"`);
     res.status(200).json({ success: true, data: enquiry });
   } catch (error) {
     next(error);
@@ -164,6 +166,7 @@ export const deleteEnquiry = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Enquiry not found' });
     }
 
+    log(req, 'delete', 'enquiry', req.params.id, enquiry.fullName, `Deleted enquiry from "${enquiry.fullName}"`);
     res.status(200).json({ success: true, message: 'Enquiry deleted successfully' });
   } catch (error) {
     next(error);

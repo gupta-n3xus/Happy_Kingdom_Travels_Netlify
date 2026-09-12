@@ -8,8 +8,8 @@ const Terms = () => {
   return (
     <>
       <SEO
-        title="Terms & Conditions | Happy Kingdom Travels"
-        description="Terms and Conditions for using Happy Kingdom Travels website and travel planning, quotation, booking, and related services."
+        title={`Terms & Conditions | ${BUSINESS_CONTACT.companyName}`}
+        description={`Terms and Conditions for using ${BUSINESS_CONTACT.companyName} website and travel planning, quotation, booking, and related services.`}
       />
 
       <section className="relative h-48 bg-gradient-to-r from-primary to-secondary flex items-center">
@@ -25,10 +25,10 @@ const Terms = () => {
             <p className="text-muted text-sm">Last Updated: September 3, 2026</p>
 
             <p>
-              Welcome to <strong>Happy Kingdom Travels</strong> ("Happy Kingdom Travels", "we", "us", "our").
+              Welcome to <strong>{BUSINESS_CONTACT.companyName}</strong> ("{BUSINESS_CONTACT.companyName}", "we", "us", "our").
             </p>
             <p>
-              These Terms & Conditions ("Terms") govern your use of the Happy Kingdom Travels website and our
+              These Terms & Conditions ("Terms") govern your use of the {BUSINESS_CONTACT.companyName} website and our
               travel planning, quotation, booking, and related services.
             </p>
             <p>
@@ -40,7 +40,7 @@ const Terms = () => {
             </p>
 
             <h2>1. About Our Services</h2>
-            <p>Happy Kingdom Travels provides travel planning and related services, initially focused on Bhutan travel.</p>
+            <p>{BUSINESS_CONTACT.companyName} provides travel planning and related services, initially focused on Bhutan travel.</p>
             <p>Our services may include:</p>
             <ul>
               <li>Bhutan tour packages</li>
@@ -115,7 +115,7 @@ const Terms = () => {
             <p>A customized itinerary becomes confirmed only after the customer accepts the quotation and completes the required payment.</p>
 
             <h2>5. Quotations</h2>
-            <p>A quotation provided by Happy Kingdom Travels is based on the information available to us at the time it is prepared.</p>
+            <p>A quotation provided by {BUSINESS_CONTACT.companyName} is based on the information available to us at the time it is prepared.</p>
             <p>Unless otherwise specified in writing:</p>
             <ul>
               <li>Quotations are subject to availability.</li>
@@ -127,7 +127,7 @@ const Terms = () => {
               <li>Additional services requested after quotation may result in additional charges.</li>
             </ul>
             <p>A quotation does not constitute a confirmed booking.</p>
-            <p>The final booking price and inclusions will be confirmed in the booking confirmation issued by Happy Kingdom Travels.</p>
+            <p>The final booking price and inclusions will be confirmed in the booking confirmation issued by {BUSINESS_CONTACT.companyName}.</p>
 
             <h2>6. Pricing</h2>
             <p>Package prices may depend on:</p>
@@ -162,7 +162,7 @@ const Terms = () => {
               <li>The required advance payment has been received;</li>
               <li>Required documents have been provided;</li>
               <li>Relevant suppliers or travel arrangements have been confirmed; and</li>
-              <li>Happy Kingdom Travels has issued a booking confirmation.</li>
+              <li>{BUSINESS_CONTACT.companyName} has issued a booking confirmation.</li>
             </ol>
             <p>Submitting an enquiry or communicating through WhatsApp does not by itself create a confirmed booking.</p>
 
@@ -180,7 +180,7 @@ const Terms = () => {
             <p>Failure to pay the balance by the specified deadline may result in cancellation of some or all travel arrangements.</p>
 
             <h2>10. Payment Methods</h2>
-            <p>We may accept payments through payment methods made available by Happy Kingdom Travels.</p>
+            <p>We may accept payments through payment methods made available by {BUSINESS_CONTACT.companyName}.</p>
             <p>These may include:</p>
             <ul>
               <li>Bank transfer</li>
@@ -188,7 +188,7 @@ const Terms = () => {
               <li>Online payment gateway</li>
               <li>Other payment methods communicated by our authorized team</li>
             </ul>
-            <p>Customers should make payments only through payment details officially provided by Happy Kingdom Travels.</p>
+            <p>Customers should make payments only through payment details officially provided by {BUSINESS_CONTACT.companyName}.</p>
             <p>We will not be responsible for payments made to unauthorized persons or unofficial accounts.</p>
 
             <h2>11. Payment Receipts</h2>
@@ -206,14 +206,14 @@ const Terms = () => {
               <li>Permit-related information</li>
               <li>Other documents required by relevant authorities</li>
             </ul>
-            <p>Customers must ensure that the information provided to Happy Kingdom Travels is accurate.</p>
+            <p>Customers must ensure that the information provided to {BUSINESS_CONTACT.companyName} is accurate.</p>
             <p>Incorrect or incomplete information may result in delays, additional charges, refusal of entry, permit issues, or cancellation.</p>
 
             <h2>13. Bhutan Entry and Immigration Requirements</h2>
             <p>Bhutan entry, immigration, permit, visa, SDF, identification, and other travel requirements are determined by the relevant Bhutanese authorities and may change.</p>
-            <p>Happy Kingdom Travels may assist customers with travel documentation and permit-related processes where included in the selected service.</p>
+            <p>{BUSINESS_CONTACT.companyName} may assist customers with travel documentation and permit-related processes where included in the selected service.</p>
             <p>However, final approval or entry into Bhutan is determined by the relevant government and immigration authorities.</p>
-            <p>Happy Kingdom Travels cannot guarantee entry approval where the decision is made by a government authority.</p>
+            <p>{BUSINESS_CONTACT.companyName} cannot guarantee entry approval where the decision is made by a government authority.</p>
             <p>Customers are responsible for providing correct documents and information within the required time.</p>
 
             <h2>14. Sustainable Development Fee and Government Regulations</h2>
@@ -270,7 +270,7 @@ const Terms = () => {
               <li>Seasonal accessibility</li>
               <li>Safety considerations</li>
             </ul>
-            <p>If an attraction becomes inaccessible, Happy Kingdom Travels may attempt to arrange a reasonable alternative where practical.</p>
+            <p>If an attraction becomes inaccessible, {BUSINESS_CONTACT.companyName} may attempt to arrange a reasonable alternative where practical.</p>
             <p>Entrance fees are included only when specifically mentioned in the quotation.</p>
 
             <h2>18. Activities and Adventure Experiences</h2>
@@ -294,7 +294,7 @@ const Terms = () => {
               <li>Government restrictions</li>
             </ul>
             <p>Customers should inform us about relevant limitations or special requirements before booking.</p>
-            <p>Happy Kingdom Travels may decline or modify an activity where it reasonably believes participation would create a significant safety concern.</p>
+            <p>{BUSINESS_CONTACT.companyName} may decline or modify an activity where it reasonably believes participation would create a significant safety concern.</p>
 
             <h2>19. Tiger's Nest / Taktsang Hike</h2>
             <p>The Tiger's Nest / Taktsang Monastery hike involves substantial walking and elevation gain.</p>
@@ -333,7 +333,7 @@ const Terms = () => {
             <p>Additional costs caused by circumstances outside our control may be payable by the customer unless otherwise agreed or required by applicable law.</p>
 
             <h2>22. Flight Arrangements</h2>
-            <p>If flights are included in a particular package or separately arranged by Happy Kingdom Travels, the flight terms of the relevant airline or booking provider may also apply.</p>
+            <p>If flights are included in a particular package or separately arranged by {BUSINESS_CONTACT.companyName}, the flight terms of the relevant airline or booking provider may also apply.</p>
             <p>Flight schedules, delays, cancellations, baggage rules, and refunds are subject to the airline's policies.</p>
             <p>Unless explicitly included, airfare is not included in the tour package.</p>
 
@@ -348,7 +348,7 @@ const Terms = () => {
               <li>Travel delays</li>
               <li>Other unforeseen circumstances</li>
             </ul>
-            <p>Unless explicitly stated in writing, Happy Kingdom Travels does not provide insurance coverage for customers.</p>
+            <p>Unless explicitly stated in writing, {BUSINESS_CONTACT.companyName} does not provide insurance coverage for customers.</p>
 
             <h2>24. Customer Responsibilities</h2>
             <p>Customers agree to:</p>
@@ -370,13 +370,13 @@ const Terms = () => {
 
             <h2>25. Personal Belongings</h2>
             <p>Customers are responsible for their personal belongings during the trip.</p>
-            <p>Happy Kingdom Travels is not responsible for loss, theft, damage, or misplacement of personal belongings unless caused by our proven negligence or as otherwise required by applicable law.</p>
+            <p>{BUSINESS_CONTACT.companyName} is not responsible for loss, theft, damage, or misplacement of personal belongings unless caused by our proven negligence or as otherwise required by applicable law.</p>
             <p>Customers should avoid carrying unnecessary valuables during travel.</p>
 
             <h2>26. Health and Medical Conditions</h2>
             <p>Customers are responsible for determining whether they are medically and physically fit to participate in their chosen itinerary and activities.</p>
             <p>Customers should inform us before booking about any condition or requirement that may reasonably affect travel arrangements.</p>
-            <p>We may recommend medical or travel advice where appropriate, but Happy Kingdom Travels does not provide medical advice.</p>
+            <p>We may recommend medical or travel advice where appropriate, but {BUSINESS_CONTACT.companyName} does not provide medical advice.</p>
             <p>Emergency medical decisions should be made with qualified medical professionals.</p>
 
             <h2>27. Changes Requested by Customers</h2>
@@ -393,10 +393,10 @@ const Terms = () => {
             </ul>
             <p>Changes are subject to availability and may result in additional charges.</p>
             <p>Any applicable cancellation or supplier charges may also apply.</p>
-            <p>Changes are confirmed only after Happy Kingdom Travels provides written confirmation.</p>
+            <p>Changes are confirmed only after {BUSINESS_CONTACT.companyName} provides written confirmation.</p>
 
             <h2>28. Cancellation by Customer</h2>
-            <p>Customers may request cancellation of a booking by contacting Happy Kingdom Travels through our official communication channels.</p>
+            <p>Customers may request cancellation of a booking by contacting {BUSINESS_CONTACT.companyName} through our official communication channels.</p>
             <p>Cancellation charges may apply depending on:</p>
             <ul>
               <li>Date of cancellation</li>
@@ -411,7 +411,7 @@ const Terms = () => {
             </ul>
             <p>The cancellation and refund terms applicable to a particular booking will be communicated in the quotation, booking confirmation, or applicable Cancellation & Refund Policy.</p>
 
-            <h2>29. Cancellation by Happy Kingdom Travels</h2>
+            <h2>29. Cancellation by {BUSINESS_CONTACT.companyName}</h2>
             <p>We reserve the right to cancel or modify a booking where reasonably necessary due to circumstances including:</p>
             <ul>
               <li>Supplier failure</li>
@@ -443,7 +443,7 @@ const Terms = () => {
             <p>We will communicate applicable refund information to the customer.</p>
 
             <h2>31. Force Majeure</h2>
-            <p>Happy Kingdom Travels will not be responsible for failure or delay in providing services where such failure or delay results from circumstances beyond our reasonable control.</p>
+            <p>{BUSINESS_CONTACT.companyName} will not be responsible for failure or delay in providing services where such failure or delay results from circumstances beyond our reasonable control.</p>
             <p>Such circumstances may include:</p>
             <ul>
               <li>Natural disasters</li>
@@ -480,7 +480,7 @@ const Terms = () => {
               <li>Government or permit service providers</li>
             </ul>
             <p>These providers may have their own terms, policies, cancellation rules, and operating procedures.</p>
-            <p>Happy Kingdom Travels will make reasonable efforts to work with reliable service providers but cannot control every action or decision made by an independent third party.</p>
+            <p>{BUSINESS_CONTACT.companyName} will make reasonable efforts to work with reliable service providers but cannot control every action or decision made by an independent third party.</p>
             <p>Nothing in these Terms excludes rights or remedies that cannot legally be excluded.</p>
 
             <h2>33. Website Availability</h2>
@@ -517,7 +517,7 @@ const Terms = () => {
             <p>Actual hotels, rooms, vehicles, landscapes, activities, or experiences may differ from photographs displayed on the website.</p>
 
             <h2>36. Intellectual Property</h2>
-            <p>Unless otherwise stated, the content of the Happy Kingdom Travels website, including:</p>
+            <p>Unless otherwise stated, the content of the {BUSINESS_CONTACT.companyName} website, including:</p>
             <ul>
               <li>Logo</li>
               <li>Branding</li>
@@ -531,7 +531,7 @@ const Terms = () => {
               <li>Layout</li>
               <li>Other original content</li>
             </ul>
-            <p>is owned by or licensed to Happy Kingdom Travels.</p>
+            <p>is owned by or licensed to {BUSINESS_CONTACT.companyName}.</p>
             <p>You may not reproduce, copy, modify, distribute, sell, publish, or commercially exploit our website content without prior written permission, except where permitted by applicable law.</p>
 
             <h2>37. Prohibited Use</h2>
@@ -556,7 +556,7 @@ const Terms = () => {
             <p>By using our website and submitting information, you acknowledge that you have reviewed the Privacy Policy.</p>
 
             <h2>39. WhatsApp Communication</h2>
-            <p>Happy Kingdom Travels may provide WhatsApp communication as a convenient method for enquiries and customer support.</p>
+            <p>{BUSINESS_CONTACT.companyName} may provide WhatsApp communication as a convenient method for enquiries and customer support.</p>
             <p>When using WhatsApp:</p>
             <ul>
               <li>You are responsible for reviewing information before sending it.</li>
@@ -568,7 +568,7 @@ const Terms = () => {
             <p>A booking is confirmed only after the applicable booking process has been completed.</p>
 
             <h2>40. Email Communication</h2>
-            <p>Customers may communicate with Happy Kingdom Travels through:</p>
+            <p>Customers may communicate with {BUSINESS_CONTACT.companyName} through:</p>
             <p>
               <a href={`mailto:${BUSINESS_CONTACT.email}`} className="text-primary">{BUSINESS_CONTACT.email}</a>
             </p>
@@ -598,7 +598,7 @@ const Terms = () => {
             <p>Customers should review the applicable third-party terms before using those services.</p>
 
             <h2>42. Limitation of Liability</h2>
-            <p>To the extent permitted by applicable law, Happy Kingdom Travels will not be responsible for losses arising from circumstances outside our reasonable control, including third-party service failures, weather conditions, government restrictions, transportation disruptions, or other force majeure events.</p>
+            <p>To the extent permitted by applicable law, {BUSINESS_CONTACT.companyName} will not be responsible for losses arising from circumstances outside our reasonable control, including third-party service failures, weather conditions, government restrictions, transportation disruptions, or other force majeure events.</p>
             <p>Nothing in these Terms is intended to exclude or limit liability where such exclusion or limitation is prohibited by applicable law.</p>
 
             <h2>43. No Guarantee of Specific Experiences</h2>
@@ -619,7 +619,7 @@ const Terms = () => {
             <p>We will make reasonable efforts to deliver the confirmed itinerary.</p>
 
             <h2>44. Complaints</h2>
-            <p>If you experience a problem during your trip, please notify Happy Kingdom Travels as soon as reasonably possible.</p>
+            <p>If you experience a problem during your trip, please notify {BUSINESS_CONTACT.companyName} as soon as reasonably possible.</p>
             <p>Where appropriate, we will attempt to resolve the issue while the trip is ongoing.</p>
             <p>Complaints made after the trip should include:</p>
             <ul>
@@ -642,7 +642,7 @@ const Terms = () => {
             <p>Customers are responsible for providing accurate contact information and checking important travel communications.</p>
 
             <h2>46. Changes to These Terms</h2>
-            <p>Happy Kingdom Travels may update these Terms from time to time.</p>
+            <p>{BUSINESS_CONTACT.companyName} may update these Terms from time to time.</p>
             <p>Changes may be made because of:</p>
             <ul>
               <li>Changes to our services</li>
@@ -657,7 +657,7 @@ const Terms = () => {
 
             <h2>47. Governing Law</h2>
             <p>These Terms shall be governed by the laws applicable in India, subject to applicable consumer protection and other mandatory legal requirements.</p>
-            <p>Any dispute will be subject to the jurisdiction of the courts having appropriate jurisdiction over Happy Kingdom Travels, subject to applicable law.</p>
+            <p>Any dispute will be subject to the jurisdiction of the courts having appropriate jurisdiction over {BUSINESS_CONTACT.companyName}, subject to applicable law.</p>
 
             <h2>48. Severability</h2>
             <p>If any provision of these Terms is determined to be invalid, unlawful, or unenforceable, that provision will be interpreted or modified to the extent necessary to make it enforceable where legally permitted.</p>
@@ -669,7 +669,7 @@ const Terms = () => {
 
             <h2>50. Contact Us</h2>
             <p>If you have questions about these Terms & Conditions, please contact us.</p>
-            <h3>Happy Kingdom Travels</h3>
+            <h3>{BUSINESS_CONTACT.companyName}</h3>
             <p>
               <strong>Email:</strong>{' '}
               <a href={`mailto:${BUSINESS_CONTACT.email}`} className="text-primary">{BUSINESS_CONTACT.email}</a>

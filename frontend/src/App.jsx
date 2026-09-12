@@ -52,6 +52,10 @@ const AdminReviews = lazy(() => import('./pages/admin/AdminReviews'))
 const AdminGallery = lazy(() => import('./pages/admin/AdminGallery'))
 const AdminBackup = lazy(() => import('./pages/admin/AdminBackup'))
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
+const AdminSubAdmins = lazy(() => import('./pages/admin/AdminSubAdmins'))
+const AdminSubAdminEditor = lazy(() => import('./pages/admin/AdminSubAdminEditor'))
+const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'))
+const AdminActivityLog = lazy(() => import('./pages/admin/AdminActivityLog'))
 
 const Loading = () => (
   <div className="min-h-screen flex items-center justify-center bg-warmWhite">
@@ -74,6 +78,17 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/admin/login" replace />
   }
   return children
+}
+
+const PermissionRoute = ({ permission, children }) => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    return <Navigate to="/admin/login" replace />
+  }
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  if (user.role === 'admin') return children
+  if (user.permissions && user.permissions.includes(permission)) return children
+  return <Navigate to="/admin/profile" replace />
 }
 
 function App() {
@@ -372,119 +387,149 @@ function App() {
           <Route
             path="/admin/packages"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminPackages />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="packages:view">
+                <AdminLayout><AdminPackages /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/packages/new"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminPackageEditor />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="packages:create">
+                <AdminLayout><AdminPackageEditor /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/packages/:id/edit"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminPackageEditor />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="packages:edit">
+                <AdminLayout><AdminPackageEditor /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/destinations"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminDestinations />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="destinations:view">
+                <AdminLayout><AdminDestinations /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/blog"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminBlogPosts />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="blog:view">
+                <AdminLayout><AdminBlogPosts /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/blog/new"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminBlogEditor />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="blog:create">
+                <AdminLayout><AdminBlogEditor /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/blog/:id/edit"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminBlogEditor />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="blog:edit">
+                <AdminLayout><AdminBlogEditor /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/enquiries"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminEnquiries />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="enquiries:view">
+                <AdminLayout><AdminEnquiries /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/reviews"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminReviews />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="reviews:view">
+                <AdminLayout><AdminReviews /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/gallery"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminGallery />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="gallery:view">
+                <AdminLayout><AdminGallery /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/backup"
             element={
-              <ProtectedRoute>
-                <AdminLayout>
-                  <AdminBackup />
-                </AdminLayout>
-              </ProtectedRoute>
+              <PermissionRoute permission="backup:export">
+                <AdminLayout><AdminBackup /></AdminLayout>
+              </PermissionRoute>
             }
           />
           <Route
             path="/admin/settings"
             element={
+              <PermissionRoute permission="settings:view">
+                <AdminLayout><AdminSettings /></AdminLayout>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="/admin/sub-admins"
+            element={
+              <PermissionRoute permission="subadmins:view">
+                <AdminLayout><AdminSubAdmins /></AdminLayout>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="/admin/sub-admins/new"
+            element={
+              <PermissionRoute permission="subadmins:create">
+                <AdminLayout><AdminSubAdminEditor /></AdminLayout>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="/admin/sub-admins/:id/edit"
+            element={
+              <PermissionRoute permission="subadmins:edit">
+                <AdminLayout><AdminSubAdminEditor /></AdminLayout>
+              </PermissionRoute>
+            }
+          />
+          <Route
+            path="/admin/profile"
+            element={
               <ProtectedRoute>
                 <AdminLayout>
-                  <AdminSettings />
+                  <AdminProfile />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/activity"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminActivityLog />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/sub-admins/:id/activity"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminActivityLog />
                 </AdminLayout>
               </ProtectedRoute>
             }

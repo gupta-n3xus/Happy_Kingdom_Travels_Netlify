@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Home, ArrowLeft, MapPin } from 'lucide-react'
 import SEO from '../components/SEO'
+import { useBusinessContact } from '../context/SettingsContext'
 
 const NotFound = () => {
+  const BUSINESS_CONTACT = useBusinessContact()
+
   return (
     <>
-      <SEO title="Page Not Found | Bhutan Travels" />
+      <SEO title={`Page Not Found | ${BUSINESS_CONTACT.companyName}`} />
 
       <div className="min-h-screen bg-warmWhite flex items-center justify-center px-4">
         <div className="text-center max-w-lg">

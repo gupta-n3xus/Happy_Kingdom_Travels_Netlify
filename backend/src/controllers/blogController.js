@@ -1,5 +1,6 @@
 import BlogPost from '../models/BlogPost.js';
 import { getPagination } from '../utils/helpers.js';
+import { log } from '../utils/activityHelper.js';
 
 export const getAllPosts = async (req, res, next) => {
   try {
@@ -62,6 +63,7 @@ export const getPostBySlug = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const post = await BlogPost.create(req.body);
+    log(req, 'create', 'blog_post', post._id?.toString(), post.title, `Created blog post "${post.title}"`);
     res.status(201).json({ success: true, data: post });
   } catch (error) {
     next(error);
@@ -79,6 +81,7 @@ export const updatePost = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Blog post not found' });
     }
 
+    log(req, 'update', 'blog_post', req.params.id, post.title, `Updated blog post "${post.title}"`);
     res.status(200).json({ success: true, data: post });
   } catch (error) {
     next(error);
@@ -93,6 +96,7 @@ export const deletePost = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Blog post not found' });
     }
 
+    log(req, 'delete', 'blog_post', req.params.id, post.title, `Deleted blog post "${post.title}"`);
     res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
   } catch (error) {
     next(error);

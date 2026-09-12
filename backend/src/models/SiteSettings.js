@@ -4,11 +4,16 @@ const siteSettingsSchema = new mongoose.Schema(
   {
     companyName: {
       type: String,
-      default: 'Bhutan Travel Agency'
+      default: 'Happy Kingdom Travels'
     },
     phone: {
       type: String,
       default: '+91 7365004536'
+    },
+    contact: {
+      mobile1: { type: String, default: '+91 7365004536' },
+      mobile2: { type: String, default: '' },
+      whatsapp: { type: String, default: '917365004536' }
     },
     whatsapp: {
       type: String,
@@ -33,7 +38,7 @@ const siteSettingsSchema = new mongoose.Schema(
       gtmId: { type: String, default: '' }
     },
     seo: {
-      defaultTitle: { type: String, default: 'Bhutan Travel Agency - Your Gateway to the Last Shangri-La' },
+      defaultTitle: { type: String, default: 'Happy Kingdom Travels - Your Gateway to the Last Shangri-La' },
       defaultDescription: { type: String, default: 'Explore Bhutan with curated travel packages. Discover ancient monasteries, pristine valleys, and vibrant culture.' }
     },
     heroImage: { type: String, default: '' }

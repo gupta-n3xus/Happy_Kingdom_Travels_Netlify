@@ -148,7 +148,7 @@ export default function PackageDetails() {
         packageName: pkg.title,
         duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D`,
         travelDate: enquiryData.travelDate || 'Flexible',
-      });
+      }, BUSINESS_CONTACT.companyName);
       openWhatsApp(whatsappMsg);
       setEnquiryData({ name: '', phone: '', email: '', travelDate: '', adults: 2, children: 0, message: '' });
     } catch (err) {
@@ -168,7 +168,7 @@ export default function PackageDetails() {
       packageName: pkg.title,
       duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D`,
       travelDate: 'Flexible',
-    });
+    }, BUSINESS_CONTACT.companyName);
     openWhatsApp(message);
   };
 
@@ -603,7 +603,7 @@ export default function PackageDetails() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }))}
+              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }, BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-forest text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-forest/90 transition-all shadow-lg shadow-forest/25"
@@ -633,7 +633,7 @@ export default function PackageDetails() {
               Custom Trip Planner
             </Link>
             <a
-              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }))}
+              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }, BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center py-4 bg-white rounded-xl border border-gray-100 hover:border-forest hover:shadow-md transition-all font-medium text-forest"
@@ -694,7 +694,7 @@ export default function PackageDetails() {
 
       <section className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Why Book with Happy Kingdom Travels?</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Why Book with {BUSINESS_CONTACT.companyName}?</h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
             We are a registered Bhutanese travel company based in Jaigaon. Every trip is managed
             by our local team — no middlemen, no hidden costs.
@@ -740,7 +740,7 @@ export default function PackageDetails() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }))}
+              href={createWhatsAppUrl(createPackageMessage({ title: pkg.title, price: pkg.price, duration: `${pkg.duration?.nights}N/${pkg.duration?.days}D` }, BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-forest px-8 py-3.5 rounded-xl font-semibold hover:bg-white/90 transition-all"

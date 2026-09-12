@@ -60,7 +60,7 @@ export default function PackageCard({ pkg }) {
       packageName: title,
       duration: duration ? `${duration.nights}N/${duration.days}D` : '',
       travelDate: 'Flexible',
-    });
+    }, BUSINESS_CONTACT.companyName);
     openWhatsApp(message);
   };
 

@@ -450,7 +450,7 @@ const Home = () => {
         title="Ready to Explore Bhutan?"
         subtitle="Tell us your travel dates and what you want from your trip. We'll help plan the rest."
         primaryCTA={{ text: 'Plan My Bhutan Trip', link: '/customize-your-trip' }}
-        secondaryCTA={{ text: 'WhatsApp Us', link: createWhatsAppUrl(createGeneralMessage()) }}
+        secondaryCTA={{ text: 'WhatsApp Us', link: createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName)) }}
       />
     </>
   )

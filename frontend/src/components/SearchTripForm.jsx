@@ -5,10 +5,12 @@ import { DURATIONS, TRAVEL_STYLES } from '../constants'
 import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { createTripPlannerMessage } from '../utils/createWhatsAppMessage'
+import { useBusinessContact } from '../context/SettingsContext'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
 import { getClientInfoSync, fetchGeoInBackground, getCachedGeo } from '../utils/clientInfo'
 
 const SearchTripForm = () => {
+  const BUSINESS_CONTACT = useBusinessContact();
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -52,7 +54,7 @@ const SearchTripForm = () => {
     setLoading(true)
     try {
       const finalDuration = formData.duration === 'custom' ? formData.customDuration : formData.duration
-      const whatsappMessage = createTripPlannerMessage(formData)
+      const whatsappMessage = createTripPlannerMessage(formData, BUSINESS_CONTACT.companyName)
       openWhatsApp(whatsappMessage)
 
       fetchGeoInBackground()

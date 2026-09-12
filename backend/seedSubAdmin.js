@@ -19,10 +19,16 @@ const seed = async () => {
       name: 'Pankaj Kumar',
       email: 'pankajkumar@hkt.com',
       password: 'ThevalueofPIis3.14159@@@',
-      role: 'sub_admin'
+      role: 'sub_admin',
+      permissions: [
+        'packages:view', 'packages:create', 'packages:edit', 'packages:delete',
+        'reviews:view', 'reviews:approve', 'reviews:edit',
+        'gallery:view', 'gallery:upload', 'gallery:approve'
+      ]
     });
 
     console.log('Sub-admin created successfully:', user.email, 'role:', user.role);
+    console.log('Permissions:', user.permissions);
     await mongoose.disconnect();
   } catch (error) {
     console.error('Error creating sub-admin:', error.message);

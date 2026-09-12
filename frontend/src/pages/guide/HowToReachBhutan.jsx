@@ -32,48 +32,48 @@ const comparisonRows = [
   { option: 'NJP/Bagdogra pickup', bestFor: 'Convenient for package travellers who want everything arranged' },
 ]
 
-const faqs = [
-  {
-    question: 'How can I reach Bhutan from India?',
-    answer: 'Bhutan can be reached from India by road through border towns like Phuentsholing, or by flight to Paro International Airport from select Indian cities.',
-  },
-  {
-    question: 'Can I travel to Bhutan by road?',
-    answer: 'Yes, several road entry points exist including Phuentsholing, Samtse, Gelephu and Samdrup Jongkhar. Phuentsholing is the most commonly used by travellers from India.',
-  },
-  {
-    question: 'Can I fly directly to Bhutan?',
-    answer: 'Yes, Paro International Airport receives flights from select Indian cities. Schedules depend on current airline operations.',
-  },
-  {
-    question: 'How do I travel from NJP to Bhutan?',
-    answer: 'From NJP Railway Station, you can travel by road to Phuentsholing (approximately 4-5 hours) and then continue into Bhutan.',
-  },
-  {
-    question: 'How far is Bagdogra from the Bhutan border?',
-    answer: 'Bagdogra Airport is approximately 3-4 hours from Phuentsholing, the main Bhutan border town.',
-  },
-  {
-    question: 'Can Happy Kingdom Travels pick me up from NJP?',
-    answer: 'Yes, for applicable packages we can arrange pickup from NJP Railway Station and coordinate onward transportation to Bhutan.',
-  },
-  {
-    question: 'Can you pick me up from Bagdogra Airport?',
-    answer: 'Yes, we can arrange pickup from Bagdogra Airport as part of your Bhutan package.',
-  },
-  {
-    question: 'Which is better, road or flight?',
-    answer: 'Road travel offers scenic views and is ideal for travellers from North Bengal. Flights provide faster access to Bhutan from major cities.',
-  },
-]
-
 export default function HowToReachBhutan() {
   const BUSINESS_CONTACT = useBusinessContact();
+
+  const faqs = [
+    {
+      question: 'How can I reach Bhutan from India?',
+      answer: 'Bhutan can be reached from India by road through border towns like Phuentsholing, or by flight to Paro International Airport from select Indian cities.',
+    },
+    {
+      question: 'Can I travel to Bhutan by road?',
+      answer: 'Yes, several road entry points exist including Phuentsholing, Samtse, Gelephu and Samdrup Jongkhar. Phuentsholing is the most commonly used by travellers from India.',
+    },
+    {
+      question: 'Can I fly directly to Bhutan?',
+      answer: 'Yes, Paro International Airport receives flights from select Indian cities. Schedules depend on current airline operations.',
+    },
+    {
+      question: 'How do I travel from NJP to Bhutan?',
+      answer: 'From NJP Railway Station, you can travel by road to Phuentsholing (approximately 4-5 hours) and then continue into Bhutan.',
+    },
+    {
+      question: 'How far is Bagdogra from the Bhutan border?',
+      answer: 'Bagdogra Airport is approximately 3-4 hours from Phuentsholing, the main Bhutan border town.',
+    },
+    {
+      question: `Can ${BUSINESS_CONTACT.companyName} pick me up from NJP?`,
+      answer: 'Yes, for applicable packages we can arrange pickup from NJP Railway Station and coordinate onward transportation to Bhutan.',
+    },
+    {
+      question: 'Can you pick me up from Bagdogra Airport?',
+      answer: 'Yes, we can arrange pickup from Bagdogra Airport as part of your Bhutan package.',
+    },
+    {
+      question: 'Which is better, road or flight?',
+      answer: 'Road travel offers scenic views and is ideal for travellers from North Bengal. Flights provide faster access to Bhutan from major cities.',
+    },
+  ]
 
   return (
     <>
       <SEO
-        title="How to Reach Bhutan from India – Road, Flight & NJP Guide | Happy Kingdom Travels"
+        title={`How to Reach Bhutan from India – Road, Flight & NJP Guide | ${BUSINESS_CONTACT.companyName}`}
         description="Learn how to reach Bhutan from India by road or flight, including practical information about NJP, Bagdogra, Phuentsholing and Paro airport."
         keywords="how to reach bhutan from india, njp to bhutan, bagdogra to bhutan, bhutan road entry, bhutan flight, travel to bhutan"
         type="article"
@@ -144,7 +144,7 @@ export default function HowToReachBhutan() {
               Travellers arriving at NJP Railway Station or Bagdogra Airport can continue towards the Bhutan border by road. The journey from NJP or Bagdogra to Phuentsholing takes approximately 3-5 hours depending on traffic and road conditions.
             </p>
             <p className="text-gray-600 text-center max-w-2xl mx-auto mb-6">
-              For applicable packages, Happy Kingdom Travels can arrange pickup from NJP Railway Station or Bagdogra Airport and coordinate onward transportation to Bhutan.
+              For applicable packages, {BUSINESS_CONTACT.companyName} can arrange pickup from NJP Railway Station or Bagdogra Airport and coordinate onward transportation to Bhutan.
             </p>
             <div className="text-center">
               <Link
@@ -212,7 +212,7 @@ export default function HowToReachBhutan() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-1 h-8 bg-gold rounded-full" />
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">How Happy Kingdom Travels Helps</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">How {BUSINESS_CONTACT.companyName} Helps</h2>
         </div>
         <p className="text-gray-600 max-w-3xl mb-8">
           Instead of arranging every part of your Bhutan journey separately, we can coordinate applicable pickup, transportation, accommodation, sightseeing and travel assistance through one package. Our team handles the logistics so you can focus on enjoying your trip.
@@ -226,7 +226,7 @@ export default function HowToReachBhutan() {
             <ArrowRight className="w-5 h-5" />
           </Link>
           <a
-            href={createWhatsAppUrl(createGuideMessage('How to Reach Bhutan'))}
+            href={createWhatsAppUrl(createGuideMessage('How to Reach Bhutan', BUSINESS_CONTACT.companyName))}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"
@@ -251,7 +251,7 @@ export default function HowToReachBhutan() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl lg:text-3xl font-bold mb-4">Ready to Plan Your Bhutan Trip?</h2>
           <p className="text-white/80 mb-8 max-w-2xl mx-auto">
-            From NJP or Bagdogra pickup to hotels, transportation, sightseeing and trip planning, Happy Kingdom Travels can help you organize your Bhutan journey according to your requirements.
+            From NJP or Bagdogra pickup to hotels, transportation, sightseeing and trip planning, {BUSINESS_CONTACT.companyName} can help you organize your Bhutan journey according to your requirements.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -268,7 +268,7 @@ export default function HowToReachBhutan() {
               Customize My Trip
             </Link>
             <a
-              href={createWhatsAppUrl(createGuideMessage('How to Reach Bhutan'))}
+              href={createWhatsAppUrl(createGuideMessage('How to Reach Bhutan', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"

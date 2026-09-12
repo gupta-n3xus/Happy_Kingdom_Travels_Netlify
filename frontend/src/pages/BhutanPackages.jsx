@@ -86,8 +86,8 @@ export default function BhutanPackages() {
   return (
     <div className="min-h-screen bg-white">
       <SEO
-        title={`Bhutan Tour Packages — 4N to 9N | Happy Kingdom Travels`}
-        description={`Browse curated Bhutan tour packages from Jaigaon & Phuentsholing. Group, solo, honeymoon, family & cultural tours with local expert guides. Happy Kingdom Travels.`}
+        title={`Bhutan Tour Packages — 4N to 9N | ${BUSINESS_CONTACT.companyName}`}
+        description={`Browse curated Bhutan tour packages from Jaigaon & Phuentsholing. Group, solo, honeymoon, family & cultural tours with local expert guides. ${BUSINESS_CONTACT.companyName}.`}
         keywords="bhutan tour packages, bhutan packages from india, bhutan group tour, bhutan honeymoon, bhutan family tour, bhutan tour from jaigaon"
         canonical="/tours"
         type="website"
@@ -211,7 +211,7 @@ export default function BhutanPackages() {
               Try adjusting your filters or contact us for a custom package.
             </p>
             <a
-              href={createWhatsAppUrl(createGeneralMessage())}
+              href={createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-forest text-white px-6 py-3 rounded-xl font-semibold hover:bg-forest/90 transition-all"
@@ -246,7 +246,7 @@ export default function BhutanPackages() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={createWhatsAppUrl(createGeneralMessage())}
+              href={createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-forest text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-forest/90 transition-all shadow-lg shadow-forest/25"

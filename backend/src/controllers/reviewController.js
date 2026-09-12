@@ -1,5 +1,6 @@
 import Review from '../models/Review.js';
 import { getPagination } from '../utils/helpers.js';
+import { log } from '../utils/activityHelper.js';
 
 export const getApprovedReviews = async (req, res, next) => {
   try {
@@ -105,6 +106,7 @@ export const deleteReview = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Review not found' });
     }
 
+    log(req, 'delete', 'review', req.params.id, review.fullName, `Deleted review by "${review.fullName}"`);
     res.status(200).json({ success: true, message: 'Review deleted successfully' });
   } catch (error) {
     next(error);
@@ -123,6 +125,7 @@ export const approveReview = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Review not found' });
     }
 
+    log(req, 'approve', 'review', req.params.id, review.fullName, `Approved review by "${review.fullName}"`);
     res.status(200).json({ success: true, data: review });
   } catch (error) {
     next(error);

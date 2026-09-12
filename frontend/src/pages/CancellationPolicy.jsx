@@ -18,8 +18,8 @@ const CancellationPolicy = () => {
   return (
     <>
       <SEO
-        title="Cancellation & Refund Policy | Happy Kingdom Travels"
-        description="Cancellation and refund policy for Bhutan tour packages booked with Happy Kingdom Travels. Understand our cancellation terms, refund process, and important conditions."
+        title={`Cancellation & Refund Policy | ${BUSINESS_CONTACT.companyName}`}
+        description={`Cancellation and refund policy for Bhutan tour packages booked with ${BUSINESS_CONTACT.companyName}. Understand our cancellation terms, refund process, and important conditions.`}
       />
 
       <section className="relative h-48 bg-gradient-to-r from-primary to-secondary flex items-center">
@@ -36,7 +36,7 @@ const CancellationPolicy = () => {
 
             <p>
               This Cancellation & Refund Policy explains the cancellation, modification, and refund terms
-              applicable to travel services booked through <strong>Happy Kingdom Travels</strong> ("Happy
+              applicable to travel services booked through <strong>{BUSINESS_CONTACT.companyName}</strong> ("Happy
               Kingdom Travels", "we", "us", or "our").
             </p>
             <p>
@@ -45,7 +45,7 @@ const CancellationPolicy = () => {
               stated in the customer's quotation or booking confirmation.
             </p>
             <p>
-              By making a booking with Happy Kingdom Travels, you acknowledge and agree to the applicable
+              By making a booking with {BUSINESS_CONTACT.companyName}, you acknowledge and agree to the applicable
               cancellation terms.
             </p>
 
@@ -76,7 +76,7 @@ const CancellationPolicy = () => {
 
             <h2>2. Cancellation Request</h2>
             <p>
-              Customers wishing to cancel a booking must contact Happy Kingdom Travels through an official
+              Customers wishing to cancel a booking must contact {BUSINESS_CONTACT.companyName} through an official
               communication channel.
             </p>
             <p>Cancellation requests may be submitted through:</p>
@@ -100,7 +100,7 @@ const CancellationPolicy = () => {
             </ul>
             <p>
               The effective cancellation date will generally be the date on which the cancellation request is
-              received and acknowledged by Happy Kingdom Travels.
+              received and acknowledged by {BUSINESS_CONTACT.companyName}.
             </p>
             <p>
               A WhatsApp message or email requesting cancellation does not automatically guarantee that a
@@ -268,7 +268,7 @@ const CancellationPolicy = () => {
               refundable.
             </p>
             <p>
-              Customers should contact Happy Kingdom Travels as soon as possible if they expect to arrive
+              Customers should contact {BUSINESS_CONTACT.companyName} as soon as possible if they expect to arrive
               late.
             </p>
 
@@ -297,7 +297,7 @@ const CancellationPolicy = () => {
               interruption.
             </p>
             <p>
-              Where a supplier provides a refund due to a documented medical situation, Happy Kingdom Travels
+              Where a supplier provides a refund due to a documented medical situation, {BUSINESS_CONTACT.companyName}
               may pass the applicable refundable amount to the customer after deducting permitted charges.
             </p>
 
@@ -333,7 +333,7 @@ const CancellationPolicy = () => {
               Additional charges may apply if the new travel dates have higher rates.
             </p>
             <p>
-              Any date change is valid only after written confirmation from Happy Kingdom Travels.
+              Any date change is valid only after written confirmation from {BUSINESS_CONTACT.companyName}.
             </p>
             <p>
               A date change may be treated as a cancellation and rebooking if required by a supplier.
@@ -376,9 +376,9 @@ const CancellationPolicy = () => {
               supplier cancellation conditions may apply.
             </p>
 
-            <h2>17. Cancellation by Happy Kingdom Travels</h2>
+            <h2>17. Cancellation by {BUSINESS_CONTACT.companyName}</h2>
             <p>
-              In exceptional circumstances, Happy Kingdom Travels may need to cancel or substantially modify
+              In exceptional circumstances, {BUSINESS_CONTACT.companyName} may need to cancel or substantially modify
               a booking.
             </p>
             <p>Reasons may include:</p>
@@ -408,8 +408,8 @@ const CancellationPolicy = () => {
 
             <h2>18. Force Majeure</h2>
             <p>
-              Force majeure events may include circumstances beyond the reasonable control of Happy Kingdom
-              Travels, including:
+              Force majeure events may include circumstances beyond the reasonable control of {BUSINESS_CONTACT.companyName}
+              , including:
             </p>
             <ul>
               <li>Natural disasters</li>
@@ -431,7 +431,7 @@ const CancellationPolicy = () => {
               <li>Other extraordinary events</li>
             </ul>
             <p>
-              If a trip is affected by a force majeure event, Happy Kingdom Travels will make reasonable
+              If a trip is affected by a force majeure event, {BUSINESS_CONTACT.companyName} will make reasonable
               efforts to assist customers and explore alternatives where practical.
             </p>
             <p>
@@ -490,7 +490,7 @@ const CancellationPolicy = () => {
               <li>Airline processing timelines</li>
             </ul>
             <p>
-              Happy Kingdom Travels cannot guarantee an airline refund where the airline does not provide one.
+              {BUSINESS_CONTACT.companyName} cannot guarantee an airline refund where the airline does not provide one.
             </p>
 
             <h2>22. Refund Calculation</h2>
@@ -510,7 +510,7 @@ const CancellationPolicy = () => {
 
             <h2>23. Refund Processing Time</h2>
             <p>
-              Once a refund is approved, Happy Kingdom Travels will initiate the refund through the applicable
+              Once a refund is approved, {BUSINESS_CONTACT.companyName} will initiate the refund through the applicable
               payment method or process.
             </p>
             <p>
@@ -616,7 +616,7 @@ const CancellationPolicy = () => {
 
             <h2>30. Changes to This Policy</h2>
             <p>
-              Happy Kingdom Travels may update this Cancellation & Refund Policy from time to time.
+              {BUSINESS_CONTACT.companyName} may update this Cancellation & Refund Policy from time to time.
             </p>
             <p>Updates may be made due to:</p>
             <ul>
@@ -640,7 +640,7 @@ const CancellationPolicy = () => {
             <p>
               For cancellation, modification, or refund-related questions, contact:
             </p>
-            <h3>Happy Kingdom Travels</h3>
+            <h3>{BUSINESS_CONTACT.companyName}</h3>
             <p>
               <strong>Email:</strong>{' '}
               <a href={`mailto:${BUSINESS_CONTACT.email}`} className="text-primary">

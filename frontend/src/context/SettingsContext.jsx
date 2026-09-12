@@ -13,8 +13,9 @@ export function SettingsProvider({ children }) {
       const res = await settingsService.getSettings();
       const data = res.data?.data || res.data || {};
       setSettings(data);
-      if (data.whatsapp) {
-        setWhatsAppNumber(data.whatsapp.replace(/[^+\d]/g, ''));
+      const whatsappNumber = data.contact?.whatsapp || data.whatsapp;
+      if (whatsappNumber) {
+        setWhatsAppNumber(whatsappNumber.replace(/[^+\d]/g, ''));
       }
     } catch (err) {
       console.error('Failed to load site settings:', err);
@@ -37,17 +38,20 @@ export function SettingsProvider({ children }) {
 export function useBusinessContact() {
   const { settings } = useContext(SettingsContext) || {};
 
-  const phone = settings?.phone || '+91 7365004536';
-  const phoneLink = `tel:${phone.replace(/[^+\d]/g, '')}`;
+  const companyName = settings?.companyName || 'Happy Kingdom Travels';
+  const mobile1 = settings?.contact?.mobile1 || settings?.phone || '+91 7365004536';
+  const mobile2 = settings?.contact?.mobile2 || '';
+  const phone = mobile1;
+  const phoneLink = `tel:${mobile1.replace(/[^+\d]/g, '')}`;
   const email = settings?.email || 'happykingdomtravel@gmail.com';
-  const whatsapp = settings?.whatsapp || '917365004536';
+  const whatsapp = settings?.contact?.whatsapp || settings?.whatsapp || '917365004536';
   const whatsappNumber = whatsapp.replace(/[^+\d]/g, '');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hi! I\'m interested in a Bhutan tour package.')}`;
   const address = settings?.address || 'Chota Mechiya Busty, Jaigaon, Alipurduar, West Bengal 736182';
   const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
   const socialLinks = settings?.socialLinks || { facebook: '', instagram: '', twitter: '', youtube: '' };
 
-  return { phone, phoneLink, email, whatsappUrl, whatsappNumber, address, mapsUrl, socialLinks };
+  return { companyName, mobile1, mobile2, phone, phoneLink, email, whatsappUrl, whatsappNumber, address, mapsUrl, socialLinks };
 }
 
 export function useSettings() {

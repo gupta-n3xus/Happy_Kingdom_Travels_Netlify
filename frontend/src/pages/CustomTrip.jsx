@@ -80,7 +80,7 @@ const CustomTrip = () => {
                     {BUSINESS_CONTACT.phone}
                   </a>
                   <a
-                    href={createWhatsAppUrl(createGeneralMessage())}
+                    href={createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName))}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center text-muted hover:text-green-500 transition-colors"

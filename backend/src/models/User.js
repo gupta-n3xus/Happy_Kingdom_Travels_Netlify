@@ -27,6 +27,18 @@ role: {
       type: String,
       enum: ['admin', 'sub_admin', 'editor'],
       default: 'editor'
+    },
+    permissions: [{
+      type: String,
+      trim: true
+    }],
+    lastLogin: {
+      type: Date,
+      default: null
+    },
+    tokenVersion: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true }

@@ -186,7 +186,7 @@ const Phuentsholing = () => {
   ]
 
   const travelTips = [
-    { title: 'Verify Current Entry Rules', description: 'Immigration rules and permits for entering Bhutan can change. Always check the latest entry requirements, visa regulations, and permit processes with the Bhutanese immigration authorities or your tour operator before travelling. Happy Kingdom Travels can guide you on current regulations.' },
+    { title: 'Verify Current Entry Rules', description: `Immigration rules and permits for entering Bhutan can change. Always check the latest entry requirements, visa regulations, and permit processes with the Bhutanese immigration authorities or your tour operator before travelling. ${BUSINESS_CONTACT.companyName} can guide you on current regulations.` },
     { title: 'Carry Valid Documents', description: 'You will need a valid passport (for international travellers) or valid photo ID (for Indian nationals entering Bhutan overland). Carry multiple photocopies and keep originals secure. Indian nationals may need an Entry Permit — confirm requirements before your trip.' },
     { title: 'Exchange Currency Before Crossing', description: 'The Indian Rupee is accepted in Phuentsholing and widely in Bhutan, but exchange rates may vary. The Bhutanese Ngultrum is pegged to the INR at par. Carry some local currency for smaller purchases on the Bhutanese side.' },
     { title: 'Start Early for Onward Travel', description: 'If Phuentsholing is a transit stop, begin your journey early in the morning to reach Thimphu (5-6 hours) or Paro (6-7 hours) before dark. Mountain roads require careful driving and daylight navigation.' },
@@ -205,7 +205,7 @@ const Phuentsholing = () => {
     },
     {
       question: 'Can I get picked up from Jaigaon or Phuentsholing?',
-      answer: 'Yes, we offer pickup services from Phuentsholing and nearby Jaigaon for guests booking Bhutan tour packages with Happy Kingdom Travels. Our team can arrange transportation from the border to your hotel or for onward travel into Bhutan. Contact us on WhatsApp for details.',
+      answer: `Yes, we offer pickup services from Phuentsholing and nearby Jaigaon for guests booking Bhutan tour packages with ${BUSINESS_CONTACT.companyName}. Our team can arrange transportation from the border to your hotel or for onward travel into Bhutan. Contact us on WhatsApp for details.`,
     },
     {
       question: 'Do I need a permit to enter Bhutan from Phuentsholing?',
@@ -237,13 +237,13 @@ const Phuentsholing = () => {
     { name: 'Bumthang', slug: 'bumthang', description: "The spiritual heartland of Bhutan with four valleys filled with ancient temples, sacred sites, and the country's oldest Buddhist monasteries." },
   ]
 
-  const whatsappUrl = createWhatsAppUrl(createDestinationMessage('Phuentsholing'))
+  const whatsappUrl = createWhatsAppUrl(createDestinationMessage('Phuentsholing', BUSINESS_CONTACT.companyName))
 
   return (
     <>
       <SEO
-        title="Phuentsholing Bhutan Travel Guide - Gateway to Bhutan, Jaigaon & Tours | Happy Kingdom Travels"
-        description="Discover Phuentsholing Bhutan — the gateway from India. Explore Bhutan Gate, border crossing, local markets, Jaigaon connection, and Bhutan tour packages. Plan your Phuentsholing journey with Happy Kingdom Travels."
+        title={`Phuentsholing Bhutan Travel Guide - Gateway to Bhutan, Jaigaon & Tours | ${BUSINESS_CONTACT.companyName}`}
+        description={`Discover Phuentsholing Bhutan — the gateway from India. Explore Bhutan Gate, border crossing, local markets, Jaigaon connection, and Bhutan tour packages. Plan your Phuentsholing journey with ${BUSINESS_CONTACT.companyName}.`}
       />
 
       {/* Hero Section */}
@@ -745,11 +745,11 @@ const Phuentsholing = () => {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Star className="w-6 h-6 text-gold fill-gold" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Plan Your Bhutan Journey With Happy Kingdom Travels</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Plan Your Bhutan Journey With {BUSINESS_CONTACT.companyName}</h2>
             <Star className="w-6 h-6 text-gold fill-gold" />
           </div>
           <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
-            From seamless border crossing assistance and entry permit guidance to expert local guides and handpicked accommodations, Happy Kingdom Travels ensures your Bhutan adventure starting from Phuentsholing is effortless and unforgettable. We handle every detail so you can focus on experiencing the magic of the Kingdom.
+            From seamless border crossing assistance and entry permit guidance to expert local guides and handpicked accommodations, {BUSINESS_CONTACT.companyName} ensures your Bhutan adventure starting from Phuentsholing is effortless and unforgettable. We handle every detail so you can focus on experiencing the magic of the Kingdom.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

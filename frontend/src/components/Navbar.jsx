@@ -50,7 +50,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center shrink-0">
             <img
               src={logo}
-              alt="Happy Kingdom Travels"
+              alt={BUSINESS_CONTACT.companyName}
               className="h-12 w-12 rounded-full object-cover"
             />
           </Link>
@@ -150,7 +150,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center shrink-0" onClick={() => setIsOpen(false)}>
               <img
                 src={logo}
-                alt="Happy Kingdom Travels"
+                alt={BUSINESS_CONTACT.companyName}
                 className="h-10 w-10 rounded-full object-cover"
               />
             </Link>

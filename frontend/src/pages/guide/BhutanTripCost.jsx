@@ -114,7 +114,7 @@ export default function BhutanTripCost() {
   return (
     <>
       <SEO
-        title="Bhutan Trip Cost from India – Complete Guide | Happy Kingdom Travels"
+        title={`Bhutan Trip Cost from India – Complete Guide | ${BUSINESS_CONTACT.companyName}`}
         description="Planning a Bhutan trip from India? Understand the complete cost breakdown including accommodation, transportation, sightseeing, government charges and get a personalized quotation."
         keywords="bhutan trip cost, bhutan tour cost from india, bhutan travel cost, bhutan trip cost from india, bhutan package cost, bhutan tour cost"
         type="website"
@@ -137,7 +137,7 @@ export default function BhutanTripCost() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost'))}
+              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-gold text-forest px-8 py-3.5 rounded-xl font-bold hover:bg-gold/90 transition-all"
@@ -281,7 +281,7 @@ export default function BhutanTripCost() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost'))}
+              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"
@@ -337,7 +337,7 @@ export default function BhutanTripCost() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost'))}
+              href={createWhatsAppUrl(createGuideMessage('Bhutan Trip Cost', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"

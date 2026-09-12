@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useBusinessContact } from '../../context/SettingsContext'
 import toast from 'react-hot-toast'
 import logo from '../../utils/logo/HKT.png'
 
 const AdminLogin = () => {
+  const BUSINESS_CONTACT = useBusinessContact();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -21,7 +23,28 @@ const AdminLogin = () => {
       const data = await login(email, password)
       toast.success('Login successful!')
       if (data?.data?.role === 'sub_admin') {
-        navigate('/admin/packages', { replace: true })
+        const perms = data?.data?.permissions || []
+        if (perms.includes('dashboard:view')) {
+          navigate('/admin', { replace: true })
+        } else if (perms.includes('packages:view')) {
+          navigate('/admin/packages', { replace: true })
+        } else if (perms.includes('destinations:view')) {
+          navigate('/admin/destinations', { replace: true })
+        } else if (perms.includes('blog:view')) {
+          navigate('/admin/blog', { replace: true })
+        } else if (perms.includes('enquiries:view')) {
+          navigate('/admin/enquiries', { replace: true })
+        } else if (perms.includes('reviews:view')) {
+          navigate('/admin/reviews', { replace: true })
+        } else if (perms.includes('gallery:view')) {
+          navigate('/admin/gallery', { replace: true })
+        } else if (perms.includes('settings:view')) {
+          navigate('/admin/settings', { replace: true })
+        } else if (perms.includes('subadmins:view')) {
+          navigate('/admin/sub-admins', { replace: true })
+        } else {
+          navigate('/admin/profile', { replace: true })
+        }
       } else {
         navigate('/admin', { replace: true })
       }
@@ -35,14 +58,14 @@ const AdminLogin = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Login | Bhutan Travels</title>
+        <title>Admin Login | {BUSINESS_CONTACT.companyName}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen bg-warmWhite flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <img src={logo} alt="Happy Kingdom Travels" className="h-16 w-auto mx-auto mb-4" />
+            <img src={logo} alt={BUSINESS_CONTACT.companyName} className="h-16 w-auto mx-auto mb-4" />
             <h1 className="font-display text-2xl font-bold text-charcoal">Admin Portal</h1>
             <p className="text-muted mt-2">Sign in to manage your website</p>
           </div>

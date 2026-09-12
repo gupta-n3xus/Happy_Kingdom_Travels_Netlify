@@ -72,16 +72,6 @@ export const STATUS_OPTIONS = [
 export const WHATSAPP_DEFAULT_MESSAGE =
   'Hi, I am interested in a Bhutan tour package. I would like help planning my trip.'
 
-export const BUSINESS_CONTACT = {
-  phone: '+91 7365004536',
-  phoneLink: 'tel:+917365004536',
-  email: 'happykingdomtravel@gmail.com',
-  whatsappUrl: 'https://wa.me/message/3LIJPTDSII3IF1?text=Hi%20Happy%20Kingdom%20Travels!%20I%27m%20interested%20in%20a%20Bhutan%20tour%20package.%20I%20would%20like%20help%20planning%20my%20trip.',
-  whatsappNumber: '917365004536',
-  address: 'Chota Mechiya Busty, Jaigaon, Alipurduar, West Bengal 736182',
-  mapsUrl: 'https://maps.google.com/?q=Chota+Mechiya+Busty+Jaigaon+Alipurduar+West+Bengal+736182',
-}
-
 export const INTERESTS = [
   'Nature',
   'Culture',
@@ -90,4 +80,93 @@ export const INTERESTS = [
   'Relaxation',
   'Family',
   'Honeymoon',
+]
+
+export const PERMISSIONS_CONFIG = [
+  {
+    key: 'packages',
+    label: 'Packages',
+    actions: [
+      { key: 'view', label: 'View Packages' },
+      { key: 'create', label: 'Create Packages' },
+      { key: 'edit', label: 'Edit Packages' },
+      { key: 'delete', label: 'Delete Packages' }
+    ]
+  },
+  {
+    key: 'destinations',
+    label: 'Destinations',
+    actions: [
+      { key: 'view', label: 'View Destinations' },
+      { key: 'create', label: 'Create Destinations' },
+      { key: 'edit', label: 'Edit Destinations' },
+      { key: 'delete', label: 'Delete Destinations' }
+    ]
+  },
+  {
+    key: 'blog',
+    label: 'Blog Posts',
+    actions: [
+      { key: 'view', label: 'View Blog Posts' },
+      { key: 'create', label: 'Create Blog Posts' },
+      { key: 'edit', label: 'Edit Blog Posts' },
+      { key: 'delete', label: 'Delete Blog Posts' }
+    ]
+  },
+  {
+    key: 'enquiries',
+    label: 'Enquiries',
+    actions: [
+      { key: 'view', label: 'View Enquiries' },
+      { key: 'edit', label: 'Edit Enquiries' },
+      { key: 'delete', label: 'Delete Enquiries' }
+    ]
+  },
+  {
+    key: 'reviews',
+    label: 'Reviews',
+    actions: [
+      { key: 'view', label: 'View Reviews' },
+      { key: 'approve', label: 'Approve Reviews' },
+      { key: 'edit', label: 'Edit Reviews' },
+      { key: 'delete', label: 'Delete Reviews' }
+    ]
+  },
+  {
+    key: 'gallery',
+    label: 'Gallery',
+    actions: [
+      { key: 'view', label: 'View Gallery' },
+      { key: 'upload', label: 'Upload to Gallery' },
+      { key: 'approve', label: 'Approve Gallery Items' },
+      { key: 'edit', label: 'Edit Gallery Items' },
+      { key: 'delete', label: 'Delete Gallery Items' }
+    ]
+  },
+  {
+    key: 'backup',
+    label: 'Backup',
+    actions: [
+      { key: 'export', label: 'Export Backup' },
+      { key: 'import', label: 'Import Backup' }
+    ]
+  },
+  {
+    key: 'settings',
+    label: 'Settings',
+    actions: [
+      { key: 'view', label: 'View Settings' },
+      { key: 'edit', label: 'Edit Settings' }
+    ]
+  },
+  {
+    key: 'subadmins',
+    label: 'Sub Admins',
+    actions: [
+      { key: 'view', label: 'View Sub Admins' },
+      { key: 'create', label: 'Create Sub Admins' },
+      { key: 'edit', label: 'Edit Sub Admins' },
+      { key: 'delete', label: 'Delete Sub Admins' }
+    ]
+  }
 ]

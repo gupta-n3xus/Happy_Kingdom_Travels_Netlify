@@ -87,7 +87,7 @@ export default function TravelGuide() {
   return (
     <>
       <SEO
-        title="Bhutan Travel Guide – Tips, Costs & Planning | Happy Kingdom Travels"
+        title={`Bhutan Travel Guide – Tips, Costs & Planning | ${BUSINESS_CONTACT.companyName}`}
         description="Everything you need to know to plan a comfortable and memorable Bhutan holiday from India. Travel costs, entry requirements, best time to visit, and more."
         keywords="bhutan travel guide, bhutan trip guide, bhutan planning, bhutan tips, bhutan travel information"
         type="website"
@@ -111,7 +111,7 @@ export default function TravelGuide() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={createWhatsAppUrl(createGeneralMessage())}
+              href={createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"
@@ -257,7 +257,7 @@ export default function TravelGuide() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={createWhatsAppUrl(createGeneralMessage())}
+              href={createWhatsAppUrl(createGeneralMessage(BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"

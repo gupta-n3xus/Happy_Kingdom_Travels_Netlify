@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, X } from 'lucide-react'
 import api from '../../services/api'
+import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
 const AdminDestinations = () => {
@@ -8,6 +9,11 @@ const AdminDestinations = () => {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const { user } = useAuth()
+
+  const canEdit = user?.role === 'admin' || user?.permissions?.includes('destinations:edit')
+  const canDelete = user?.role === 'admin' || user?.permissions?.includes('destinations:delete')
+  const canCreate = user?.role === 'admin' || user?.permissions?.includes('destinations:create')
   const [formData, setFormData] = useState({
     name: '',
     shortDescription: '',
@@ -99,13 +105,15 @@ const AdminDestinations = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-charcoal">Destinations</h1>
-        <button
-          onClick={() => { setEditingId(null); resetForm(); setShowModal(true); }}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Destination
-        </button>
+        {canCreate && (
+          <button
+            onClick={() => { setEditingId(null); resetForm(); setShowModal(true); }}
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Destination
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -151,12 +159,16 @@ const AdminDestinations = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <button onClick={() => handleEdit(dest)} className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => handleDelete(dest._id)} className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {canEdit && (
+                          <button onClick={() => handleEdit(dest)} className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button onClick={() => handleDelete(dest._id)} className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

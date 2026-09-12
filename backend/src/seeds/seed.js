@@ -638,20 +638,26 @@ const seedData = async () => {
     await SiteSettings.create({
       companyName: 'Happy Kingdom Travels',
       phone: '+91 7365004536',
+      contact: {
+        mobile1: '+91 7365004536',
+        mobile2: '',
+        whatsapp: '917365004536'
+      },
       whatsapp: '917365004536',
       email: 'happykingdomtravel@gmail.com',
       address: 'Chota Mechiya Busty, Jaigaon, Alipurduar, West Bengal 736182',
       socialLinks: {
         facebook: '',
         instagram: '',
-        twitter: ''
+        twitter: '',
+        youtube: ''
       },
       analytics: {
         ga4Id: '',
         gtmId: ''
       },
       seo: {
-        defaultTitle: 'Bhutan Travel Agency - Your Gateway to the Last Shangri-La',
+        defaultTitle: 'Happy Kingdom Travels - Your Gateway to the Last Shangri-La',
         defaultDescription: 'Explore Bhutan with curated travel packages. Discover ancient monasteries, pristine valleys, and vibrant culture.'
       }
     });

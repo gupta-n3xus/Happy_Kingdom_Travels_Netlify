@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Eye, X, Trash2, Image, Download, ChevronLeft, ChevronRight } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import enquiryService from '../../services/enquiryService'
+import { useAuth } from '../../context/AuthContext'
 import { formatDate, formatDateTime } from '../../utils/helpers'
 import { STATUS_OPTIONS } from '../../constants'
 import toast from 'react-hot-toast'
@@ -19,6 +20,9 @@ const AdminEnquiries = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [total, setTotal] = useState(0)
   const modalRef = useRef(null)
+  const { user } = useAuth()
+
+  const canDelete = user?.role === 'admin' || user?.permissions?.includes('enquiries:delete')
 
   useEffect(() => {
     setPage(1)
@@ -483,13 +487,15 @@ const AdminEnquiries = () => {
                 )}
                 {savingImage ? 'Saving...' : 'Save as Image'}
               </button>
-              <button
-                onClick={() => handleDelete(selectedEnquiry._id)}
-                className="inline-flex items-center justify-center gap-2 bg-red-50 text-red-600 px-4 py-3 rounded-xl font-semibold hover:bg-red-100 transition-all"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </button>
+              {canDelete && (
+                <button
+                  onClick={() => handleDelete(selectedEnquiry._id)}
+                  className="inline-flex items-center justify-center gap-2 bg-red-50 text-red-600 px-4 py-3 rounded-xl font-semibold hover:bg-red-100 transition-all"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              )}
             </div>
             </div>
           </div>

@@ -273,13 +273,13 @@ const HaaValley = () => {
     { name: 'Bumthang', slug: 'bumthang', description: "The spiritual heartland of Bhutan with four valleys filled with ancient temples, sacred sites, and the country's oldest Buddhist monasteries." },
   ]
 
-  const whatsappUrl = createWhatsAppUrl(createDestinationMessage('Haa Valley'))
+  const whatsappUrl = createWhatsAppUrl(createDestinationMessage('Haa Valley', BUSINESS_CONTACT.companyName))
 
   return (
     <>
       <SEO
-        title="Haa Valley Bhutan Travel Guide - Things to Do, Places to Visit & Tours | Happy Kingdom Travels"
-        description="Discover Haa Valley Bhutan with our complete travel guide. Explore twin temples, traditional farmhouses, mountain viewpoints, and off-the-beaten-path experiences. Plan your Haa Valley trip with Happy Kingdom Travels."
+        title={`Haa Valley Bhutan Travel Guide - Things to Do, Places to Visit & Tours | ${BUSINESS_CONTACT.companyName}`}
+        description={`Discover Haa Valley Bhutan with our complete travel guide. Explore twin temples, traditional farmhouses, mountain viewpoints, and off-the-beaten-path experiences. Plan your Haa Valley trip with ${BUSINESS_CONTACT.companyName}.`}
       />
 
       {/* Hero Section */}
@@ -737,11 +737,11 @@ const HaaValley = () => {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Star className="w-6 h-6 text-gold fill-gold" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Plan Your Bhutan Journey With Happy Kingdom Travels</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Plan Your Bhutan Journey With {BUSINESS_CONTACT.companyName}</h2>
             <Star className="w-6 h-6 text-gold fill-gold" />
           </div>
           <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
-            From seamless visa processing and expert local guides to handpicked farmstays and personalized itineraries, Happy Kingdom Travels ensures your Haa Valley adventure is effortless and unforgettable. We handle every detail so you can focus on experiencing the magic of Bhutan.
+            From seamless visa processing and expert local guides to handpicked farmstays and personalized itineraries, {BUSINESS_CONTACT.companyName} ensures your Haa Valley adventure is effortless and unforgettable. We handle every detail so you can focus on experiencing the magic of Bhutan.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

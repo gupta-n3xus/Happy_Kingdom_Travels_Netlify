@@ -13,8 +13,7 @@ const AdminSettings = () => {
   const heroFileRef = useRef(null)
   const [formData, setFormData] = useState({
     companyName: '',
-    phone: '',
-    whatsapp: '',
+    contact: { mobile1: '', mobile2: '', whatsapp: '' },
     email: '',
     address: '',
     socialLinks: { facebook: '', instagram: '', twitter: '', youtube: '' },
@@ -33,8 +32,11 @@ const AdminSettings = () => {
       const settings = data.data || {}
       setFormData({
         companyName: settings.companyName || '',
-        phone: settings.phone || '',
-        whatsapp: settings.whatsapp || '',
+        contact: {
+          mobile1: settings.contact?.mobile1 || settings.phone || '',
+          mobile2: settings.contact?.mobile2 || '',
+          whatsapp: settings.contact?.whatsapp || settings.whatsapp || '',
+        },
         email: settings.email || '',
         address: settings.address || '',
         socialLinks: settings.socialLinks || { facebook: '', instagram: '', twitter: '', youtube: '' },
@@ -78,6 +80,13 @@ const AdminSettings = () => {
     } finally {
       setUploading(false)
     }
+  }
+
+  const updateContact = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      contact: { ...prev.contact, [field]: value }
+    }))
   }
 
   if (loading) {
@@ -143,14 +152,6 @@ const AdminSettings = () => {
               <input type="text" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.companyName} onChange={(e) => setFormData({ ...formData, companyName: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-charcoal mb-1">Phone</label>
-              <input type="tel" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal mb-1">WhatsApp</label>
-              <input type="tel" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.whatsapp} onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })} />
-            </div>
-            <div>
               <label className="block text-sm font-medium text-charcoal mb-1">Email</label>
               <input type="email" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
             </div>
@@ -158,6 +159,29 @@ const AdminSettings = () => {
               <label className="block text-sm font-medium text-charcoal mb-1">Address</label>
               <textarea rows="2" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })}></textarea>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <h2 className="font-bold text-charcoal mb-4">Contact Numbers</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-charcoal mb-1">Mobile Number 1</label>
+              <input type="tel" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.contact.mobile1} onChange={(e) => updateContact('mobile1', e.target.value)} placeholder="+91 XXXXX XXXXX" />
+              <p className="text-xs text-gray-400 mt-1">Primary contact number for calls</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-charcoal mb-1">Mobile Number 2 <span className="text-gray-400 font-normal">(optional)</span></label>
+              <input type="tel" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.contact.mobile2} onChange={(e) => updateContact('mobile2', e.target.value)} placeholder="+91 XXXXX XXXXX" />
+              <p className="text-xs text-gray-400 mt-1">Secondary contact number (leave empty if not needed)</p>
+            </div>
+          </div>
+
+          <h2 className="font-bold text-charcoal mb-4 mt-6 pt-6 border-t border-gray-100">WhatsApp</h2>
+          <div>
+            <label className="block text-sm font-medium text-charcoal mb-1">WhatsApp Number</label>
+            <input type="tel" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary" value={formData.contact.whatsapp} onChange={(e) => updateContact('whatsapp', e.target.value)} placeholder="91XXXXXXXXXX" />
+            <p className="text-xs text-gray-400 mt-1">Country code + number without spaces (e.g. 919876543210)</p>
           </div>
         </div>
 

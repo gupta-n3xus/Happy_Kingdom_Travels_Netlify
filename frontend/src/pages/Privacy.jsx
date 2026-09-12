@@ -8,8 +8,8 @@ const Privacy = () => {
   return (
     <>
       <SEO
-        title="Privacy Policy | Happy Kingdom Travels"
-        description="Privacy Policy for Happy Kingdom Travels. Learn how we collect, use, store, disclose, and protect information when you visit our website or use our travel services."
+        title={`Privacy Policy | ${BUSINESS_CONTACT.companyName}`}
+        description={`Privacy Policy for ${BUSINESS_CONTACT.companyName}. Learn how we collect, use, store, disclose, and protect information when you visit our website or use our travel services.`}
       />
 
       <section className="relative h-48 bg-gradient-to-r from-primary to-secondary flex items-center">
@@ -25,7 +25,7 @@ const Privacy = () => {
             <p className="text-muted text-sm">Last Updated: September 1, 2026</p>
 
             <p>
-              Welcome to <strong>Happy Kingdom Travels</strong> ("Happy Kingdom Travels", "we", "us", or "our").
+              Welcome to <strong>{BUSINESS_CONTACT.companyName}</strong> ("{BUSINESS_CONTACT.companyName}", "we", "us", or "our").
             </p>
             <p>
               This Privacy Policy explains how we collect, use, store, disclose, and protect information when you
@@ -36,9 +36,9 @@ const Privacy = () => {
               By using our website, you acknowledge that you have read and understood this Privacy Policy.
             </p>
 
-            <h2>1. About Happy Kingdom Travels</h2>
+            <h2>1. About {BUSINESS_CONTACT.companyName}</h2>
             <p>
-              Happy Kingdom Travels is a travel service provider initially focused on planning and assisting
+              {BUSINESS_CONTACT.companyName} is a travel service provider initially focused on planning and assisting
               customers with trips to Bhutan.
             </p>
             <p>Our services may include:</p>
@@ -181,7 +181,7 @@ const Privacy = () => {
               <li>Selected package</li>
             </ul>
             <p>
-              The WhatsApp message is generated to make it easier for you to contact Happy Kingdom Travels.
+              The WhatsApp message is generated to make it easier for you to contact {BUSINESS_CONTACT.companyName}.
             </p>
             <p>You remain responsible for reviewing the message before sending it through WhatsApp.</p>
             <p>
@@ -224,8 +224,8 @@ const Privacy = () => {
               <li>Date and time of submission</li>
             </ul>
             <p>
-              This information may be stored in our database and used by authorized members of Happy Kingdom
-              Travels for customer service and travel planning.
+              This information may be stored in our database and used by authorized members of {BUSINESS_CONTACT.companyName}
+              for customer service and travel planning.
             </p>
 
             <h2>6. Email Communications</h2>
@@ -247,7 +247,7 @@ const Privacy = () => {
 
             <h2>7. WhatsApp Communications</h2>
             <p>
-              Our website may provide links to WhatsApp to allow customers to contact Happy Kingdom Travels.
+              Our website may provide links to WhatsApp to allow customers to contact {BUSINESS_CONTACT.companyName}.
             </p>
             <p>Our WhatsApp contact link may be:</p>
             <p>
@@ -299,7 +299,7 @@ const Privacy = () => {
 
             <h2>10. Google Search and SEO</h2>
             <p>
-              Happy Kingdom Travels may use search-engine optimization and structured website information to
+              {BUSINESS_CONTACT.companyName} may use search-engine optimization and structured website information to
               help our pages appear in search results.
             </p>
             <p>
@@ -350,7 +350,7 @@ const Privacy = () => {
             </ul>
             <p>These third parties may have their own privacy policies and terms.</p>
             <p>
-              Happy Kingdom Travels is not responsible for the privacy practices of third-party websites or
+              {BUSINESS_CONTACT.companyName} is not responsible for the privacy practices of third-party websites or
               services that we do not control.
             </p>
             <p>We recommend reviewing their respective privacy policies before providing personal information to them.</p>
@@ -416,7 +416,7 @@ const Privacy = () => {
               third-party payment service provider.
             </p>
             <p>
-              Unless expressly stated otherwise, Happy Kingdom Travels does not intend to store complete
+              Unless expressly stated otherwise, {BUSINESS_CONTACT.companyName} does not intend to store complete
               payment card numbers, CVV numbers, or similar sensitive payment credentials on its own servers.
             </p>
             <p>
@@ -522,7 +522,7 @@ const Privacy = () => {
               If you have questions about this Privacy Policy, want to request information about your personal
               data, or have a privacy-related concern, please contact us.
             </p>
-            <h3>Happy Kingdom Travels</h3>
+            <h3>{BUSINESS_CONTACT.companyName}</h3>
             <p>
               <strong>Email:</strong>{' '}
               <a href={`mailto:${BUSINESS_CONTACT.email}`} className="text-primary">{BUSINESS_CONTACT.email}</a>
@@ -531,7 +531,7 @@ const Privacy = () => {
               <strong>WhatsApp:</strong> Available through our website WhatsApp contact link
             </p>
             <p>
-              <strong>Website:</strong> Happy Kingdom Travels
+              <strong>Website:</strong> {BUSINESS_CONTACT.companyName}
             </p>
             <p>
               For privacy-related requests, please include sufficient information for us to understand and
@@ -540,8 +540,8 @@ const Privacy = () => {
 
             <h2>24. Important Notice</h2>
             <p>
-              This Privacy Policy is intended to explain the general privacy practices of Happy Kingdom
-              Travels and how information is handled through our website and services.
+              This Privacy Policy is intended to explain the general privacy practices of {BUSINESS_CONTACT.companyName}
+              and how information is handled through our website and services.
             </p>
             <p>It does not replace professional legal advice.</p>
             <p>

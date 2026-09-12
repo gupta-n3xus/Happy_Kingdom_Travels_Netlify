@@ -6,10 +6,12 @@ import { STATES, STATE_CITIES } from '../data/states'
 import enquiryService from '../services/enquiryService'
 import { trackEvent } from '../hooks/useAnalytics'
 import { createCustomTripMessage } from '../utils/createWhatsAppMessage'
+import { useBusinessContact } from '../context/SettingsContext'
 import { openWhatsApp } from '../utils/createWhatsAppUrl'
 import { getClientInfoSync, fetchGeoInBackground, getCachedGeo } from '../utils/clientInfo'
 
 const QuoteForm = () => {
+  const BUSINESS_CONTACT = useBusinessContact();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -60,7 +62,7 @@ const QuoteForm = () => {
       return
     }
 
-    const whatsappMessage = createCustomTripMessage(formData)
+    const whatsappMessage = createCustomTripMessage(formData, BUSINESS_CONTACT.companyName)
     openWhatsApp(whatsappMessage)
 
     fetchGeoInBackground()

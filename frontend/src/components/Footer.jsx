@@ -41,7 +41,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center mb-6">
-              <img src={logo} alt="Happy Kingdom Travels" className="h-12 w-12 rounded-full object-cover" />
+              <img src={logo} alt={BUSINESS_CONTACT.companyName} className="h-12 w-12 rounded-full object-cover" />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Your trusted partner for authentic Bhutan travel experiences. Discover the Land of the Thunder Dragon with our expert-guided tours.
@@ -145,15 +145,28 @@ const Footer = () => {
               Contact
             </h3>
             <ul className="space-y-4">
-              <li className="flex items-start space-x-3">
-                <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
-                <a
-                  href={BUSINESS_CONTACT.phoneLink}
-                  className="text-gray-400 hover:text-accent transition-colors text-sm"
-                >
-                  {BUSINESS_CONTACT.phone}
-                </a>
-              </li>
+              {BUSINESS_CONTACT.mobile1 && (
+                <li className="flex items-start space-x-3">
+                  <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                  <a
+                    href={`tel:${BUSINESS_CONTACT.mobile1.replace(/[^+\d]/g, '')}`}
+                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                  >
+                    {BUSINESS_CONTACT.mobile1}
+                  </a>
+                </li>
+              )}
+              {BUSINESS_CONTACT.mobile2 && (
+                <li className="flex items-start space-x-3">
+                  <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                  <a
+                    href={`tel:${BUSINESS_CONTACT.mobile2.replace(/[^+\d]/g, '')}`}
+                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                  >
+                    {BUSINESS_CONTACT.mobile2}
+                  </a>
+                </li>
+              )}
               <li className="flex items-start space-x-3">
                 <MessageCircle className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                 <a
@@ -194,7 +207,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} Happy Kingdom Travels. All rights reserved.
+              &copy; {new Date().getFullYear()} {BUSINESS_CONTACT.companyName}. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
               {legal.map((link) => (

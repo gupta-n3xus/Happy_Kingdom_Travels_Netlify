@@ -2,12 +2,18 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Edit, Trash2 } from 'lucide-react'
 import blogService from '../../services/blogService'
+import { useAuth } from '../../context/AuthContext'
 import { formatDate } from '../../utils/helpers'
 import toast from 'react-hot-toast'
 
 const AdminBlogPosts = () => {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
+
+  const canEdit = user?.role === 'admin' || user?.permissions?.includes('blog:edit')
+  const canDelete = user?.role === 'admin' || user?.permissions?.includes('blog:delete')
+  const canCreate = user?.role === 'admin' || user?.permissions?.includes('blog:create')
 
   useEffect(() => {
     fetchPosts()
@@ -39,13 +45,15 @@ const AdminBlogPosts = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-charcoal">Blog Posts</h1>
-        <Link
-          to="/admin/blog/new"
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Post
-        </Link>
+        {canCreate && (
+          <Link
+            to="/admin/blog/new"
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Post
+          </Link>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -104,18 +112,22 @@ const AdminBlogPosts = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-muted text-sm">{formatDate(post.createdAt)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <Link
-                          to={`/admin/blog/${post._id}/edit`}
-                          className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(post._id)}
-                          className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {canEdit && (
+                          <Link
+                            to={`/admin/blog/${post._id}/edit`}
+                            className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Link>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(post._id)}
+                            className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

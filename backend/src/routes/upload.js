@@ -1,10 +1,11 @@
 import express from 'express';
 import upload, { galleryUpload } from '../config/upload.js';
-import { protect, authorize } from '../middleware/auth.js';
+import { protect } from '../middleware/auth.js';
+import { checkPermission } from '../middleware/permission.js';
 
 const router = express.Router();
 
-router.post('/image', protect, authorize('admin', 'sub_admin'), (req, res) => {
+router.post('/image', protect, checkPermission('packages:create'), (req, res) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
@@ -17,7 +18,7 @@ router.post('/image', protect, authorize('admin', 'sub_admin'), (req, res) => {
   });
 });
 
-router.post('/images', protect, authorize('admin', 'sub_admin'), (req, res) => {
+router.post('/images', protect, checkPermission('packages:create'), (req, res) => {
   upload.array('images', 10)(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });

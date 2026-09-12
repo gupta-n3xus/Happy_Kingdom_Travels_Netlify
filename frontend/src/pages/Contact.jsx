@@ -42,7 +42,7 @@ const Contact = () => {
       })
       toast.success('Thank you! Your enquiry has been received. We\'ll get back to you shortly.')
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-      window.open(createWhatsAppUrl(createContactMessage(formData.subject || 'general enquiry')), '_blank')
+      window.open(createWhatsAppUrl(createContactMessage(formData.subject || 'general enquiry', BUSINESS_CONTACT.companyName)), '_blank')
     } catch (error) {
       toast.error('Sorry, we couldn\'t submit your enquiry. Please try again or contact us on WhatsApp.')
     } finally {
@@ -50,11 +50,15 @@ const Contact = () => {
     }
   }
 
+  const phoneDetails = [];
+  if (BUSINESS_CONTACT.mobile1) phoneDetails.push(BUSINESS_CONTACT.mobile1);
+  if (BUSINESS_CONTACT.mobile2) phoneDetails.push(BUSINESS_CONTACT.mobile2);
+
   const contactInfo = [
     {
       icon: Phone,
       title: 'Call Us',
-      details: [BUSINESS_CONTACT.phone],
+      details: phoneDetails.length > 0 ? phoneDetails : [BUSINESS_CONTACT.phone],
       link: BUSINESS_CONTACT.phoneLink,
     },
     {
@@ -67,7 +71,7 @@ const Contact = () => {
       icon: MapPin,
       title: 'Visit Us',
       details: BUSINESS_CONTACT.address.split(', ').length > 1
-        ? ['Chota Mechiya Busty, Jaigaon,', 'Alipurduar, West Bengal 736182']
+        ? [BUSINESS_CONTACT.address.split(', ').slice(0, 2).join(', ') + ',', BUSINESS_CONTACT.address.split(', ').slice(2).join(', ')]
         : [BUSINESS_CONTACT.address],
       link: BUSINESS_CONTACT.mapsUrl,
     },
@@ -230,7 +234,7 @@ const Contact = () => {
               ))}
 
               <a
-                href={createWhatsAppUrl(createContactMessage('general enquiry'))}
+                href={createWhatsAppUrl(createContactMessage('general enquiry', BUSINESS_CONTACT.companyName))}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackEvent('whatsapp_click', { source: 'contact_page' })}

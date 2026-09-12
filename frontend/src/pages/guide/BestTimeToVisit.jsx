@@ -128,7 +128,7 @@ export default function BestTimeToVisit() {
   return (
     <>
       <SEO
-        title="Best Time to Visit Bhutan – Weather, Seasons & Guide | Happy Kingdom Travels"
+        title={`Best Time to Visit Bhutan – Weather, Seasons & Guide | ${BUSINESS_CONTACT.companyName}`}
         description="Discover the best time to visit Bhutan. Learn about spring, summer, autumn and winter seasons with weather details, travel tips and recommendations for every type of traveller."
         keywords="best time to visit Bhutan, Bhutan seasons, Bhutan weather, Bhutan travel season, when to visit Bhutan, Bhutan monsoon, Bhutan winter, Bhutan spring"
         type="website"
@@ -307,7 +307,7 @@ export default function BestTimeToVisit() {
               Customize Trip
             </Link>
             <a
-              href={createWhatsAppUrl(createGuideMessage('Best Time to Visit Bhutan'))}
+              href={createWhatsAppUrl(createGuideMessage('Best Time to Visit Bhutan', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"

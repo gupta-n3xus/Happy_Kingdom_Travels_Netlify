@@ -13,7 +13,7 @@ export const slugify = (text) => {
 export const formatResponse = (res, statusCode, data, message = null) => {
   const response = { success: true };
   if (message) response.message = message;
-  if (data !== undefined) {
+  if (data !== undefined && data !== null) {
     if (data.pagination) {
       response.data = data.data;
       response.pagination = data.pagination;

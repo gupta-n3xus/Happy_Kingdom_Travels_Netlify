@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon, MessageCircle, Check } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Star, Upload, Loader2, ImageIcon, MessageCircle } from 'lucide-react'
 import galleryService from '../../services/galleryService'
 import { useAuth } from '../../context/AuthContext'
 import { formatDate } from '../../utils/helpers'
@@ -10,6 +10,10 @@ const CATEGORIES = ['Paro', 'Thimphu', 'Punakha', 'Bumthang', 'Other']
 const AdminGallery = () => {
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
+  const canEdit = isAdmin || user?.permissions?.includes('gallery:edit')
+  const canDelete = isAdmin || user?.permissions?.includes('gallery:delete')
+  const canApprove = isAdmin || user?.permissions?.includes('gallery:approve')
+  const canUpload = isAdmin || user?.permissions?.includes('gallery:upload')
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('All')
@@ -207,7 +211,7 @@ const AdminGallery = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-charcoal">Gallery</h1>
-        {isAdmin && (
+        {canUpload && (
           <button
             onClick={openCreateModal}
             className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-light transition-colors flex items-center"
@@ -351,7 +355,7 @@ const AdminGallery = () => {
                                   <p className="text-sm font-medium text-charcoal truncate">{c.name}</p>
                                   <p className="text-xs text-muted truncate">{c.text}</p>
                                 </div>
-                                {isAdmin && (
+                                {canDelete && (
                                   <button
                                     onClick={() => handleDeleteComment(item._id, c._id)}
                                     className="shrink-0 p-1 text-muted hover:text-red-500 hover:bg-red-50 rounded transition-colors"
@@ -373,7 +377,7 @@ const AdminGallery = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        {isAdmin ? (
+                        {canApprove && (
                           <button
                             onClick={() => handleToggleApproval(item._id, item.approved)}
                             className={`p-2 rounded-lg transition-colors ${
@@ -393,30 +397,22 @@ const AdminGallery = () => {
                               </svg>
                             )}
                           </button>
-                        ) : !item.approved ? (
+                        )}
+                        {canEdit && (
                           <button
-                            onClick={() => handleToggleApproval(item._id, false)}
-                            className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors"
-                            title="Approve and make public"
+                            onClick={() => openEditModal(item)}
+                            className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                           >
-                            <Check className="w-4 h-4" />
+                            <Edit className="w-4 h-4" />
                           </button>
-                        ) : null}
-                        {isAdmin && (
-                          <>
-                            <button
-                              onClick={() => openEditModal(item)}
-                              className="p-2 text-muted hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(item._id)}
-                              className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(item._id)}
+                            className="p-2 text-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         )}
                       </div>
                     </td>

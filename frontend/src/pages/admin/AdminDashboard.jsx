@@ -14,7 +14,12 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (user?.role === 'sub_admin') {
-      navigate('/admin/packages', { replace: true })
+      const perms = user?.permissions || []
+      if (perms.includes('dashboard:view')) {
+        fetchDashboardData()
+      } else {
+        navigate('/admin/profile', { replace: true })
+      }
       return
     }
     fetchDashboardData()

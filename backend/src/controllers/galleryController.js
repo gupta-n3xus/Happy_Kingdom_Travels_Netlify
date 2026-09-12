@@ -1,6 +1,7 @@
 import GalleryItem from '../models/GalleryItem.js';
 import { getPagination } from '../utils/helpers.js';
 import { deleteCloudinaryImages } from '../config/upload.js';
+import { log } from '../utils/activityHelper.js';
 
 export const getPublishedGallery = async (req, res, next) => {
   try {
@@ -85,6 +86,7 @@ export const createGalleryItem = async (req, res, next) => {
       approved: false
     });
 
+    log(req, 'create', 'gallery', item._id?.toString(), item.title || item.caption, `Created gallery item`);
     res.status(201).json({
       success: true,
       message: 'Your valuable feedback has been received. It will be reviewed by our team and made public shortly. Thank you for your valuable time with us!',
@@ -106,6 +108,7 @@ export const updateGalleryItem = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Gallery item not found' });
     }
 
+    log(req, 'update', 'gallery', req.params.id, item.title || item.caption, `Updated gallery item`);
     res.status(200).json({ success: true, data: item });
   } catch (error) {
     next(error);
@@ -125,6 +128,7 @@ export const deleteGalleryItem = async (req, res, next) => {
     if (Array.isArray(item.images)) imageUrls.push(...item.images);
     if (imageUrls.length > 0) await deleteCloudinaryImages(imageUrls);
 
+    log(req, 'delete', 'gallery', req.params.id, item.title || item.caption, `Deleted gallery item`);
     await item.deleteOne();
 
     res.status(200).json({ success: true, message: 'Gallery item deleted successfully' });
@@ -144,6 +148,7 @@ export const approveGalleryItem = async (req, res, next) => {
     item.approved = true;
     await item.save();
 
+    log(req, 'approve', 'gallery', req.params.id, item.title || item.caption, `Approved gallery item`);
     res.status(200).json({ success: true, data: item });
   } catch (error) {
     next(error);

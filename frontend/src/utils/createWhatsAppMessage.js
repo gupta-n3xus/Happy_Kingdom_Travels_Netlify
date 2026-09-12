@@ -13,6 +13,8 @@ const STYLE_LABELS = {
   luxury: 'Luxury',
 }
 
+const DEFAULT_COMPANY_NAME = 'Happy Kingdom Travels'
+
 function formatDate(dateStr) {
   if (!dateStr) return 'Not specified'
   try {
@@ -32,7 +34,7 @@ function safe(val, fallback = 'Not specified') {
   return String(val)
 }
 
-export function createTripPlannerMessage(formData) {
+export function createTripPlannerMessage(formData, companyName = DEFAULT_COMPANY_NAME) {
   const travelFrom = formData.city && formData.state
     ? `${formData.city}, ${formData.state}`
     : safe(formData.travelFrom)
@@ -46,7 +48,7 @@ export function createTripPlannerMessage(formData) {
     ? (STYLE_LABELS[formData.travelStyle] || formData.travelStyle)
     : 'Not specified'
 
-  return `Hi Happy Kingdom Travels!
+  return `Hi ${companyName}!
 
 I'd like to plan a Bhutan trip. Here are my requirements:
 
@@ -60,9 +62,9 @@ I'd like to plan a Bhutan trip. Here are my requirements:
 Please send me the available packages and quotation.`
 }
 
-export function createPackageMessage(pkg) {
+export function createPackageMessage(pkg, companyName = DEFAULT_COMPANY_NAME) {
   const title = safe(pkg.title, 'a Bhutan package')
-  return `Hi Happy Kingdom Travels!
+  return `Hi ${companyName}!
 
 I'm interested in the following package:
 
@@ -73,29 +75,29 @@ I'm interested in the following package:
 Please share the full itinerary and details.`
 }
 
-export function createGeneralMessage() {
-  return `Hi Happy Kingdom Travels!
+export function createGeneralMessage(companyName = DEFAULT_COMPANY_NAME) {
+  return `Hi ${companyName}!
 
 I'm interested in a Bhutan tour package. I would like help planning my trip. Please share the available options and pricing.`
 }
 
-export function createGuideMessage(topic) {
+export function createGuideMessage(topic, companyName = DEFAULT_COMPANY_NAME) {
   const subject = safe(topic, 'Bhutan travel')
-  return `Hi Happy Kingdom Travels!
+  return `Hi ${companyName}!
 
 I was reading your travel guide about "${subject}" and have some questions. Could you help me with more details?`
 }
 
-export function createContactMessage(subject) {
+export function createContactMessage(subject, companyName = DEFAULT_COMPANY_NAME) {
   const sub = safe(subject, 'general enquiry')
-  return `Hi Happy Kingdom Travels!
+  return `Hi ${companyName}!
 
 I have a ${sub}. I'd like to discuss this with your team.`
 }
 
-export function createDestinationMessage(destination) {
+export function createDestinationMessage(destination, companyName = DEFAULT_COMPANY_NAME) {
   const dest = safe(destination, 'Bhutan')
-  return `Hi Happy Kingdom Travels!
+  return `Hi ${companyName}!
 
 I want to know more about visiting ${dest} and Bhutan tour packages that include ${dest}. Could you share the available options and pricing?`
 }
@@ -109,7 +111,7 @@ const HOTEL_LABELS = {
   any: 'Any',
 }
 
-export function createCustomTripMessage(formData) {
+export function createCustomTripMessage(formData, companyName = DEFAULT_COMPANY_NAME) {
   const name = safe(formData.name, 'there')
   const travelFrom = formData.city && formData.state ? `${formData.city}, ${formData.state}` : safe(formData.travelFrom, 'Not specified')
   const travelDate = formatDate(formData.travelDate)
@@ -124,7 +126,7 @@ export function createCustomTripMessage(formData) {
   const message = formData.message || 'None'
 
   let lines = [
-    `Hi Happy Kingdom Travels!`,
+    `Hi ${companyName}!`,
     ``,
     `I'd like to plan a custom Bhutan trip. Here are my details:`,
     ``,

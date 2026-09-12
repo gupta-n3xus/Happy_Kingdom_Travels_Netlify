@@ -1,6 +1,7 @@
 import Package from '../models/Package.js';
 import { formatResponse, formatError, getPagination } from '../utils/helpers.js';
 import { importImageToCloudinary, deleteCloudinaryImage, deleteCloudinaryImages } from '../config/upload.js';
+import { log } from '../utils/activityHelper.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -128,6 +129,7 @@ export const createPackage = async (req, res) => {
   try {
     await importImages(req.body);
     const pkg = await Package.create(req.body);
+    log(req, 'create', 'package', pkg._id?.toString(), pkg.title, `Created package "${pkg.title}"`);
     return formatResponse(res, 201, pkg);
   } catch (error) {
     console.error('createPackage error:', error);
@@ -145,6 +147,7 @@ export const updatePackage = async (req, res) => {
     if (!pkg) {
       return formatError(res, 404, 'Package not found');
     }
+    log(req, 'update', 'package', pkg._id?.toString(), pkg.title, `Updated package "${pkg.title}"`);
     return formatResponse(res, 200, pkg);
   } catch (error) {
     console.error('updatePackage error:', error);
@@ -158,8 +161,9 @@ export const deletePackage = async (req, res) => {
     if (!pkg) {
       return formatError(res, 404, 'Package not found');
     }
-    await deletePackageImages(pkg);
+    log(req, 'delete', 'package', pkg._id?.toString(), pkg.title, `Deleted package "${pkg.title}"`);
     await pkg.deleteOne();
+    deletePackageImages(pkg).catch(err => console.error('Image cleanup warning:', err.message));
     return formatResponse(res, 200, null, 'Package deleted successfully');
   } catch (error) {
     console.error('deletePackage error:', error);

@@ -32,56 +32,56 @@ const checklistItems = [
   'Copies of important documents (digital and physical)',
 ]
 
-const faqs = [
-  {
-    question: 'Do Indians need a visa for Bhutan?',
-    answer: 'Indian nationals have specific entry requirements for Bhutan. Please verify current requirements with official sources before travel.',
-  },
-  {
-    question: 'What documents do Indians need to visit Bhutan?',
-    answer: 'Accepted documents may include a valid Indian passport or Voter ID. Requirements can change so verify before travel.',
-  },
-  {
-    question: 'Is a passport required?',
-    answer: 'A valid passport is one of the accepted travel documents. Check current requirements for the most up-to-date information.',
-  },
-  {
-    question: 'Is Voter ID accepted?',
-    answer: 'Voter ID has been accepted for Bhutan entry in the past. Verify current acceptance with official sources.',
-  },
-  {
-    question: 'Is Aadhaar accepted for Bhutan travel?',
-    answer: 'Do not rely on Aadhaar alone unless current official requirements specifically confirm its acceptance.',
-  },
-  {
-    question: 'What documents are required for children?',
-    answer: 'Children may need birth certificates, passports and parent/guardian identification. Requirements can differ from adults.',
-  },
-  {
-    question: 'What is the Bhutan entry permit?',
-    answer: 'Indian travellers must complete applicable Bhutan entry and immigration formalities.',
-  },
-  {
-    question: 'What is SDF?',
-    answer: 'The Sustainable Development Fee is part of Bhutan\'s tourism framework. The amount and rules can change per government policy.',
-  },
-  {
-    question: 'Can Happy Kingdom Travels help with entry formalities?',
-    answer: 'Yes, we provide guidance and assistance with applicable documentation and permit processes as part of relevant packages.',
-  },
-  {
-    question: 'Can Bhutan entry requirements change?',
-    answer: 'Yes, immigration and tourism regulations may change. Always verify current requirements before travelling.',
-  },
-]
-
 export default function EntryRequirements() {
   const BUSINESS_CONTACT = useBusinessContact();
+
+  const faqs = [
+    {
+      question: 'Do Indians need a visa for Bhutan?',
+      answer: 'Indian nationals have specific entry requirements for Bhutan. Please verify current requirements with official sources before travel.',
+    },
+    {
+      question: 'What documents do Indians need to visit Bhutan?',
+      answer: 'Accepted documents may include a valid Indian passport or Voter ID. Requirements can change so verify before travel.',
+    },
+    {
+      question: 'Is a passport required?',
+      answer: 'A valid passport is one of the accepted travel documents. Check current requirements for the most up-to-date information.',
+    },
+    {
+      question: 'Is Voter ID accepted?',
+      answer: 'Voter ID has been accepted for Bhutan entry in the past. Verify current acceptance with official sources.',
+    },
+    {
+      question: 'Is Aadhaar accepted for Bhutan travel?',
+      answer: 'Do not rely on Aadhaar alone unless current official requirements specifically confirm its acceptance.',
+    },
+    {
+      question: 'What documents are required for children?',
+      answer: 'Children may need birth certificates, passports and parent/guardian identification. Requirements can differ from adults.',
+    },
+    {
+      question: 'What is the Bhutan entry permit?',
+      answer: 'Indian travellers must complete applicable Bhutan entry and immigration formalities.',
+    },
+    {
+      question: 'What is SDF?',
+      answer: 'The Sustainable Development Fee is part of Bhutan\'s tourism framework. The amount and rules can change per government policy.',
+    },
+    {
+      question: `Can ${BUSINESS_CONTACT.companyName} help with entry formalities?`,
+      answer: 'Yes, we provide guidance and assistance with applicable documentation and permit processes as part of relevant packages.',
+    },
+    {
+      question: 'Can Bhutan entry requirements change?',
+      answer: 'Yes, immigration and tourism regulations may change. Always verify current requirements before travelling.',
+    },
+  ]
 
   return (
     <>
       <SEO
-        title="Bhutan Entry Requirements for Indians – Documents & Permit Guide | Happy Kingdom Travels"
+        title={`Bhutan Entry Requirements for Indians – Documents & Permit Guide | ${BUSINESS_CONTACT.companyName}`}
         description="Complete guide to Bhutan entry requirements for Indian travellers. Learn about required documents, permits, SDF, and everything you need for a smooth entry into Bhutan."
         keywords="bhutan entry requirements, bhutan visa for indians, bhutan permit, bhutan documents required, bhutan entry permit, indian nationals bhutan, sustainable development fee"
       />
@@ -226,7 +226,7 @@ export default function EntryRequirements() {
               Entry permit requirements can change based on government regulations. It is essential to verify the current requirements before your travel dates.
             </p>
             <p className="text-gray-600 leading-relaxed">
-              Happy Kingdom Travels provides guidance and assistance with the applicable documentation and permit processes as part of our relevant tour packages. Our team can help you understand what is needed for a smooth entry into Bhutan.
+              {BUSINESS_CONTACT.companyName} provides guidance and assistance with the applicable documentation and permit processes as part of our relevant tour packages. Our team can help you understand what is needed for a smooth entry into Bhutan.
             </p>
           </div>
         </div>
@@ -321,7 +321,7 @@ export default function EntryRequirements() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={createWhatsAppUrl(createGuideMessage('Bhutan Entry Requirements'))}
+              href={createWhatsAppUrl(createGuideMessage('Bhutan Entry Requirements', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"
@@ -355,7 +355,7 @@ export default function EntryRequirements() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl lg:text-3xl font-bold mb-4">Ready to Plan Your Bhutan Trip?</h2>
           <p className="text-white/80 mb-8 max-w-2xl mx-auto">
-            Let Happy Kingdom Travels help you plan a memorable journey to Bhutan. We can guide you through the documentation and planning process.
+            Let {BUSINESS_CONTACT.companyName} help you plan a memorable journey to Bhutan. We can guide you through the documentation and planning process.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -373,7 +373,7 @@ export default function EntryRequirements() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <a
-              href={createWhatsAppUrl(createGuideMessage('Bhutan Entry Requirements'))}
+              href={createWhatsAppUrl(createGuideMessage('Bhutan Entry Requirements', BUSINESS_CONTACT.companyName))}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all"
