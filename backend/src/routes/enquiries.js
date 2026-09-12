@@ -13,9 +13,9 @@ const router = Router();
 
 router.post('/', createEnquiry);
 router.post('/geo', updateEnquiryGeo);
-router.get('/', protect, authorize('admin', 'sub_admin'), getAllEnquiries);
-router.get('/:id', protect, authorize('admin', 'sub_admin'), getEnquiryById);
-router.put('/:id', protect, authorize('admin', 'sub_admin'), updateEnquiryStatus);
-router.delete('/:id', protect, authorize('admin', 'sub_admin'), deleteEnquiry);
+router.get('/', protect, authorize('admin'), getAllEnquiries);
+router.get('/:id', protect, authorize('admin'), getEnquiryById);
+router.put('/:id', protect, authorize('admin'), updateEnquiryStatus);
+router.delete('/:id', protect, authorize('admin'), deleteEnquiry);
 
 export default router;
