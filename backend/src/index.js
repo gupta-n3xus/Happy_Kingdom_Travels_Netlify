@@ -21,6 +21,7 @@ import uploadRoutes from './routes/upload.js';
 import backupRoutes from './routes/backup.js';
 import galleryRoutes from './routes/gallery.js';
 import activityRoutes from './routes/activity.js';
+import { generateSitemap } from './controllers/sitemapController.js';
 
 const app = express();
 
@@ -53,6 +54,8 @@ app.use('/api/activity', activityRoutes);
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running', version: '1.4.0' });
 });
+
+app.get('/sitemap.xml', generateSitemap);
 
 app.use(errorHandler);
 

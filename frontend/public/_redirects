@@ -1,2 +1,3 @@
 /api/*  https://happykingdomtravelsnetlify-production.up.railway.app/api/:splat  200
+/sitemap.xml  https://happykingdomtravelsnetlify-production.up.railway.app/sitemap.xml  200
 /*  /index.html  200
