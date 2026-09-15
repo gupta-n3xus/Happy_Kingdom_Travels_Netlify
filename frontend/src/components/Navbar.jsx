@@ -166,7 +166,7 @@ const Navbar = () => {
             {navItems.map((link) =>
               link.hasDropdown ? (
                 <div key={link.path}>
-                  <div className="px-4 py-3 text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                  <div className="px-4 py-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">
                     {link.name}
                   </div>
                   {packageLinks.map((item) => (

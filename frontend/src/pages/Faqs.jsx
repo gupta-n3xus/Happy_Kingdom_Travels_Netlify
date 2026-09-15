@@ -14,17 +14,19 @@ const FAQItem = ({ question, answer }) => {
     <div className="border-b border-gray-100 last:border-b-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-controls={`faq-answer-${question?.slice(0, 20)}`}
         className="w-full flex items-center justify-between py-4 text-left hover:text-forest transition-colors"
       >
         <span className="font-medium text-charcoal pr-4">{question}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-forest shrink-0" />
+          <ChevronUp className="w-5 h-5 text-forest shrink-0" aria-hidden="true" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-muted shrink-0" />
+          <ChevronDown className="w-5 h-5 text-muted shrink-0" aria-hidden="true" />
         )}
       </button>
       {isOpen && (
-        <div className="pb-4 text-muted leading-relaxed">
+        <div id={`faq-answer-${question?.slice(0, 20)}`} className="pb-4 text-muted leading-relaxed">
           {answer}
         </div>
       )}

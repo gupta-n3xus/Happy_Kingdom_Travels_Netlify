@@ -67,6 +67,7 @@ const AdminPackages = () => {
           <input
             type="text"
             placeholder="Search packages..."
+            aria-label="Search packages"
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

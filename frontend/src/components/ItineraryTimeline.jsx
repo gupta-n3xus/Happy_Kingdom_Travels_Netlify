@@ -32,6 +32,8 @@ const ItineraryTimeline = ({ itinerary }) => {
               <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 <button
                   onClick={() => toggleDay(day.dayNumber || day.day)}
+                  aria-expanded={isExpanded}
+                  aria-controls={`itinerary-day-${day.dayNumber || day.day}`}
                   className="w-full p-5 flex items-center justify-between text-left hover:bg-warmWhite transition-colors"
                 >
                   <div>
@@ -40,19 +42,21 @@ const ItineraryTimeline = ({ itinerary }) => {
                     </h3>
                     {day.locations && (
                       <div className="flex items-center text-muted text-sm mt-1">
-                        <MapPin className="w-4 h-4 mr-1" />
+                        <MapPin className="w-4 h-4 mr-1" aria-hidden="true" />
                         {Array.isArray(day.locations) ? day.locations.join(', ') : day.locations}
                       </div>
                     )}
                   </div>
                   {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-muted shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-muted shrink-0" aria-hidden="true" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-muted shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-muted shrink-0" aria-hidden="true" />
                   )}
                 </button>
 
                 <div
+                  id={`itinerary-day-${day.dayNumber || day.day}`}
+                  role="region"
                   className={`transition-all duration-300 ease-in-out ${
                     isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
                   } overflow-hidden`}

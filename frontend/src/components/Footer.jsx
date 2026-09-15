@@ -43,7 +43,7 @@ const Footer = () => {
             <Link to="/" className="flex items-center mb-6">
               <img src={logo} alt={BUSINESS_CONTACT.companyName} className="h-12 w-12 rounded-full object-cover" />
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+            <p className="text-gray-300 text-sm leading-relaxed mb-6">
               Your trusted partner for authentic Bhutan travel experiences. Discover the Land of the Thunder Dragon with our expert-guided tours.
             </p>
             <div className="flex space-x-3">
@@ -79,7 +79,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -97,7 +97,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -115,7 +115,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -131,7 +131,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -150,7 +150,7 @@ const Footer = () => {
                   <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                   <a
                     href={`tel:${BUSINESS_CONTACT.mobile1.replace(/[^+\d]/g, '')}`}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {BUSINESS_CONTACT.mobile1}
                   </a>
@@ -161,7 +161,7 @@ const Footer = () => {
                   <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                   <a
                     href={`tel:${BUSINESS_CONTACT.mobile2.replace(/[^+\d]/g, '')}`}
-                    className="text-gray-400 hover:text-accent transition-colors text-sm"
+                    className="text-gray-300 hover:text-accent transition-colors text-sm"
                   >
                     {BUSINESS_CONTACT.mobile2}
                   </a>
@@ -173,7 +173,7 @@ const Footer = () => {
                   href={BUSINESS_CONTACT.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-accent transition-colors text-sm"
+                  className="text-gray-300 hover:text-accent transition-colors text-sm"
                 >
                   WhatsApp Us
                 </a>
@@ -182,7 +182,7 @@ const Footer = () => {
                 <Mail className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                 <a
                   href={`mailto:${BUSINESS_CONTACT.email}`}
-                  className="text-gray-400 hover:text-accent transition-colors text-sm"
+                  className="text-gray-300 hover:text-accent transition-colors text-sm"
                 >
                   {BUSINESS_CONTACT.email}
                 </a>
@@ -193,7 +193,7 @@ const Footer = () => {
                   href={BUSINESS_CONTACT.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-accent transition-colors text-sm"
+                  className="text-gray-300 hover:text-accent transition-colors text-sm"
                 >
                   {BUSINESS_CONTACT.address}
                 </a>
@@ -206,7 +206,7 @@ const Footer = () => {
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-400 text-sm">
               &copy; {new Date().getFullYear()} {BUSINESS_CONTACT.companyName}. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -214,7 +214,7 @@ const Footer = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="text-gray-500 text-sm hover:text-accent transition-colors"
+                  className="text-gray-400 text-sm hover:text-accent transition-colors"
                 >
                   {link.name}
                 </Link>

@@ -845,6 +845,7 @@ export default function PackageDetails() {
                         key={star}
                         type="button"
                         onClick={() => setReviewData((prev) => ({ ...prev, rating: star }))}
+                        aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                         className="text-2xl transition-colors"
                       >
                         <Star
@@ -936,8 +937,9 @@ export default function PackageDetails() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-1">Travel Date</label>
+            <label htmlFor="enquiry-travelDate" className="block text-sm font-medium text-gray-900 mb-1">Travel Date</label>
             <input
+              id="enquiry-travelDate"
               type="date"
               name="travelDate"
               required

@@ -24,16 +24,21 @@ const FAQAccordion = ({ faqs }) => {
           >
             <button
               onClick={() => toggleFAQ(index)}
+              aria-expanded={isOpen}
+              aria-controls={`faq-panel-${index}`}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-warmWhite transition-colors"
             >
               <span className="font-medium text-charcoal pr-4">{faq.question}</span>
               {isOpen ? (
-                <ChevronUp className="w-5 h-5 text-primary shrink-0" />
+                <ChevronUp className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-muted shrink-0" />
+                <ChevronDown className="w-5 h-5 text-muted shrink-0" aria-hidden="true" />
               )}
             </button>
             <div
+              id={`faq-panel-${index}`}
+              role="region"
+              aria-labelledby={`faq-question-${index}`}
               className={`transition-all duration-300 ease-in-out ${
                 isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
               } overflow-hidden`}

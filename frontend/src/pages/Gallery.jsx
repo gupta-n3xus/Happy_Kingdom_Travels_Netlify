@@ -327,6 +327,7 @@ const Gallery = () => {
                       key={star}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, rating: star }))}
+                      aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                       className="p-0.5 transition-transform hover:scale-110"
                     >
                       <Star

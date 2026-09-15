@@ -187,6 +187,7 @@ const QuoteForm = () => {
           <div className="grid grid-cols-2 gap-3">
             <select
               name="state"
+              aria-label="Select state"
               value={formData.state}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-warmWhite text-charcoal"
@@ -200,6 +201,7 @@ const QuoteForm = () => {
             </select>
             <select
               name="city"
+              aria-label="Select city"
               value={formData.city}
               onChange={handleChange}
               disabled={!formData.state}

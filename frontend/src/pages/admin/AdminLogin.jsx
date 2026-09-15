@@ -129,6 +129,8 @@ const AdminLogin = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-charcoal"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

@@ -1,23 +1,49 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 
 const Modal = ({ isOpen, onClose, title, children }) => {
+  const modalRef = useRef(null)
+  const previousFocusRef = useRef(null)
+
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement?.focus()
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement?.focus()
+        }
+      }
     },
     [onClose]
   )
 
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement
       document.addEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'hidden'
+      requestAnimationFrame(() => {
+        modalRef.current?.focus()
+      })
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = ''
+      previousFocusRef.current?.focus()
     }
   }, [isOpen, handleKeyDown])
 
@@ -31,7 +57,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       aria-label={title}
     >
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col animate-fade-in">
+      <div
+        ref={modalRef}
+        tabIndex={-1}
+        className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col animate-fade-in outline-none"
+      >
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-gray-100">
             <h2 className="font-display text-xl font-bold text-charcoal">{title}</h2>

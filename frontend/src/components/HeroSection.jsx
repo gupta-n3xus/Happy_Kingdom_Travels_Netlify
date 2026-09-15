@@ -25,6 +25,7 @@ const HeroSection = ({
               src={backgroundImage}
               alt={title}
               className="w-full h-full object-cover mix-blend-overlay"
+              fetchpriority="high"
             />
             <div className="absolute inset-0 bg-charcoal/50" />
           </>
