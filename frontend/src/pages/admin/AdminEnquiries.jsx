@@ -16,6 +16,7 @@ const AdminEnquiries = () => {
   const [filter, setFilter] = useState('all')
   const [savingImage, setSavingImage] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const [selectedIds, setSelectedIds] = useState([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [total, setTotal] = useState(0)
@@ -26,6 +27,7 @@ const AdminEnquiries = () => {
 
   useEffect(() => {
     setPage(1)
+    setSelectedIds([])
     fetchEnquiries(1, filter)
   }, [filter])
 
@@ -65,6 +67,7 @@ const AdminEnquiries = () => {
       await enquiryService.deleteEnquiry(id)
       toast.success('Enquiry deleted')
       setSelectedEnquiry(null)
+      setSelectedIds((prev) => prev.filter((i) => i !== id))
       if (enquiries.length === 1 && page > 1) {
         setPage(page - 1)
       } else {
@@ -72,6 +75,35 @@ const AdminEnquiries = () => {
       }
     } catch (error) {
       toast.error('Failed to delete enquiry')
+    }
+  }
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id])
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === enquiries.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(enquiries.map((e) => e._id))
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (!window.confirm(`Delete ${selectedIds.length} selected enquiries?`)) return
+    try {
+      await enquiryService.bulkDelete(selectedIds)
+      toast.success(`${selectedIds.length} enquiries deleted`)
+      setSelectedIds([])
+      setSelectedEnquiry(null)
+      if (enquiries.length === selectedIds.length && page > 1) {
+        setPage(page - 1)
+      } else {
+        fetchEnquiries(page, filter)
+      }
+    } catch (error) {
+      toast.error('Failed to delete enquiries')
     }
   }
 
@@ -183,14 +215,25 @@ const AdminEnquiries = () => {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-charcoal">Enquiries</h1>
-        <button
-          onClick={exportToExcel}
-          disabled={exporting}
-          className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
-        >
-          <Download className="w-4 h-4" />
-          {exporting ? 'Exporting...' : `Export All (${total})`}
-        </button>
+        <div className="flex items-center gap-2">
+          {selectedIds.length > 0 && canDelete && (
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-700 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Selected ({selectedIds.length})
+            </button>
+          )}
+          <button
+            onClick={exportToExcel}
+            disabled={exporting}
+            className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            <Download className="w-4 h-4" />
+            {exporting ? 'Exporting...' : `Export All (${total})`}
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">
@@ -214,6 +257,16 @@ const AdminEnquiries = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-gray-50">
+                {canDelete && (
+                  <th className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={enquiries.length > 0 && selectedIds.length === enquiries.length}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                  </th>
+                )}
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Contact</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">Travel From</th>
@@ -227,19 +280,29 @@ const AdminEnquiries = () => {
             <tbody className="divide-y">
               {loading ? (
                 <tr>
-                  <td colSpan="8" className="px-6 py-12 text-center">
+                  <td colSpan={canDelete ? '9' : '8'} className="px-6 py-12 text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                   </td>
                 </tr>
               ) : enquiries.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="px-6 py-12 text-center text-muted">
+                  <td colSpan={canDelete ? '9' : '8'} className="px-6 py-12 text-center text-muted">
                     No enquiries found
                   </td>
                 </tr>
               ) : (
                 enquiries.map((enquiry) => (
                   <tr key={enquiry._id} className="hover:bg-gray-50">
+                    {canDelete && (
+                      <td className="px-4 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(enquiry._id)}
+                          onChange={() => toggleSelect(enquiry._id)}
+                          className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                      </td>
+                    )}
                     <td className="px-6 py-4">
                       <p className="font-medium text-charcoal">{enquiry.fullName}</p>
                     </td>

@@ -44,9 +44,14 @@ export const getClientIp = (req) => {
 
 export const getActivityLogs = async (req, res, next) => {
   try {
-    const { userId, page = 1, limit = 50 } = req.query;
+    const { userId, role, page = 1, limit = 50 } = req.query;
     const query = {};
     if (userId) query.user = userId;
+    if (role) {
+      const roleQuery = { role };
+      const userIds = (await (await import('../models/User.js')).default.find(roleQuery).select('_id')).map(u => u._id);
+      query.user = { $in: userIds };
+    }
 
     const total = await ActivityLog.countDocuments(query);
     const logs = await ActivityLog.find(query)
@@ -94,9 +99,14 @@ export const getSubAdminLogs = async (req, res, next) => {
 
 export const getSessions = async (req, res, next) => {
   try {
-    const { userId, page = 1, limit = 20 } = req.query;
+    const { userId, role, page = 1, limit = 20 } = req.query;
     const matchQuery = { sessionId: { $ne: null } };
     if (userId) matchQuery.user = new (await import('mongoose')).default.Types.ObjectId(userId);
+    if (role) {
+      const User = (await import('../models/User.js')).default;
+      const userIds = (await User.find({ role }).select('_id')).map(u => u._id);
+      matchQuery.user = { $in: userIds };
+    }
 
     const sessions = await ActivityLog.aggregate([
       { $match: matchQuery },
@@ -162,6 +172,20 @@ export const getSessions = async (req, res, next) => {
       totalPages: Math.ceil(total / limit),
       data: populatedData
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const bulkDeleteActivityLogs = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, message: 'No activity log IDs provided' });
+    }
+
+    const result = await ActivityLog.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ success: true, deletedCount: result.deletedCount });
   } catch (error) {
     next(error);
   }

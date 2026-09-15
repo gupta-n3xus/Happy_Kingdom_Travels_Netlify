@@ -1,6 +1,7 @@
 import Enquiry from '../models/Enquiry.js';
 import { getPagination } from '../utils/helpers.js';
 import { log } from '../utils/activityHelper.js';
+import { getClientIP, getGeoLocation, parseUA } from '../utils/geo.js';
 
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -58,6 +59,54 @@ export const createEnquiry = async (req, res, next) => {
       });
     }
     next(error);
+  }
+};
+
+export const createQuickEnquiry = async (req, res, next) => {
+  try {
+    const { source, message } = req.body;
+
+    if (!source || !['phone_click', 'whatsapp_click'].includes(source)) {
+      return res.status(400).json({ success: false, message: 'Invalid source' });
+    }
+
+    const ip = getClientIP(req);
+    const userAgent = req.headers['user-agent'] || '';
+    const referrer = req.headers['referer'] || '';
+    const language = req.headers['accept-language'] || '';
+    const { browser, os, device } = parseUA(userAgent);
+
+    let location = null;
+    try {
+      location = await getGeoLocation(ip);
+    } catch {}
+
+    const fullName = source === 'whatsapp_click' ? 'WhatsApp Click' : 'Phone Click';
+    const phone = 'N/A';
+    const email = `click-tracking@happykingdomtravels.com`;
+
+    const enquiry = await Enquiry.create({
+      fullName,
+      phone,
+      email,
+      message: message || `${source} — ${referrer || 'direct'}`,
+      source: 'website',
+      status: 'new',
+      ipAddress: ip,
+      userAgent,
+      referrer,
+      language,
+      browser,
+      os,
+      device,
+      location,
+    });
+
+    console.log('Quick enquiry saved:', enquiry._id);
+    return res.status(201).json({ success: true });
+  } catch (error) {
+    console.error('Quick enquiry error:', error.message);
+    return res.status(200).json({ success: true });
   }
 };
 
@@ -168,6 +217,22 @@ export const deleteEnquiry = async (req, res, next) => {
 
     log(req, 'delete', 'enquiry', req.params.id, enquiry.fullName, `Deleted enquiry from "${enquiry.fullName}"`);
     res.status(200).json({ success: true, message: 'Enquiry deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const bulkDeleteEnquiries = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, message: 'No enquiry IDs provided' });
+    }
+
+    const result = await Enquiry.deleteMany({ _id: { $in: ids } });
+    log(req, 'delete', 'enquiry', null, null, `Bulk deleted ${result.deletedCount} enquiries`);
+
+    res.status(200).json({ success: true, message: `${result.deletedCount} enquiries deleted`, deletedCount: result.deletedCount });
   } catch (error) {
     next(error);
   }

@@ -856,8 +856,9 @@ export default function PackageDetails() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">Travel Date</label>
+                  <label htmlFor="review-travelDate" className="block text-sm font-medium text-gray-900 mb-1">Travel Date</label>
                   <input
+                    id="review-travelDate"
                     type="date"
                     name="travelDate"
                     value={reviewData.travelDate}

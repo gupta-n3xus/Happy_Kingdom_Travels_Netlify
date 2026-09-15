@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import {
   createEnquiry,
+  createQuickEnquiry,
   getAllEnquiries,
   getEnquiryById,
   updateEnquiryStatus,
   deleteEnquiry,
+  bulkDeleteEnquiries,
   updateEnquiryGeo
 } from '../controllers/enquiryController.js';
 import { protect } from '../middleware/auth.js';
@@ -13,7 +15,9 @@ import { checkPermission } from '../middleware/permission.js';
 const router = Router();
 
 router.post('/', createEnquiry);
+router.post('/quick', createQuickEnquiry);
 router.post('/geo', updateEnquiryGeo);
+router.post('/bulk-delete', protect, checkPermission('enquiries:delete'), bulkDeleteEnquiries);
 router.get('/', protect, checkPermission('enquiries:view'), getAllEnquiries);
 router.get('/:id', protect, checkPermission('enquiries:view'), getEnquiryById);
 router.put('/:id', protect, checkPermission('enquiries:edit'), updateEnquiryStatus);

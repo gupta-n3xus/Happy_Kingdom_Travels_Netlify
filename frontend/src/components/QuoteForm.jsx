@@ -183,9 +183,10 @@ const QuoteForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">Travelling From</label>
+          <label htmlFor="quote-state" className="block text-sm font-medium text-charcoal mb-1">Travelling From</label>
           <div className="grid grid-cols-2 gap-3">
             <select
+              id="quote-state"
               name="state"
               aria-label="Select state"
               value={formData.state}
@@ -200,6 +201,7 @@ const QuoteForm = () => {
               ))}
             </select>
             <select
+              id="quote-city"
               name="city"
               aria-label="Select city"
               value={formData.city}
@@ -218,8 +220,9 @@ const QuoteForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">Travel Date *</label>
+          <label htmlFor="quote-travelDate" className="block text-sm font-medium text-charcoal mb-1">Travel Date *</label>
           <input
+            id="quote-travelDate"
             type="date"
             name="travelDate"
             value={formData.travelDate}

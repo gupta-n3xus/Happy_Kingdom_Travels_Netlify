@@ -149,8 +149,9 @@ const SearchTripForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">State *</label>
+          <label htmlFor="search-state" className="block text-sm font-medium text-charcoal mb-1">State *</label>
           <select
+            id="search-state"
             name="state"
             value={formData.state}
             onChange={handleChange}
@@ -167,8 +168,9 @@ const SearchTripForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">City *</label>
+          <label htmlFor="search-city" className="block text-sm font-medium text-charcoal mb-1">City *</label>
           <select
+            id="search-city"
             name="city"
             value={formData.city}
             onChange={handleChange}
@@ -186,8 +188,9 @@ const SearchTripForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">Travel Date *</label>
+          <label htmlFor="search-travelDate" className="block text-sm font-medium text-charcoal mb-1">Travel Date *</label>
           <input
+            id="search-travelDate"
             type="date"
             name="travelDate"
             value={formData.travelDate}

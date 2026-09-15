@@ -16,6 +16,9 @@ const enquiryService = {
   deleteEnquiry: async (id) => {
     return api.delete(`/enquiries/${id}`)
   },
+  bulkDelete: async (ids) => {
+    return api.post('/enquiries/bulk-delete', { ids })
+  },
 }
 
 export default enquiryService

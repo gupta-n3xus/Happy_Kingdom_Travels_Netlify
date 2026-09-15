@@ -4,6 +4,7 @@ import { ArrowLeft, Monitor, Smartphone, Tablet, Globe, Shield, UserPlus, Edit2,
 import activityService from '../../services/activityService'
 import subAdminService from '../../services/subAdminService'
 import { formatDateTime } from '../../utils/helpers'
+import toast from 'react-hot-toast'
 
 const ACTION_CONFIG = {
   login: { icon: LogIn, color: 'text-green-600', bg: 'bg-green-50', label: 'Login' },
@@ -24,7 +25,7 @@ const getDeviceIcon = (device) => {
   return Monitor
 }
 
-const SessionCard = ({ session }) => {
+const SessionCard = ({ session, selected, onToggle }) => {
   const [expanded, setExpanded] = useState(false)
   const isActive = !session.logoutTime
   const duration = session.logoutTime
@@ -38,65 +39,73 @@ const SessionCard = ({ session }) => {
 
   return (
     <div className={`border rounded-xl overflow-hidden transition-all ${isActive ? 'border-green-200 bg-green-50/30' : 'border-gray-200 bg-white'}`}>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-      >
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isActive ? 'bg-green-100' : 'bg-gray-100'}`}>
-          {isActive ? <Wifi className="w-4 h-4 text-green-600" /> : <WifiOff className="w-4 h-4 text-gray-400" />}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-charcoal text-sm">
-              {new Date(session.loginTime).toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
-            </span>
-            <span className="text-muted text-sm">
-              {new Date(session.loginTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
-            </span>
-            {session.logoutTime && (
-              <>
-                <span className="text-muted text-xs">to</span>
-                <span className="text-muted text-sm">
-                  {new Date(session.logoutTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+      <div className="w-full px-4 py-3 flex items-center gap-3 text-left">
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={() => onToggle(session._id)}
+          className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary shrink-0"
+        />
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex-1 flex items-center gap-3 hover:bg-gray-50 transition-colors rounded-lg -ml-1 px-1 py-0.5"
+        >
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isActive ? 'bg-green-100' : 'bg-gray-100'}`}>
+            {isActive ? <Wifi className="w-4 h-4 text-green-600" /> : <WifiOff className="w-4 h-4 text-gray-400" />}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-medium text-charcoal text-sm">
+                {new Date(session.loginTime).toLocaleDateString('en-IN', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+              </span>
+              <span className="text-muted text-sm">
+                {new Date(session.loginTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+              </span>
+              {session.logoutTime && (
+                <>
+                  <span className="text-muted text-xs">to</span>
+                  <span className="text-muted text-sm">
+                    {new Date(session.logoutTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+                  </span>
+                </>
+              )}
+              {isActive && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                  Active
                 </span>
-              </>
-            )}
-            {isActive && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                Active
+              )}
+            </div>
+            <div className="flex items-center gap-3 mt-1 text-xs text-muted">
+              <span className="inline-flex items-center gap-1">
+                <DeviceIcon className="w-3 h-3" />
+                {session.device}
               </span>
-            )}
-          </div>
-          <div className="flex items-center gap-3 mt-1 text-xs text-muted">
-            <span className="inline-flex items-center gap-1">
-              <DeviceIcon className="w-3 h-3" />
-              {session.device}
-            </span>
-            <span>{session.browser}</span>
-            <span>{session.os}</span>
-            <span className="font-mono">{session.ip}</span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {duration < 1 ? '<1m' : duration < 60 ? `${duration}m` : `${Math.floor(duration / 60)}h ${duration % 60}m`}
-            </span>
-            <span>{session.activityCount} action{session.activityCount !== 1 ? 's' : ''}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          {Object.entries(actionCounts).map(([action, count]) => {
-            const config = ACTION_CONFIG[action]
-            if (!config) return null
-            const Icon = config.icon
-            return (
-              <span key={action} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs ${config.bg} ${config.color}`} title={`${config.label}: ${count}`}>
-                <Icon className="w-3 h-3" />
-                {count > 1 && <span className="ml-0.5">{count}</span>}
+              <span>{session.browser}</span>
+              <span>{session.os}</span>
+              <span className="font-mono">{session.ip}</span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {duration < 1 ? '<1m' : duration < 60 ? `${duration}m` : `${Math.floor(duration / 60)}h ${duration % 60}m`}
               </span>
-            )
-          })}
-        </div>
-        {expanded ? <ChevronDown className="w-4 h-4 text-muted" /> : <ChevronRight className="w-4 h-4 text-muted" />}
-      </button>
+              <span>{session.activityCount} action{session.activityCount !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            {Object.entries(actionCounts).map(([action, count]) => {
+              const config = ACTION_CONFIG[action]
+              if (!config) return null
+              const Icon = config.icon
+              return (
+                <span key={action} className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs ${config.bg} ${config.color}`} title={`${config.label}: ${count}`}>
+                  <Icon className="w-3 h-3" />
+                  {count > 1 && <span className="ml-0.5">{count}</span>}
+                </span>
+              )
+            })}
+          </div>
+          {expanded ? <ChevronDown className="w-4 h-4 text-muted" /> : <ChevronRight className="w-4 h-4 text-muted" />}
+        </button>
+      </div>
 
       {expanded && (
         <div className="border-t bg-gray-50/50">
@@ -150,11 +159,13 @@ const AdminActivityLog = () => {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [total, setTotal] = useState(0)
+  const [roleFilter, setRoleFilter] = useState('')
+  const [selectedIds, setSelectedIds] = useState([])
 
   useEffect(() => {
     if (id) fetchSubAdmin()
     fetchData()
-  }, [id, page, viewMode])
+  }, [id, page, viewMode, roleFilter])
 
   const fetchSubAdmin = async () => {
     try {
@@ -168,17 +179,22 @@ const AdminActivityLog = () => {
   const fetchData = async () => {
     try {
       setLoading(true)
+      setSelectedIds([])
       if (viewMode === 'sessions') {
         const params = { page, limit: 20 }
         if (id) params.userId = id
+        else if (roleFilter) params.role = roleFilter
         const response = await activityService.getSessions(params)
         setSessions(response.data || [])
         setTotalPages(response.totalPages || 1)
         setTotal(response.total || 0)
       } else {
+        const params = { page, limit: 20 }
+        if (id) params.userId = id
+        else if (roleFilter) params.role = roleFilter
         const response = id
           ? await activityService.getBySubAdmin(id, { page, limit: 20 })
-          : await activityService.getAll({ page, limit: 20 })
+          : await activityService.getAll(params)
         setLogs(response.data || [])
         setTotalPages(response.totalPages || 1)
         setTotal(response.total || 0)
@@ -189,6 +205,32 @@ const AdminActivityLog = () => {
       setLoading(false)
     }
   }
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id])
+  }
+
+  const toggleSelectAll = (items) => {
+    if (selectedIds.length === items.length) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(items.map((item) => item._id))
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (!window.confirm(`Delete ${selectedIds.length} selected items?`)) return
+    try {
+      await activityService.bulkDelete(selectedIds)
+      toast.success(`${selectedIds.length} items deleted`)
+      setSelectedIds([])
+      fetchData()
+    } catch (error) {
+      toast.error('Failed to delete items')
+    }
+  }
+
+  const currentItems = viewMode === 'sessions' ? sessions : logs
 
   return (
     <div>
@@ -211,6 +253,36 @@ const AdminActivityLog = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {selectedIds.length > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-700 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Selected ({selectedIds.length})
+            </button>
+          )}
+          {!id && (
+            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+              {[
+                { value: '', label: 'All' },
+                { value: 'admin', label: 'Admin' },
+                { value: 'sub_admin', label: 'Sub-Admin' },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => { setRoleFilter(opt.value); setPage(1) }}
+                  className={`px-3 py-1.5 text-sm rounded-md font-medium transition-colors ${
+                    roleFilter === opt.value
+                      ? 'bg-white text-charcoal shadow-sm'
+                      : 'text-muted hover:text-charcoal'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
           <button
             onClick={() => { setViewMode('sessions'); setPage(1) }}
             className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${viewMode === 'sessions' ? 'bg-primary text-white' : 'bg-gray-100 text-muted hover:bg-gray-200'}`}
@@ -271,9 +343,25 @@ const AdminActivityLog = () => {
                 <p className="text-muted">No sessions recorded yet</p>
               </div>
             ) : (
-              sessions.map((session) => (
-                <SessionCard key={session._id} session={session} />
-              ))
+              <>
+                <div className="flex items-center gap-2 px-1 pb-1">
+                  <input
+                    type="checkbox"
+                    checked={sessions.length > 0 && selectedIds.length === sessions.length}
+                    onChange={() => toggleSelectAll(sessions)}
+                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-xs text-muted">Select all on this page</span>
+                </div>
+                {sessions.map((session) => (
+                  <SessionCard
+                    key={session._id}
+                    session={session}
+                    selected={selectedIds.includes(session._id)}
+                    onToggle={toggleSelect}
+                  />
+                ))}
+              </>
             )}
           </div>
         ) : (
@@ -281,6 +369,14 @@ const AdminActivityLog = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-gray-50">
+                  <th className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={logs.length > 0 && selectedIds.length === logs.length}
+                      onChange={() => toggleSelectAll(logs)}
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                  </th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Action</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">User</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Details</th>
@@ -293,7 +389,7 @@ const AdminActivityLog = () => {
               <tbody>
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="px-4 py-12 text-center">
+                    <td colSpan="8" className="px-4 py-12 text-center">
                       <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                       <p className="text-muted">No activity recorded yet</p>
                     </td>
@@ -306,6 +402,14 @@ const AdminActivityLog = () => {
 
                     return (
                       <tr key={log._id} className="border-b hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.includes(log._id)}
+                            onChange={() => toggleSelect(log._id)}
+                            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                          />
+                        </td>
                         <td className="px-4 py-3">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.color}`}>
                             <ActionIcon className="w-3 h-3 mr-1" />

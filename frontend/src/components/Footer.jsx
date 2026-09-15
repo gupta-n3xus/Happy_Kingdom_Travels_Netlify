@@ -223,6 +223,20 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <p className="text-center text-gray-500 text-xs">
+            Website Built & Developed by{' '}
+            <a
+              href="mailto:sushil2933@outlook.com?subject=A%20viewer%20from%20https%3A%2F%2Fhappykingdomtravels.com%2F&body=Hi%20Sushil%2C%0A%0AI%20just%20visited%20https%3A%2F%2Fhappykingdomtravels.com%2F%20and%20wanted%20to%20say%20%E2%80%94%20amazing%20work%20on%20the%20website%21%20It%E2%80%99s%20clean%2C%20fast%2C%20and%20a%20pleasure%20to%20browse.%0A%0ABest%20regards"
+              className="text-gray-400 hover:text-accent transition-colors"
+            >
+              @Sushil Gupta
+            </a>
+          </p>
+        </div>
+      </div>
     </footer>
   )
 }

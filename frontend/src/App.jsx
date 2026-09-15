@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { SettingsProvider } from './context/SettingsContext'
 import ScrollToTop from './components/ScrollToTop'
+import LinkTracker from './components/LinkTracker'
 import { useTracking } from './hooks/useAnalytics'
 
 const Navbar = lazy(() => import('./components/Navbar'))
@@ -98,6 +99,7 @@ function App() {
     <SettingsProvider>
     <AuthProvider>
       <ScrollToTop />
+      <LinkTracker />
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route

@@ -2,9 +2,10 @@ import api from './api'
 
 const activityService = {
   getAll: async (params = {}) => {
-    const { page = 1, limit = 50, userId } = params
+    const { page = 1, limit = 50, userId, role } = params
     const query = new URLSearchParams({ page, limit })
     if (userId) query.append('userId', userId)
+    if (role) query.append('role', role)
     return api.get(`/activity?${query}`)
   },
 
@@ -14,11 +15,16 @@ const activityService = {
   },
 
   getSessions: async (params = {}) => {
-    const { page = 1, limit = 20, userId } = params
+    const { page = 1, limit = 20, userId, role } = params
     const query = new URLSearchParams({ page, limit })
     if (userId) query.append('userId', userId)
+    if (role) query.append('role', role)
     return api.get(`/activity/sessions?${query}`)
-  }
+  },
+
+  bulkDelete: async (ids) => {
+    return api.post('/activity/bulk-delete', { ids })
+  },
 }
 
 export default activityService
