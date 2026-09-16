@@ -62,7 +62,7 @@ blogPostSchema.pre('save', function (next) {
 });
 
 blogPostSchema.index({ title: 'text', content: 'text' });
-blogPostSchema.index({ slug: 1 });
+
 blogPostSchema.index({ category: 1, published: 1 });
 
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);
