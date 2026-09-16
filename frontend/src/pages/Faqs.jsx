@@ -250,12 +250,29 @@ const FAQs = () => {
     },
   ]
 
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.flatMap(group =>
+      group.items.map(item => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.a
+        }
+      }))
+    )
+  }
+
   return (
     <>
       <SEO
         title={`Frequently Asked Questions — Bhutan Tour Packages | ${BUSINESS_CONTACT.companyName}`}
         description={`Answers to common questions about Bhutan tour packages, visa, documents, SDF, hotels, transportation, payment, cancellation, and more. Plan your Bhutan trip with ${BUSINESS_CONTACT.companyName}.`}
       />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
 
       <section className="relative h-48 bg-gradient-to-r from-primary to-secondary flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white w-full">

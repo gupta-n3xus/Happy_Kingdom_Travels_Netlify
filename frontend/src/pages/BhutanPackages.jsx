@@ -89,7 +89,6 @@ export default function BhutanPackages() {
         title={`Bhutan Tour Packages — 4N to 9N | ${BUSINESS_CONTACT.companyName}`}
         description={`Browse curated Bhutan tour packages from Jaigaon & Phuentsholing. Group, solo, honeymoon, family & cultural tours with local expert guides. ${BUSINESS_CONTACT.companyName}.`}
         keywords="bhutan tour packages, bhutan packages from india, bhutan group tour, bhutan honeymoon, bhutan family tour, bhutan tour from jaigaon"
-        canonical="/tours"
         type="website"
       />
 

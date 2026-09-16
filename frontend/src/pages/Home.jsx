@@ -194,6 +194,24 @@ const Home = () => {
         keywords="Bhutan tour packages, Bhutan travel, Bhutan trip from India, Bhutan itinerary, Bhutan hotels"
       />
 
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": BUSINESS_CONTACT.companyName,
+        "url": "https://happykingdomtravels.com",
+        "logo": "https://happykingdomtravels.com/favicon.png",
+        "description": "Complete Bhutan tour packages with hotels, transportation, sightseeing and local assistance. Customized itineraries from NJP/Bagdogra.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": BUSINESS_CONTACT.address
+        },
+        "telephone": BUSINESS_CONTACT.mobile1,
+        "email": BUSINESS_CONTACT.email,
+        "sameAs": Object.values(BUSINESS_CONTACT.socialLinks).filter(Boolean),
+        "areaServed": "Bhutan",
+        "serviceType": ["Bhutan Tour Packages", "Custom Itineraries", "Honeymoon Tours", "Family Tours", "Group Tours"]
+      }) }} />
+
       {/* SECTION 1 — HERO */}
       <HeroSection
         title="Explore Bhutan. We'll Handle the Journey."

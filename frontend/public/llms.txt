@@ -6,16 +6,16 @@ Happy Kingdom Travels is a Bhutan-based travel agency offering guided tour packa
 
 - [Bhutan Tour Packages](/bhutan-tour-packages) — 4N/5D to 9N/10D packages covering Paro, Thimphu, Punakha, Bumthang, and more
 - [Custom Trip Builder](/customize-your-trip) — Personalised itineraries based on your preferences
-- [Family Tour Packages](/family-tour-packages) — Kid-friendly Bhutan holidays with flexible schedules
-- [Group Tour Packages](/group-tour-packages) — Affordable group departures to Bhutan
+- [Family Tour Packages](/bhutan-family-packages) — Kid-friendly Bhutan holidays with flexible schedules
+- [Group Tour Packages](/bhutan-group-packages) — Affordable group departures to Bhutan
 - [Travel Guide](/travel-guide) — Bhutan trip cost, visa requirements, best time to visit, how to reach Bhutan
-- [Destinations](/destinations) — Detailed guides for Paro, Thimphu, Punakha, Bumthang, Haa Valley, and more
+- [Destinations](/destinations/paro) — Detailed guides for Paro, Thimphu, Punakha, Bumthang, Haa Valley, and more
 
 ## Key Information
 
 - Office: [Happy Kingdom Travels](/about), Siliguri, West Bengal, India
 - Contact: [Phone and WhatsApp](/contact) — available for trip enquiries and bookings
-- Blog: [Travel tips and guides](/blog) — latest Bhutan travel news, itineraries, and cultural insights
+- Blog: [Travel tips and guides](/travel-guide) — latest Bhutan travel news, itineraries, and cultural insights
 - Reviews: [Customer testimonials](/reviews) — verified reviews from past travellers
 
 ## How to Book

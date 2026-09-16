@@ -8,7 +8,11 @@ const NotFound = () => {
 
   return (
     <>
-      <SEO title={`Page Not Found | ${BUSINESS_CONTACT.companyName}`} />
+      <SEO
+        title={`Page Not Found | ${BUSINESS_CONTACT.companyName}`}
+        description="The page you are looking for does not exist or has been moved. Please check the URL or return to the homepage."
+        robots="noindex, nofollow"
+      />
 
       <div className="min-h-screen bg-warmWhite flex items-center justify-center px-4">
         <div className="text-center max-w-lg">
