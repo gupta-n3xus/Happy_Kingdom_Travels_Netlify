@@ -184,7 +184,28 @@ export const bulkDeleteActivityLogs = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'No activity log IDs provided' });
     }
 
-    const result = await ActivityLog.deleteMany({ _id: { $in: ids } });
+    const mongoose = (await import('mongoose')).default;
+
+    const objectIds = [];
+    const sessionIds = [];
+    for (const id of ids) {
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        objectIds.push(id);
+      } else {
+        sessionIds.push(id);
+      }
+    }
+
+    const query = {};
+    if (objectIds.length > 0 && sessionIds.length > 0) {
+      query.$or = [{ _id: { $in: objectIds } }, { sessionId: { $in: sessionIds } }];
+    } else if (objectIds.length > 0) {
+      query._id = { $in: objectIds };
+    } else {
+      query.sessionId = { $in: sessionIds };
+    }
+
+    const result = await ActivityLog.deleteMany(query);
     res.status(200).json({ success: true, deletedCount: result.deletedCount });
   } catch (error) {
     next(error);
